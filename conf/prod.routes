@@ -1,6 +1,6 @@
 # Add all the application routes to the app.routes file
-->         /register-estate-deceased-settlor-frontend                    app.Routes
-->         /                          health.Routes
-->     	   /template                  template.Routes
+->         /register-an-estate/deceased-person      app.Routes
+->         /                                        health.Routes
+->     	   /template                                template.Routes
 
 GET        /admin/metrics             @com.kenshoo.play.metrics.MetricsController.metrics

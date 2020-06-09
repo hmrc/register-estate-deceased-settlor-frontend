@@ -24,7 +24,7 @@ import play.api.libs.json._
 import scala.util.{Failure, Success, Try}
 
 final case class UserAnswers(
-                              id: String,
+                              internalAuthId: String,
                               data: JsObject = Json.obj(),
                               lastUpdated: LocalDateTime = LocalDateTime.now
                             ) {

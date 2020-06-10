@@ -26,15 +26,14 @@ case object LivedInTheUkYesNoPage extends QuestionPage[Boolean] {
 
   override def toString: String = "livedInTheUkYesNo"
 
-  // TODO: bring over spec for this once implemented.
-//  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
-//    value match {
-//      case Some(true) =>
-//        userAnswers.remove(NonUkAddressPage)
-//      case Some(false) =>
-//        userAnswers.remove(UkAddressPage)
-//      case _ =>
-//        super.cleanup(value, userAnswers)
-//    }
-//  }
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
+    value match {
+      case Some(true) =>
+        userAnswers.remove(NonUkAddressPage)
+      case Some(false) =>
+        userAnswers.remove(UkAddressPage)
+      case _ =>
+        super.cleanup(value, userAnswers)
+    }
+  }
 }

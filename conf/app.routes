@@ -34,3 +34,12 @@ POST       /national-insurance-number           controllers.NationalInsuranceNum
 
 GET        /had-address                         controllers.AddressYesNoController.onPageLoad()
 POST       /had-address                         controllers.AddressYesNoController.onSubmit()
+
+GET        /had-uk-address                      controllers.LivedInTheUkYesNoController.onPageLoad()
+POST       /had-uk-address                      controllers.LivedInTheUkYesNoController.onSubmit()
+
+GET        /uk-address                          controllers.UkAddressController.onPageLoad()
+POST       /uk-address                          controllers.UkAddressController.onSubmit()
+
+GET        /non-uk-address                      controllers.NonUkAddressController.onPageLoad()
+POST       /non-uk-address                      controllers.NonUkAddressController.onSubmit()

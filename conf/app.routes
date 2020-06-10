@@ -1,27 +1,36 @@
 # microservice specific routes
 
-GET        /                              controllers.IndexController.onPageLoad
+GET        /                                    controllers.IndexController.onPageLoad
 
-GET        /assets/*file                  controllers.Assets.versioned(path="/public", file: Asset)
+GET        /assets/*file                        controllers.Assets.versioned(path="/public", file: Asset)
 
-GET        /language/:lang                controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET        /language/:lang                      controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
-GET        /this-service-has-been-reset   controllers.SessionExpiredController.onPageLoad
+GET        /this-service-has-been-reset         controllers.SessionExpiredController.onPageLoad
 
-GET        /check-your-answers            controllers.CheckYourAnswersController.onPageLoad
+GET        /check-your-answers                  controllers.CheckYourAnswersController.onPageLoad
 
-GET        /unauthorised                  controllers.UnauthorisedController.onPageLoad
+GET        /unauthorised                        controllers.UnauthorisedController.onPageLoad
 
-GET        /logout                        controllers.LogoutController.logout()
+GET        /logout                              controllers.LogoutController.logout()
 
-GET        /name                          controllers.NameController.onPageLoad()
-POST       /name                          controllers.NameController.onSubmit()
+GET        /name                                controllers.NameController.onPageLoad()
+POST       /name                                controllers.NameController.onSubmit()
 
-GET        /date-of-death                 controllers.DateOfDeathController.onPageLoad()
-POST       /date-of-death                 controllers.DateOfDeathController.onSubmit()
+GET        /date-of-death                       controllers.DateOfDeathController.onPageLoad()
+POST       /date-of-death                       controllers.DateOfDeathController.onSubmit()
 
-GET        /know-date-of-birth            controllers.DateOfBirthYesNoController.onPageLoad()
-POST       /know-date-of-birth            controllers.DateOfBirthYesNoController.onSubmit()
+GET        /know-date-of-birth                  controllers.DateOfBirthYesNoController.onPageLoad()
+POST       /know-date-of-birth                  controllers.DateOfBirthYesNoController.onSubmit()
 
-GET        /date-of-birth                 controllers.DateOfBirthController.onPageLoad()
-POST       /date-of-birth                 controllers.DateOfBirthController.onSubmit()
+GET        /date-of-birth                       controllers.DateOfBirthController.onPageLoad()
+POST       /date-of-birth                       controllers.DateOfBirthController.onSubmit()
+
+GET        /know-national-insurance-number      controllers.NationalInsuranceNumberYesNoController.onPageLoad()
+POST       /know-national-insurance-number      controllers.NationalInsuranceNumberYesNoController.onSubmit()
+
+GET        /national-insurance-number           controllers.NationalInsuranceNumberController.onPageLoad()
+POST       /national-insurance-number           controllers.NationalInsuranceNumberController.onSubmit()
+
+GET        /had-address                         controllers.AddressYesNoController.onPageLoad()
+POST       /had-address                         controllers.AddressYesNoController.onSubmit()

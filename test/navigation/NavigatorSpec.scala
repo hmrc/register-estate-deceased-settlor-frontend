@@ -47,15 +47,28 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(DateOfDeathPage, NormalMode, baseAnswers)
           .mustBe(controllers.routes.DateOfBirthYesNoController.onPageLoad())
       }
-    }
 
-    "in Check mode" must {
+      "Do you know date of birth page -> Yes -> Date of birth page" in {
+        val answers = baseAnswers
+          .set(DateOfBirthYesNoPage, true).success.value
 
-      "go to CheckYourAnswers from a page that doesn't exist in the edit route map" in {
-
-        case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id")) mustBe routes.CheckYourAnswersController.onPageLoad()
+        navigator.nextPage(DateOfBirthYesNoPage, NormalMode, answers)
+          .mustBe(controllers.routes.DateOfBirthController.onPageLoad())
       }
+
+      "Date of birth page -> Do you know NINO page" in {
+        navigator.nextPage(DateOfBirthPage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.NationalInsuranceNumberYesNoController.onPageLoad())
+      }
+
+      "Do you know date of birth page -> No -> Do you know NINO page" in {
+        val answers = baseAnswers
+          .set(DateOfBirthYesNoPage, false).success.value
+
+        navigator.nextPage(DateOfBirthYesNoPage, NormalMode, answers)
+          .mustBe(controllers.routes.NationalInsuranceNumberYesNoController.onPageLoad())
+      }
+
     }
   }
 }

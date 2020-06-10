@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.{Actions, NameRequiredAction}
+import controllers.actions.Actions
 import forms.DateOfDeathFormProvider
 import javax.inject.Inject
 import models.NormalMode
@@ -35,7 +35,6 @@ class DateOfDeathController @Inject()(
                                        sessionRepository: SessionRepository,
                                        navigator: Navigator,
                                        actions: Actions,
-                                       nameAction: NameRequiredAction,
                                        formProvider: DateOfDeathFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: DateOfDeathView
@@ -43,7 +42,7 @@ class DateOfDeathController @Inject()(
 
   private val form = formProvider.withConfig("deceasedSettlor.dateOfDeath")
 
-  def onPageLoad(): Action[AnyContent] = (actions.authWithData andThen nameAction).apply {
+  def onPageLoad(): Action[AnyContent] = actions.authWithName.apply {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(DateOfDeathPage) match {
@@ -54,7 +53,7 @@ class DateOfDeathController @Inject()(
       Ok(view(preparedForm, request.name))
   }
 
-  def onSubmit(): Action[AnyContent] = (actions.authWithData andThen nameAction).async {
+  def onSubmit(): Action[AnyContent] = actions.authWithName.async {
     implicit request =>
 
       form.bindFromRequest().fold(

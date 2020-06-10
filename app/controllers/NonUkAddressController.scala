@@ -36,7 +36,6 @@ class NonUkAddressController @Inject()(
                                         sessionRepository: SessionRepository,
                                         navigator: Navigator,
                                         actions: Actions,
-                                        nameAction: NameRequiredAction,
                                         formProvider: NonUkAddressFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: NonUkAddressView,
@@ -45,7 +44,7 @@ class NonUkAddressController @Inject()(
 
   private val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithData.andThen(nameAction) {
+  def onPageLoad(): Action[AnyContent] = actions.authWithName {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(NonUkAddressPage) match {
@@ -56,7 +55,7 @@ class NonUkAddressController @Inject()(
       Ok(view(preparedForm, countryOptions.options, request.name))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.authWithData.andThen(nameAction).async {
+  def onSubmit(): Action[AnyContent] = actions.authWithName.async {
     implicit request =>
 
       form.bindFromRequest().fold(

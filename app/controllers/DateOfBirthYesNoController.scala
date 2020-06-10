@@ -35,7 +35,6 @@ class DateOfBirthYesNoController @Inject()(
                                             playbackRepository: SessionRepository,
                                             navigator: Navigator,
                                             actions: Actions,
-                                            nameAction: NameRequiredAction,
                                             formProvider: YesNoFormProvider,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: DateOfBirthYesNoView
@@ -43,7 +42,7 @@ class DateOfBirthYesNoController @Inject()(
 
   private val form = formProvider.withPrefix("deceasedSettlor.dateOfBirthYesNo")
 
-  def onPageLoad(): Action[AnyContent] = (actions.authWithData andThen nameAction) {
+  def onPageLoad(): Action[AnyContent] = actions.authWithName {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(DateOfBirthYesNoPage) match {
@@ -54,7 +53,7 @@ class DateOfBirthYesNoController @Inject()(
       Ok(view(preparedForm, request.name))
   }
 
-  def onSubmit(): Action[AnyContent] = (actions.authWithData andThen nameAction).async {
+  def onSubmit(): Action[AnyContent] = actions.authWithName.async {
     implicit request =>
 
       form.bindFromRequest().fold(

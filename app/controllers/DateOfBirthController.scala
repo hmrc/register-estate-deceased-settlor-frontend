@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.{Actions, NameRequiredAction}
+import controllers.actions.Actions
 import forms.DateOfBirthFormProvider
 import javax.inject.Inject
 import models.NormalMode
@@ -35,16 +35,14 @@ class DateOfBirthController @Inject()(
                                        sessionRepository: SessionRepository,
                                        navigator: Navigator,
                                        actions: Actions,
-                                       nameAction: NameRequiredAction,
                                        formProvider: DateOfBirthFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: DateOfBirthView
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider.withPrefix("deceasedSettlor.dateOfBirth")
+  private val form = formProvider.withPrefix("deceasedSettlor.dateOfBirth")
 
-
-  def onPageLoad(): Action[AnyContent] = (actions.authWithData andThen nameAction) {
+  def onPageLoad(): Action[AnyContent] = actions.authWithName {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(DateOfBirthPage) match {
@@ -55,7 +53,7 @@ class DateOfBirthController @Inject()(
       Ok(view(preparedForm, request.name))
   }
 
-  def onSubmit(): Action[AnyContent] = (actions.authWithData andThen nameAction).async {
+  def onSubmit(): Action[AnyContent] = actions.authWithName.async {
     implicit request =>
 
       form.bindFromRequest().fold(

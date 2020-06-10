@@ -35,7 +35,6 @@ class NationalInsuranceNumberController @Inject()(
                                                    sessionRepository: SessionRepository,
                                                    navigator: Navigator,
                                                    actions: Actions,
-                                                   nameAction: NameRequiredAction,
                                                    formProvider: NationalInsuranceNumberFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: NationalInsuranceNumberView
@@ -43,7 +42,7 @@ class NationalInsuranceNumberController @Inject()(
 
   private val form = formProvider.withPrefix("deceasedSettlor.nationalInsuranceNumber")
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithData.andThen(nameAction) {
+  def onPageLoad(): Action[AnyContent] = actions.authWithName {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(NationalInsuranceNumberPage) match {
@@ -54,7 +53,7 @@ class NationalInsuranceNumberController @Inject()(
       Ok(view(preparedForm, request.name))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.authWithData.andThen(nameAction).async {
+  def onSubmit(): Action[AnyContent] = actions.authWithName.async {
     implicit request =>
 
       form.bindFromRequest().fold(

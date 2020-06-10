@@ -23,7 +23,8 @@ import models._
 
 class NavigatorSpec extends SpecBase {
 
-  val navigator = new Navigator
+  private val navigator = new Navigator
+  private val baseAnswers = emptyUserAnswers
 
   "Navigator" when {
 
@@ -34,6 +35,13 @@ class NavigatorSpec extends SpecBase {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
       }
+
+      "Name page -> Date of death" in {
+
+        navigator.nextPage(NamePage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.DateOfDeathController.onPageLoad())
+      }
+
     }
 
     "in Check mode" must {

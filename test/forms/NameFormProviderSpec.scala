@@ -26,7 +26,6 @@ class NameFormProviderSpec extends StringFieldBehaviours with OptionalFieldBehav
   private val messageKeyPrefix = "deceasedSettlor.name"
   private val form = new NameFormProvider().withPrefix(messageKeyPrefix)
 
-  private val minLength = 1
   private val maxLength = 35
 
   ".firstName" must {

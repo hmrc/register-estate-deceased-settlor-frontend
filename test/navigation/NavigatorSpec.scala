@@ -42,6 +42,11 @@ class NavigatorSpec extends SpecBase {
           .mustBe(controllers.routes.DateOfDeathController.onPageLoad())
       }
 
+      "Date of death page -> Date of birth yes/no page" in {
+
+        navigator.nextPage(DateOfDeathPage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.DateOfBirthYesNoController.onPageLoad())
+      }
     }
 
     "in Check mode" must {

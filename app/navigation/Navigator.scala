@@ -28,6 +28,7 @@ class Navigator @Inject()() {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case NamePage => _ => routes.DateOfDeathController.onPageLoad()
+    case DateOfDeathPage => _ => routes.DateOfBirthYesNoController.onPageLoad()
     case _ => _ => routes.IndexController.onPageLoad()
   }
 

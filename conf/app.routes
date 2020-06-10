@@ -19,3 +19,9 @@ POST       /name                          controllers.NameController.onSubmit()
 
 GET        /date-of-death                 controllers.DateOfDeathController.onPageLoad()
 POST       /date-of-death                 controllers.DateOfDeathController.onSubmit()
+
+GET        /know-date-of-birth            controllers.DateOfBirthYesNoController.onPageLoad()
+POST       /know-date-of-birth            controllers.DateOfBirthYesNoController.onSubmit()
+
+GET        /date-of-birth                 controllers.DateOfBirthController.onPageLoad()
+POST       /date-of-birth                 controllers.DateOfBirthController.onSubmit()

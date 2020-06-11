@@ -104,9 +104,11 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
       val mockPlaybackRepository = mock[SessionRepository]
 
       when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
+      val userAnswers = emptyUserAnswers
+        .set(NamePage, name).success.value
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )

@@ -16,25 +16,24 @@
 
 package controllers.actions
 
+import controllers.routes
 import javax.inject.Inject
 import models.requests.{DataRequest, NameRequest}
 import pages.NamePage
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.ActionTransformer
+import play.api.mvc.Results.Redirect
+import play.api.mvc.{ActionRefiner, ActionTransformer, Result}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class NameRequiredAction @Inject()(val executionContext: ExecutionContext, val messagesApi: MessagesApi)
-  extends ActionTransformer[DataRequest, NameRequest] with I18nSupport {
+  extends ActionRefiner[DataRequest, NameRequest] with I18nSupport {
 
-  override protected def transform[A](request: DataRequest[A]): Future[NameRequest[A]] = {
-    Future.successful(NameRequest[A](request, getName(request)))
+  override protected def refine[A](request: DataRequest[A]): Future[Either[Result, NameRequest[A]]] = {
+    Future.successful(request.userAnswers.get(NamePage) match {
+      case Some(name) => Right(NameRequest[A](request, name.displayName))
+      case _ => Left(Redirect(routes.NameController.onPageLoad()))
+    })
   }
 
-  private def getName[A](request: DataRequest[A]): String = {
-    request.userAnswers.get(NamePage) match {
-      case Some(name) => name.displayName
-      case _ => request.messages(messagesApi)("deceasedSettlor.name.default")
-    }
-  }
 }

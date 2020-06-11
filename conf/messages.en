@@ -62,8 +62,6 @@ session_expired.guidance = The details you have given have been deleted because 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-deceasedSettlor.name.default = the person who died
-
 deceasedSettlor.name.checkYourAnswersLabel = What was the name of the person who died?
 deceasedSettlor.name.title = What was the person who died's name?
 deceasedSettlor.name.heading = What was the person who died's name?

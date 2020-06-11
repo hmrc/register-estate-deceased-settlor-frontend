@@ -86,7 +86,7 @@ class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted" in {
+    "redirect to the name page when there is no name answer" in {
 
       val onwardRoute = Call("GET", "/foo")
 
@@ -96,6 +96,37 @@ class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
+          )
+          .build()
+
+      val request =
+        FakeRequest(POST, nationalInsuranceNumberRoute)
+          .withFormUrlEncodedBody(("value", "AA000000A"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.NameController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to the next page when valid data is submitted" in {
+
+      val onwardRoute = Call("GET", "/foo")
+
+      val mockPlaybackRepository = mock[SessionRepository]
+
+      when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
+
+      val userAnswers = emptyUserAnswers
+        .set(NamePage, name).success.value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )

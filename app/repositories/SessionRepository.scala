@@ -21,6 +21,7 @@ import java.time.LocalDateTime
 import akka.stream.Materializer
 import javax.inject.Inject
 import models.UserAnswers
+import org.slf4j.LoggerFactory
 import play.api.Configuration
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoApi
@@ -36,24 +37,38 @@ class DefaultSessionRepository @Inject()(
                                           config: Configuration
                                         )(implicit ec: ExecutionContext, m: Materializer) extends SessionRepository {
 
+  private val logger = LoggerFactory.getLogger("application." + this.getClass.getCanonicalName)
 
   private val collectionName: String = "user-answers"
 
   private val cacheTtl = config.get[Int]("mongodb.timeToLiveInSeconds")
 
   private def collection: Future[JSONCollection] =
-    mongo.database.map(_.collection[JSONCollection](collectionName))
+    for {
+      _ <- ensureIndexes
+      res <- mongo.database.map(_.collection[JSONCollection](collectionName))
+    } yield res
 
   private val lastUpdatedIndex = Index(
-    key     = Seq("lastUpdated" -> IndexType.Ascending),
-    name    = Some("user-answers-last-updated-index"),
+    key = Seq("updatedAt" -> IndexType.Ascending),
+    name = Some("user-answers-updated-at-index"),
     options = BSONDocument("expireAfterSeconds" -> cacheTtl)
   )
 
-  val started: Future[Unit] =
-    collection.flatMap {
-      _.indexesManager.ensure(lastUpdatedIndex)
-    }.map(_ => ())
+  private val internalAuthIdIndex = Index(
+    key = Seq("_id" -> IndexType.Ascending),
+    name = Some("internal-auth-id-index")
+  )
+
+  private lazy val ensureIndexes = {
+    logger.info("Ensuring collection indexes")
+    for {
+      collection              <- mongo.database.map(_.collection[JSONCollection](collectionName))
+      createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
+      createdIdIndex          <- collection.indexesManager.ensure(internalAuthIdIndex)
+    } yield createdLastUpdatedIndex && createdIdIndex
+  }
+
 
   override def get(id: String): Future[Option[UserAnswers]] =
     collection.flatMap(_.find(Json.obj("_id" -> id), None).one[UserAnswers])
@@ -61,7 +76,7 @@ class DefaultSessionRepository @Inject()(
   override def set(userAnswers: UserAnswers): Future[Boolean] = {
 
     val selector = Json.obj(
-      "_id" -> userAnswers.id
+      "_id" -> userAnswers.internalAuthId
     )
 
     val modifier = Json.obj(
@@ -79,8 +94,6 @@ class DefaultSessionRepository @Inject()(
 }
 
 trait SessionRepository {
-
-  val started: Future[Unit]
 
   def get(id: String): Future[Option[UserAnswers]]
 

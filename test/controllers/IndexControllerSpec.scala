@@ -35,10 +35,8 @@ class IndexControllerSpec extends SpecBase {
 
       val view = application.injector.instanceOf[IndexView]
 
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view()(fakeRequest, messages).toString
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.NameController.onPageLoad().url
 
       application.stop()
     }

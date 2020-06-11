@@ -23,7 +23,8 @@ import models._
 
 class NavigatorSpec extends SpecBase {
 
-  val navigator = new Navigator
+  private val navigator = new Navigator
+  private val baseAnswers = emptyUserAnswers
 
   "Navigator" when {
 
@@ -34,14 +35,101 @@ class NavigatorSpec extends SpecBase {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
       }
-    }
 
-    "in Check mode" must {
+      "Name page -> Date of death" in {
 
-      "go to CheckYourAnswers from a page that doesn't exist in the edit route map" in {
+        navigator.nextPage(NamePage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.DateOfDeathController.onPageLoad())
+      }
 
-        case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id")) mustBe routes.CheckYourAnswersController.onPageLoad()
+      "Date of death page -> Date of birth yes/no page" in {
+
+        navigator.nextPage(DateOfDeathPage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.DateOfBirthYesNoController.onPageLoad())
+      }
+
+      "Do you know date of birth page -> Yes -> Date of birth page" in {
+        val answers = baseAnswers
+          .set(DateOfBirthYesNoPage, true).success.value
+
+        navigator.nextPage(DateOfBirthYesNoPage, NormalMode, answers)
+          .mustBe(controllers.routes.DateOfBirthController.onPageLoad())
+      }
+
+      "Date of birth page -> Do you know NINO page" in {
+        navigator.nextPage(DateOfBirthPage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.NationalInsuranceNumberYesNoController.onPageLoad())
+      }
+
+      "Do you know date of birth page -> No -> Do you know NINO page" in {
+        val answers = baseAnswers
+          .set(DateOfBirthYesNoPage, false).success.value
+
+        navigator.nextPage(DateOfBirthYesNoPage, NormalMode, answers)
+          .mustBe(controllers.routes.NationalInsuranceNumberYesNoController.onPageLoad())
+      }
+
+      "Do you know NINO page -> Yes -> NINO page" in {
+        val answers = baseAnswers
+          .set(NationalInsuranceNumberYesNoPage, true).success.value
+
+        navigator.nextPage(NationalInsuranceNumberYesNoPage, NormalMode, answers)
+          .mustBe(controllers.routes.NationalInsuranceNumberController.onPageLoad())
+      }
+
+      "Do you know NINO page -> No -> Do you know address page" in {
+        val answers = baseAnswers
+          .set(NationalInsuranceNumberYesNoPage, false).success.value
+
+        navigator.nextPage(NationalInsuranceNumberYesNoPage, NormalMode, answers)
+          .mustBe(controllers.routes.AddressYesNoController.onPageLoad())
+      }
+
+      "NINO page -> Check details page" in {
+        navigator.nextPage(NationalInsuranceNumberPage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
+      }
+
+      "Do you know last address page -> Yes -> Lived in UK page" in {
+        val answers = baseAnswers
+          .set(AddressYesNoPage, true).success.value
+
+        navigator.nextPage(AddressYesNoPage, NormalMode, answers)
+          .mustBe(controllers.routes.LivedInTheUkYesNoController.onPageLoad())
+      }
+
+      "Do you know last address page -> No -> Check details page" in {
+        val answers = baseAnswers
+          .set(AddressYesNoPage, false).success.value
+
+        navigator.nextPage(AddressYesNoPage, NormalMode, answers)
+          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
+      }
+
+      "Lived in the UK page -> Yes -> UK address page" in {
+        val answers = baseAnswers
+          .set(LivedInTheUkYesNoPage, true).success.value
+
+        navigator.nextPage(LivedInTheUkYesNoPage, NormalMode, answers)
+          .mustBe(controllers.routes.UkAddressController.onPageLoad())
+      }
+
+      "Lived in the UK page -> No -> Non-UK address page" in {
+        val answers = baseAnswers
+          .set(LivedInTheUkYesNoPage, false).success.value
+
+        navigator.nextPage(LivedInTheUkYesNoPage, NormalMode, answers)
+          .mustBe(controllers.routes.NonUkAddressController.onPageLoad())
+      }
+
+      "Uk Address page -> Check details page" in {
+        navigator.nextPage(UkAddressPage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
+      }
+
+      "Non-Uk Address page -> Check details page" in {
+        navigator.nextPage(NonUkAddressPage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
       }
     }
   }

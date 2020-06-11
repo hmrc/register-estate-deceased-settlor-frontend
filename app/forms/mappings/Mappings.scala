@@ -24,6 +24,13 @@ import models.Enumerable
 
 trait Mappings extends Formatters with Constraints {
 
+  protected def nino(errorKey: String = "error.required"): FieldMapping[String] =
+    of(ninoFormatter(errorKey))
+
+  protected def postcode(requiredKey : String = "error.required",
+                         invalidKey : String = "error.postcodeInvalid") : FieldMapping[String] =
+    of(postcodeFormatter(requiredKey, invalidKey))
+
   protected def text(errorKey: String = "error.required"): FieldMapping[String] =
     of(stringFormatter(errorKey))
 

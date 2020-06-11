@@ -33,13 +33,15 @@ class Navigator @Inject()() {
     case _ => _ => routes.IndexController.onPageLoad()
   }
 
+  private lazy val checkYourAnswersRoute: Call = routes.CheckDetailsController.onPageLoad()
+
   private val normalRoute: PartialFunction[Page, UserAnswers => Call] = {
     case NamePage => _ => routes.DateOfDeathController.onPageLoad()
     case DateOfDeathPage => _ => routes.DateOfBirthYesNoController.onPageLoad()
     case DateOfBirthPage => _ => routes.NationalInsuranceNumberYesNoController.onPageLoad()
-    case NationalInsuranceNumberPage => _ => ???
-    case UkAddressPage => _ => ???
-    case NonUkAddressPage => _ => ???
+    case NationalInsuranceNumberPage => _ => checkYourAnswersRoute
+    case UkAddressPage => _ => checkYourAnswersRoute
+    case NonUkAddressPage => _ => checkYourAnswersRoute
   }
 
   private val yesNoRoute: PartialFunction[Page, UserAnswers => Call] = {
@@ -48,7 +50,7 @@ class Navigator @Inject()() {
     case NationalInsuranceNumberYesNoPage => ua =>
       yesNoNav(ua, NationalInsuranceNumberYesNoPage, routes.NationalInsuranceNumberController.onPageLoad(), routes.AddressYesNoController.onPageLoad())
     case AddressYesNoPage => ua =>
-      yesNoNav(ua, AddressYesNoPage, routes.LivedInTheUkYesNoController.onPageLoad(), ???)
+      yesNoNav(ua, AddressYesNoPage, routes.LivedInTheUkYesNoController.onPageLoad(), checkYourAnswersRoute)
     case LivedInTheUkYesNoPage => ua =>
       yesNoNav(ua, LivedInTheUkYesNoPage, routes.UkAddressController.onPageLoad(), routes.NonUkAddressController.onPageLoad())
   }

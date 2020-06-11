@@ -8,8 +8,6 @@ GET        /language/:lang                      controllers.LanguageSwitchContro
 
 GET        /this-service-has-been-reset         controllers.SessionExpiredController.onPageLoad
 
-GET        /check-your-answers                  controllers.CheckYourAnswersController.onPageLoad
-
 GET        /unauthorised                        controllers.UnauthorisedController.onPageLoad
 
 GET        /logout                              controllers.LogoutController.logout()
@@ -44,5 +42,5 @@ POST       /uk-address                          controllers.UkAddressController.
 GET        /non-uk-address                      controllers.NonUkAddressController.onPageLoad()
 POST       /non-uk-address                      controllers.NonUkAddressController.onSubmit()
 
-GET        /check-details                       controllers.CheckDetailsController.renderFromUserAnswers()
+GET        /check-details                       controllers.CheckDetailsController.onPageLoad()
 POST       /check-details                       controllers.CheckDetailsController.onSubmit()

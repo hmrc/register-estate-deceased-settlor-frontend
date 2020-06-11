@@ -75,7 +75,7 @@ class CheckDetailsController @Inject()(
 //      }
 //  }
 
-  def renderFromUserAnswers(): Action[AnyContent] = actions.authWithName.async {
+  def onPageLoad(): Action[AnyContent] = actions.authWithName.async {
     implicit request =>
         Future.successful(render(
           request.userAnswers,

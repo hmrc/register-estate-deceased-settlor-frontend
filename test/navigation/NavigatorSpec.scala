@@ -85,10 +85,10 @@ class NavigatorSpec extends SpecBase {
           .mustBe(controllers.routes.AddressYesNoController.onPageLoad())
       }
 
-//      "NINO page -> Check details page" in {
-//        navigator.nextPage(NationalInsuranceNumberPage, NormalMode, baseAnswers)
-//          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
-//      }
+      "NINO page -> Check details page" in {
+        navigator.nextPage(NationalInsuranceNumberPage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
+      }
 
       "Do you know last address page -> Yes -> Lived in UK page" in {
         val answers = baseAnswers
@@ -98,13 +98,13 @@ class NavigatorSpec extends SpecBase {
           .mustBe(controllers.routes.LivedInTheUkYesNoController.onPageLoad())
       }
 
-//      "Do you know last address page -> No -> Check details page" in {
-//        val answers = baseAnswers
-//          .set(AddressYesNoPage, false).success.value
-//
-//        navigator.nextPage(AddressYesNoPage, NormalMode, answers)
-//          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
-//      }
+      "Do you know last address page -> No -> Check details page" in {
+        val answers = baseAnswers
+          .set(AddressYesNoPage, false).success.value
+
+        navigator.nextPage(AddressYesNoPage, NormalMode, answers)
+          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
+      }
 
       "Lived in the UK page -> Yes -> UK address page" in {
         val answers = baseAnswers
@@ -122,15 +122,15 @@ class NavigatorSpec extends SpecBase {
           .mustBe(controllers.routes.NonUkAddressController.onPageLoad())
       }
 
-//      "Uk Address page -> Check details page" in {
-//        navigator.nextPage(UkAddressPage, NormalMode, baseAnswers)
-//          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
-//      }
+      "Uk Address page -> Check details page" in {
+        navigator.nextPage(UkAddressPage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
+      }
 
-//      "Non-Uk Address page -> Check details page" in {
-//        navigator.nextPage(NonUkAddressPage, NormalMode, baseAnswers)
-//          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
-//      }
+      "Non-Uk Address page -> Check details page" in {
+        navigator.nextPage(NonUkAddressPage, NormalMode, baseAnswers)
+          .mustBe(controllers.routes.CheckDetailsController.onPageLoad())
+      }
     }
   }
 }

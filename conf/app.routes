@@ -43,3 +43,6 @@ POST       /uk-address                          controllers.UkAddressController.
 
 GET        /non-uk-address                      controllers.NonUkAddressController.onPageLoad()
 POST       /non-uk-address                      controllers.NonUkAddressController.onSubmit()
+
+GET        /check-details                       controllers.CheckDetailsController.renderFromUserAnswers()
+POST       /check-details                       controllers.CheckDetailsController.onSubmit()

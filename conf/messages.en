@@ -121,3 +121,6 @@ deceasedSettlor.ukAddress.postcode.hint = For example AB1 1AB
 deceasedSettlor.nonUkAddress.checkYourAnswersLabel = What was {0}’s address?
 deceasedSettlor.nonUkAddress.title = What was the person who died’s address?
 deceasedSettlor.nonUkAddress.heading = What was {0}’s address?
+
+deceasedSettlor.checkDetails.title = Check the details of the person who died
+deceasedSettlor.checkDetails.heading = Check the details of the person who died

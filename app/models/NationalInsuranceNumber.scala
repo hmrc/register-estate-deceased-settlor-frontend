@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package viewmodels
+package models
 
-import play.twirl.api.Html
+import play.api.libs.json.{Format, Json}
 
-case class AnswerRow(label: Html, answer: Html, changeUrl: Option[String])
+case class NationalInsuranceNumber(nino: String)
+object NationalInsuranceNumber{
+  implicit val format: Format[NationalInsuranceNumber] = Json.format[NationalInsuranceNumber]
+}

@@ -75,9 +75,6 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
           name.displayName
         )(fakeRequest, messages).toString
 
-//      contentAsString(result) mustEqual
-//        view(expectedSections)(fakeRequest, messages).toString
-
       application.stop()
     }
 

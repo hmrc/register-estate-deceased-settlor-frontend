@@ -16,9 +16,11 @@
 
 package controllers
 
+import connectors.EstatesConnector
 import controllers.actions.Actions
 import javax.inject.Inject
-import models.UserAnswers
+import models.requests.OptionalDataRequest
+import models.{DeceasedSettlor, UserAnswers}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -29,20 +31,27 @@ import scala.concurrent.{ExecutionContext, Future}
 class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  actions: Actions,
-                                 repository: SessionRepository
+                                 repository: SessionRepository,
+                                 estatesConnector: EstatesConnector
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authWithSession.async {
     implicit request =>
-
-      request.userAnswers match {
-        case Some(_) =>
-          Future.successful(Redirect(controllers.routes.NameController.onPageLoad()))
+      estatesConnector.getDeceased() flatMap {
+        case Some(deceased) =>
+          val userAnswers: UserAnswers = extractAnswersFromDeceased(deceased)
+          repository.set(userAnswers).map { _ =>
+            Redirect(controllers.routes.CheckDetailsController.onPageLoad())
+          }
         case None =>
           val userAnswers: UserAnswers = UserAnswers(request.internalId)
           repository.set(userAnswers).map { _ =>
             Redirect(controllers.routes.NameController.onPageLoad())
           }
       }
+  }
+
+  private def extractAnswersFromDeceased(deceased: DeceasedSettlor)(implicit request: OptionalDataRequest[AnyContent]) = {
+    UserAnswers(request.internalId)
   }
 }

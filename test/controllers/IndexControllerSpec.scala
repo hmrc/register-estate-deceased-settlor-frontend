@@ -16,17 +16,36 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import base.SpecBase
+import connectors.EstatesConnector
+import models.{DeceasedSettlor, Name, NationalInsuranceNumber, UserAnswers}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import repositories.SessionRepository
 
-class IndexControllerSpec extends SpecBase {
+import scala.concurrent.Future
+
+class IndexControllerSpec extends SpecBase with MockitoSugar {
 
   "Index Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "return redirect to name controller if no existing deceased data" in {
+      val estatesConnector = mock[EstatesConnector]
+      when(estatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(None))
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val sessionRepository = mock[SessionRepository]
+      when(sessionRepository.set(any[UserAnswers])).thenReturn(Future.successful(true))
+
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(bind[EstatesConnector].toInstance(estatesConnector))
+        .overrides(bind[SessionRepository].toInstance(sessionRepository))
+        .build()
 
       val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
 
@@ -37,5 +56,35 @@ class IndexControllerSpec extends SpecBase {
 
       application.stop()
     }
+  }
+
+  "return redirect to name controller if no existing deceased data" in {
+    val deceased = DeceasedSettlor(
+      Name("First", None, "Last"),
+      Some(LocalDate.of(1972, 9, 18)),
+      Some(LocalDate.of(2018, 2, 23)),
+      Some(NationalInsuranceNumber("AA111111B")),
+      None
+    )
+
+    val estatesConnector = mock[EstatesConnector]
+    when(estatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(Some(deceased)))
+
+    val sessionRepository = mock[SessionRepository]
+    when(sessionRepository.set(any[UserAnswers])).thenReturn(Future.successful(true))
+
+    val application = applicationBuilder(userAnswers = None)
+      .overrides(bind[EstatesConnector].toInstance(estatesConnector))
+      .overrides(bind[SessionRepository].toInstance(sessionRepository))
+      .build()
+
+    val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
+
+    val result = route(application, request).value
+
+    status(result) mustEqual SEE_OTHER
+    redirectLocation(result).value mustEqual routes.CheckDetailsController.onPageLoad().url
+
+    application.stop()
   }
 }

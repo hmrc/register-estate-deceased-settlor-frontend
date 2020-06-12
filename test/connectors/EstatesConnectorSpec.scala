@@ -1,0 +1,152 @@
+/*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package connectors
+
+import java.time.LocalDate
+
+import base.SpecBase
+import com.github.tomakehurst.wiremock.client.WireMock.{okJson, urlEqualTo, _}
+import models.{DeceasedSettlor, Name, NationalInsuranceNumber}
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import play.api.libs.json.Json
+import play.api.test.Helpers.{CONTENT_TYPE, _}
+import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, InternalServerException, Upstream5xxResponse}
+import utils.WireMockHelper
+
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext}
+
+class EstatesConnectorSpec extends SpecBase
+  with ScalaFutures
+  with IntegrationPatience
+  with WireMockHelper {
+
+  private val deceased = DeceasedSettlor(
+    Name("First", None, "Last"),
+    Some(LocalDate.of(1972, 9, 18)),
+    Some(LocalDate.of(2018, 2, 23)),
+    Some(NationalInsuranceNumber("AA111111B")),
+    None
+  )
+
+  private val requestBody = Json.toJson(deceased)
+
+  private implicit lazy val hc: HeaderCarrier = HeaderCarrier()
+
+  "trusts store connector" must {
+
+    "submit deceased as JSON" in {
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.estates.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      implicit def ec: ExecutionContext = application.injector.instanceOf[ExecutionContext]
+
+      val connector = application.injector.instanceOf[EstatesConnector]
+
+      val json = Json.obj()
+      val deceased = DeceasedSettlor(
+        Name("First", None, "Last"),
+        Some(LocalDate.of(1972, 9, 18)),
+        Some(LocalDate.of(2018, 2, 23)),
+        Some(NationalInsuranceNumber("AA111111B")),
+        None
+      )
+
+      val requestBody = Json.toJson(deceased)
+
+      server.stubFor(
+        post(urlEqualTo("/estates/deceased"))
+          .withHeader(CONTENT_TYPE, containing("application/json"))
+          .withRequestBody(equalTo(requestBody.toString))
+
+          .willReturn(okJson(json.toString))
+      )
+
+      val futureResult = connector.setDeceased(deceased)
+
+      whenReady(futureResult) {
+        r =>
+          r.status mustBe OK
+      }
+
+      application.stop()
+    }
+
+    "throw exception on internal server error" in {
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.estates.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      implicit def ec: ExecutionContext = application.injector.instanceOf[ExecutionContext]
+
+      val connector = application.injector.instanceOf[EstatesConnector]
+
+      val json = Json.obj()
+
+      server.stubFor(
+        post(urlEqualTo("/estates/deceased"))
+          .withHeader(CONTENT_TYPE, containing("application/json"))
+          .withRequestBody(equalTo(requestBody.toString))
+
+          .willReturn(serverError)
+      )
+
+      val result = connector.setDeceased(deceased)
+      assertThrows[Upstream5xxResponse] { Await.result(result, Duration.Inf) }
+
+      application.stop()
+    }
+
+    "throw exception on bad request" in {
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.estates.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      implicit def ec: ExecutionContext = application.injector.instanceOf[ExecutionContext]
+
+      val connector = application.injector.instanceOf[EstatesConnector]
+
+      val json = Json.obj()
+
+      server.stubFor(
+        post(urlEqualTo("/estates/deceased"))
+          .withHeader(CONTENT_TYPE, containing("application/json"))
+          .withRequestBody(equalTo(requestBody.toString))
+
+          .willReturn(badRequest)
+      )
+
+      val result = connector.setDeceased(deceased)
+      assertThrows[BadRequestException] { Await.result(result, Duration.Inf) }
+
+      application.stop()
+    }
+  }
+}

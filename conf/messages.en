@@ -1,7 +1,3 @@
-checkYourAnswers.title = Check Your Answers
-checkYourAnswers.heading = Check Your Answers
-checkYourAnswers.guidance = Guidance for check your answers
-
 date.day = Day
 date.month = Month
 date.year = Year
@@ -36,6 +32,29 @@ site.address.nonUk.line2 = Address line 2
 site.address.nonUk.line3 = Address line 3 (optional)
 site.address.nonUk.country = Country
 
+ukAddress.error.line1.required = Enter address line 1
+ukAddress.error.line2.required = Enter address line 2
+ukAddress.error.postcode.required = Enter a postcode
+ukAddress.error.line1.length = Address line 1 must be 35 characters or less
+ukAddress.error.line2.length = Address line 2 must be 35 characters or less
+ukAddress.error.line3.length = Address line 3 must be 35 characters or less
+ukAddress.error.line4.length = Address line 4 must be 35 characters or less
+ukAddress.error.line1.invalidCharacters = Address line 1 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line2.invalidCharacters = Address line 2 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line3.invalidCharacters = Address line 3 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line4.invalidCharacters = Address line 4 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.postcode.invalidCharacters = Enter a real postcode
+
+nonUkAddress.error.line1.required = Enter address line 1
+nonUkAddress.error.line2.required = Enter address line 2
+nonUkAddress.error.country.required = Select a country
+nonUkAddress.error.line1.length = Address line 1 must be 35 characters or less
+nonUkAddress.error.line2.length = Address line 2 must be 35 characters or less
+nonUkAddress.error.line3.length = Address line 3 must be 35 characters or less
+nonUkAddress.error.line1.invalidCharacters = Address line 1 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+nonUkAddress.error.line2.invalidCharacters = Address line 2 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+nonUkAddress.error.line3.invalidCharacters = Address line 3 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
 error.browser.title.prefix = Error:
 error.boolean = Please give an answer
 error.invalid_date = Give a correct date
@@ -51,10 +70,6 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
-index.title = register-estate-deceased-settlor-frontend
-index.heading = register-estate-deceased-settlor-frontend
-index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
-
 session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
@@ -62,81 +77,75 @@ session_expired.guidance = The details you have given have been deleted because 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-deceasedSettlor.name.checkYourAnswersLabel = What was the name of the person who died?
-deceasedSettlor.name.title = What was the name of the person who died?
-deceasedSettlor.name.heading = What was the name of the person who died?
+deceasedSettlor.name.checkYourAnswersLabel = What is the name of the person who died?
+deceasedSettlor.name.title = What is the name of the person who died?
+deceasedSettlor.name.heading = What is the name of the person who died?
 deceasedSettlor.name.firstName = First name
 deceasedSettlor.name.middleName = Middle names (optional)
 deceasedSettlor.name.lastName = Last name
-deceasedSettlor.name.error.firstName.required = Enter the person who died’s first name
-deceasedSettlor.name.error.lastName.required = Enter the person who died’s last name
-deceasedSettlor.name.error.firstName.length = The person who died’s first name must be 35 characters or less
-deceasedSettlor.name.error.middleName.length = The person who died’s middle names must be 35 characters or less
-deceasedSettlor.name.error.lastName.length = The person who died’s last name must be 35 characters or less
-deceasedSettlor.name.error.firstName.invalid = The person who died’s first name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
-deceasedSettlor.name.error.middleName.invalid = The person who died’s middle name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
-deceasedSettlor.name.error.lastName.invalid = The person who died’s last name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+deceasedSettlor.name.error.firstName.required = Enter the first name of the person who died
+deceasedSettlor.name.error.lastName.required = Enter the last name of the person who died
+deceasedSettlor.name.error.firstName.length = The first name of the person who died must be 35 characters or less
+deceasedSettlor.name.error.middleName.length = The middle names of the person who died must be 35 characters or less
+deceasedSettlor.name.error.lastName.length = The last name of the person who died must be 35 characters or less
+deceasedSettlor.name.error.firstName.invalid = The first name of the person who died must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+deceasedSettlor.name.error.middleName.invalid = The middle names of the person who died must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+deceasedSettlor.name.error.lastName.invalid = The last name of the person who died must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
 
 deceasedSettlor.dateOfDeath.checkYourAnswersLabel = What is {0}’s date of death?
-deceasedSettlor.dateOfDeath.title = What is the person who died’s date of death?
+deceasedSettlor.dateOfDeath.title = What is the date of death of the person who died?
 deceasedSettlor.dateOfDeath.heading = What is {0}’s date of death?
 deceasedSettlor.dateOfDeath.error.required.all = Enter a date of death
-deceasedSettlor.dateOfDeath.error.required.two = Date of death must include a {0} and a {1}
-deceasedSettlor.dateOfDeath.error.required = Date of death must include a {0}
+deceasedSettlor.dateOfDeath.error.required.two = The date of death of the person who died must include a {0} and a {1}
+deceasedSettlor.dateOfDeath.error.required = The date of death of the person who died must include a {0}
 deceasedSettlor.dateOfDeath.error.invalid = Enter a real date of death
-deceasedSettlor.dateOfDeath.error.future = Date of death must be on or before the current date
-deceasedSettlor.dateOfDeath.error.past = Date of death must be after 31 December 1499
+deceasedSettlor.dateOfDeath.error.future = The date of death of the person who died must be today or in the past
+deceasedSettlor.dateOfDeath.error.past = The date of death of the person who died must be after 31 December 1499
 
 deceasedSettlor.dateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
-deceasedSettlor.dateOfBirthYesNo.title = Do you know the person who died’s date of birth?
+deceasedSettlor.dateOfBirthYesNo.title = Do you know the date of birth of the person who died?
 deceasedSettlor.dateOfBirthYesNo.heading = Do you know {0}’s date of birth?
-deceasedSettlor.dateOfBirthYesNo.error.required = Select yes if you know the person who died’s date of birth
+deceasedSettlor.dateOfBirthYesNo.error.required = Select yes if you know the date of birth of the person who died
 
 deceasedSettlor.dateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
-deceasedSettlor.dateOfBirth.title = What is the person who died’s date of birth?
+deceasedSettlor.dateOfBirth.title = What is the date of birth of the person who died?
 deceasedSettlor.dateOfBirth.heading = What is {0}’s date of birth?
 deceasedSettlor.dateOfBirth.error.required.all = Enter a date of birth
-deceasedSettlor.dateOfBirth.error.required.two = Date of birth must include a {0} and a {1}
-deceasedSettlor.dateOfBirth.error.required = Date of birth must include a {0}
+deceasedSettlor.dateOfBirth.error.required.two = The date of birth of the person who died must include a {0} and a {1}
+deceasedSettlor.dateOfBirth.error.required = The date of birth of the person who died must include a {0}
 deceasedSettlor.dateOfBirth.error.invalid = Enter a real date of birth
-deceasedSettlor.dateOfBirth.error.future = Date of birth must be today or in the past
-deceasedSettlor.dateOfBirth.error.past = Date of birth must be after 31 December 1499
+deceasedSettlor.dateOfBirth.error.future = The date of birth of the person who died must be today or in the past
+deceasedSettlor.dateOfBirth.error.past = The date of birth of the person who died must be after 31 December 1499
 
 deceasedSettlor.nationalInsuranceNumberYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
-deceasedSettlor.nationalInsuranceNumberYesNo.title = Do you know the person who died’s National Insurance number?
+deceasedSettlor.nationalInsuranceNumberYesNo.title = Do you know the National Insurance number of the person who died?
 deceasedSettlor.nationalInsuranceNumberYesNo.heading = Do you know {0}’s National Insurance number?
-deceasedSettlor.nationalInsuranceNumberYesNo.error.required = Select yes if you know the person who died’s National Insurance number
+deceasedSettlor.nationalInsuranceNumberYesNo.error.required = Select yes if you know the National Insurance number of the person who died
 
 deceasedSettlor.nationalInsuranceNumber.checkYourAnswersLabel = What is {0}’s National Insurance number?
-deceasedSettlor.nationalInsuranceNumber.title = What is the person who died’s National Insurance number?
+deceasedSettlor.nationalInsuranceNumber.title = What is the National Insurance number of the person who died?
 deceasedSettlor.nationalInsuranceNumber.heading = What is {0}’s National Insurance number?
 deceasedSettlor.nationalInsuranceNumber.hint = It is on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
-deceasedSettlor.nationalInsuranceNumber.error.required = Enter the person who died’s National Insurance number
-deceasedSettlor.nationalInsuranceNumber.error.invalidFormat = Enter the person who died’s National Insurance number in the correct format
+deceasedSettlor.nationalInsuranceNumber.error.required = Enter the National Insurance number of the person who died
+deceasedSettlor.nationalInsuranceNumber.error.invalidFormat = Enter the National Insurance number of the person who died in the correct format
 
 deceasedSettlor.addressYesNo.checkYourAnswersLabel = Do you know {0}’s last known address?
-deceasedSettlor.addressYesNo.title = Do you know the person who died’s last known address?
+deceasedSettlor.addressYesNo.title = Do you know the last known address of the person who died?
 deceasedSettlor.addressYesNo.heading = Do you know {0}’s last known address?
-deceasedSettlor.addressYesNo.error.required = Select yes if you know the person who died’s last known address
+deceasedSettlor.addressYesNo.error.required = Select yes if you know the last known address of the person who died
 
-deceasedSettlor.livedInTheUkYesNo.checkYourAnswersLabel = Did {0} live in the UK?
-deceasedSettlor.livedInTheUkYesNo.title = Did the person who died live in the UK?
-deceasedSettlor.livedInTheUkYesNo.heading = Did {0} live in the UK?
+deceasedSettlor.livedInTheUkYesNo.checkYourAnswersLabel = Was {0}’s last known address in the UK?
+deceasedSettlor.livedInTheUkYesNo.title = Was the last known address of the person who died in the UK?
+deceasedSettlor.livedInTheUkYesNo.heading = Was {0}’s last known address in the UK?
 deceasedSettlor.livedInTheUkYesNo.error.required = Select yes if the person who died lived in the UK
 
-deceasedSettlor.ukAddress.checkYourAnswersLabel = What was {0}’s address?
-deceasedSettlor.ukAddress.title = What was the person who died’s address?
-deceasedSettlor.ukAddress.heading = What was {0}’s address?
-deceasedSettlor.ukAddress.line1 = Address line 1
-deceasedSettlor.ukAddress.line2 = Address line 2
-deceasedSettlor.ukAddress.line3 = Address line 3 (optional)
-deceasedSettlor.ukAddress.line4 = Address line 4 (optional)
-deceasedSettlor.ukAddress.postcode = Postcode
-deceasedSettlor.ukAddress.postcode.hint = For example AB1 1AB
+deceasedSettlor.ukAddress.checkYourAnswersLabel = What is {0}’s last known address?
+deceasedSettlor.ukAddress.title = What is the last known address of the person who died?
+deceasedSettlor.ukAddress.heading = What is {0}’s last known address?
 
-deceasedSettlor.nonUkAddress.checkYourAnswersLabel = What was {0}’s address?
-deceasedSettlor.nonUkAddress.title = What was the person who died’s address?
-deceasedSettlor.nonUkAddress.heading = What was {0}’s address?
+deceasedSettlor.nonUkAddress.checkYourAnswersLabel = What is {0}’s last known address?
+deceasedSettlor.nonUkAddress.title = What is the last known address of the person who died?
+deceasedSettlor.nonUkAddress.heading = What is {0}’s last known address?
 
 deceasedSettlor.checkDetails.title = Check the details of the person who died
 deceasedSettlor.checkDetails.heading = Check the details of the person who died

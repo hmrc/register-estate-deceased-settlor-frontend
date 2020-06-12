@@ -63,8 +63,8 @@ unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
 deceasedSettlor.name.checkYourAnswersLabel = What was the name of the person who died?
-deceasedSettlor.name.title = What was the person who died’s name?
-deceasedSettlor.name.heading = What was the person who died’s name?
+deceasedSettlor.name.title = What was name of the person who died?
+deceasedSettlor.name.heading = What was the name of the person who died?
 deceasedSettlor.name.firstName = First name
 deceasedSettlor.name.middleName = Middle names (optional)
 deceasedSettlor.name.lastName = Last name

@@ -17,9 +17,11 @@
 package controllers
 
 import config.{ErrorHandler, FrontendAppConfig}
+import connectors.{EstatesConnector, EstatesStoreConnector}
 import controllers.actions._
 import javax.inject.Inject
 import models.UserAnswers
+import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import repositories.SessionRepository
@@ -36,14 +38,13 @@ class CheckDetailsController @Inject()(
                                         actions: Actions,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: CheckDetailsView,
-//                                        connector: TrustConnector,
-//                                        trustStoreConnector: TrustStoreConnector,
+                                        estatesConnector: EstatesConnector,
+                                        estatesStoreConnector: EstatesStoreConnector,
                                         val appConfig: FrontendAppConfig,
                                         sessionRepository: SessionRepository,
                                         printHelper: DeceasedSettlorPrintHelper,
                                         mapper: DeceasedSettlorMapper,
                                         nameAction: NameRequiredAction,
-//                                        extractor: DeceasedSettlorExtractor,
                                         errorHandler: ErrorHandler
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
@@ -57,24 +58,6 @@ class CheckDetailsController @Inject()(
     ))
   }
 
-//  def extractAndRender(): Action[AnyContent] = actions.authWithData.async {
-//    implicit request =>
-//
-//      service.getSettlors(request.userAnswers.utr) flatMap {
-//        case Settlors(individuals, businesses, Some(deceased)) =>
-//          for {
-//            hasAdditionalSettlors <- Future.successful(individuals.nonEmpty || businesses.nonEmpty)
-//            extractedF <- Future.fromTry(extractor(request.userAnswers, deceased, hasAdditionalSettlors))
-//            _ <- sessionRepository.set(extractedF)
-//          } yield {
-//            render(extractedF, deceased.name.displayName)
-//          }
-//        case Settlors(_, _, None) =>
-//          throw new Exception("Deceased Settlor Information not found")
-//
-//      }
-//  }
-
   def onPageLoad(): Action[AnyContent] = actions.authWithName.async {
     implicit request =>
         Future.successful(render(
@@ -85,20 +68,17 @@ class CheckDetailsController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
 
-      mapper(request.userAnswers).map {
-        deceasedSettlor => ???
-//          connector.amendDeceasedSettlor(request.userAnswers.utr, deceasedSettlor).flatMap(_ =>
-//            service.getSettlors(request.userAnswers.utr).flatMap { settlors =>
-//              (settlors.hasAdditionalSettlors, request.userAnswers.get(AdditionalSettlorsYesNoPage)) match {
-//                case (false, Some(false)) =>
-//                  trustStoreConnector.setTaskComplete(request.userAnswers.utr).map(_ =>
-//                    Redirect(appConfig.maintainATrustOverview)
-//                  )
-//                case _ =>
-//                  Future.successful(Redirect(controllers.routes.AddASettlorController.onPageLoad()))
-//              }
-//            }
-//          )
-      }.getOrElse(Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate)))
+      mapper(request.userAnswers) match {
+        case Some(deceasedSettlor) =>
+          for {
+            _ <- estatesConnector.setDeceased(deceasedSettlor)
+            _ <- estatesStoreConnector.setTaskComplete()
+          } yield {
+            Redirect(appConfig.registrationProgressUrl)
+          }
+        case None =>
+          Logger.warn("[CheckDetailsController][submit] Unable to generate agent details to submit.")
+          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+      }
   }
 }

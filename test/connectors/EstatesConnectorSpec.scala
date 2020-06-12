@@ -22,6 +22,7 @@ import base.SpecBase
 import com.github.tomakehurst.wiremock.client.WireMock.{okJson, urlEqualTo, _}
 import models.{DeceasedSettlor, Name, NationalInsuranceNumber}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import play.api.Application
 import play.api.libs.json.Json
 import play.api.test.Helpers.{CONTENT_TYPE, _}
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, InternalServerException, Upstream5xxResponse}
@@ -50,13 +51,8 @@ class EstatesConnectorSpec extends SpecBase
   "trusts store connector" must {
 
     "submit deceased as JSON" in {
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.estates.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
+
+      val application: Application = createApplication
 
       implicit def ec: ExecutionContext = application.injector.instanceOf[ExecutionContext]
 
@@ -92,13 +88,8 @@ class EstatesConnectorSpec extends SpecBase
     }
 
     "throw exception on internal server error" in {
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.estates.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
+
+      val application: Application = createApplication
 
       implicit def ec: ExecutionContext = application.injector.instanceOf[ExecutionContext]
 
@@ -121,13 +112,8 @@ class EstatesConnectorSpec extends SpecBase
     }
 
     "throw exception on bad request" in {
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.estates.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
+
+      val application: Application = createApplication
 
       implicit def ec: ExecutionContext = application.injector.instanceOf[ExecutionContext]
 
@@ -148,5 +134,73 @@ class EstatesConnectorSpec extends SpecBase
 
       application.stop()
     }
+
+    "read submitted deceased as JSON" in {
+
+      val application: Application = createApplication
+
+      implicit def ec: ExecutionContext = application.injector.instanceOf[ExecutionContext]
+
+      val connector = application.injector.instanceOf[EstatesConnector]
+
+      val deceased = DeceasedSettlor(
+        Name("First", None, "Last"),
+        Some(LocalDate.of(1972, 9, 18)),
+        Some(LocalDate.of(2018, 2, 23)),
+        Some(NationalInsuranceNumber("AA111111B")),
+        None
+      )
+
+      val submittedDeceased = Json.toJson(deceased)
+
+      server.stubFor(
+        get(urlEqualTo("/estates/deceased"))
+          .willReturn(okJson(submittedDeceased.toString))
+      )
+
+      val futureResult = connector.getDeceased()
+
+      whenReady(futureResult) {
+        r =>
+          r mustBe Some(deceased)
+      }
+
+      application.stop()
+    }
+
+    "read return None when there is no submitted deceased to get" in {
+
+      val application: Application = createApplication
+
+      implicit def ec: ExecutionContext = application.injector.instanceOf[ExecutionContext]
+
+      val connector = application.injector.instanceOf[EstatesConnector]
+
+      server.stubFor(
+        get(urlEqualTo("/estates/deceased"))
+          .willReturn(okJson(Json.obj().toString))
+      )
+
+      val futureResult = connector.getDeceased()
+
+      whenReady(futureResult) {
+        r =>
+          r mustBe None
+      }
+
+      application.stop()
+    }
+
+  }
+
+  private def createApplication = {
+    val application = applicationBuilder()
+      .configure(
+        Seq(
+          "microservice.services.estates.port" -> server.port(),
+          "auditing.enabled" -> false
+        ): _*
+      ).build()
+    application
   }
 }

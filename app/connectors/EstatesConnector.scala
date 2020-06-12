@@ -19,7 +19,7 @@ package connectors
 import config.FrontendAppConfig
 import javax.inject.Inject
 import models.DeceasedSettlor
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsSuccess, JsValue, Json}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -27,7 +27,16 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class EstatesConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
-  private def deceasedUrl() = s"${config.estatesUrl}/estates/deceased"
+  private lazy val deceasedUrl = s"${config.estatesUrl}/estates/deceased"
+
+  def getDeceased()(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[Option[DeceasedSettlor]] = {
+    http.GET[JsValue](deceasedUrl) flatMap {
+      _.validate[DeceasedSettlor] match {
+        case JsSuccess(value, _) => Future.successful(Some(value))
+        case _ => Future.successful(None)
+      }
+    }
+  }
 
   def setDeceased(deceasedSettlor: DeceasedSettlor)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
     http.POST[JsValue, HttpResponse](deceasedUrl, Json.toJson(deceasedSettlor))

@@ -16,17 +16,38 @@
 
 package controllers
 
+import java.time.{LocalDate, LocalDateTime}
+
 import base.SpecBase
+import connectors.EstatesConnector
+import models.{DeceasedSettlor, Name, NationalInsuranceNumber, UserAnswers}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.{verify, when}
+import org.scalatestplus.mockito.MockitoSugar
+import pages.{DateOfBirthPage, DateOfBirthYesNoPage, DateOfDeathPage, NamePage, NationalInsuranceNumberPage, NationalInsuranceNumberYesNoPage}
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import repositories.SessionRepository
+import services.LocalDateTimeService
 
-class IndexControllerSpec extends SpecBase {
+import scala.concurrent.Future
 
-  "Index Controller" must {
+class IndexControllerSpec extends SpecBase with MockitoSugar {
 
-    "return OK and the correct view for a GET" in {
+    "Index Controller" must {
 
-      val application = applicationBuilder(userAnswers = None).build()
+    "return redirect to name controller if no existing deceased data" in {
+      val estatesConnector = mock[EstatesConnector]
+      when(estatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(None))
+
+      val sessionRepository = mock[SessionRepository]
+      when(sessionRepository.set(any[UserAnswers])).thenReturn(Future.successful(true))
+
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(bind[EstatesConnector].toInstance(estatesConnector))
+        .overrides(bind[SessionRepository].toInstance(sessionRepository))
+        .build()
 
       val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
 
@@ -35,7 +56,49 @@ class IndexControllerSpec extends SpecBase {
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.NameController.onPageLoad().url
 
+      verify(sessionRepository).set(emptyUserAnswers)
+
       application.stop()
     }
+  }
+
+  "return redirect to check details controller with extracted data if existing deceased data" in {
+    val deceased = DeceasedSettlor(
+      Name("First", None, "Last"),
+      Some(LocalDate.of(1972, 9, 18)),
+      Some(LocalDate.of(2018, 2, 23)),
+      Some(NationalInsuranceNumber("AA111111B")),
+      None
+    )
+
+    val estatesConnector = mock[EstatesConnector]
+    when(estatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(Some(deceased)))
+
+    val sessionRepository = mock[SessionRepository]
+    when(sessionRepository.set(any[UserAnswers])).thenReturn(Future.successful(true))
+
+    val application = applicationBuilder(userAnswers = None)
+      .overrides(bind[EstatesConnector].toInstance(estatesConnector))
+      .overrides(bind[SessionRepository].toInstance(sessionRepository))
+      .build()
+
+    val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
+
+    val result = route(application, request).value
+
+    status(result) mustEqual SEE_OTHER
+    redirectLocation(result).value mustEqual routes.CheckDetailsController.onPageLoad().url
+
+    val expectedAnswers: UserAnswers = emptyUserAnswers
+      .set(NamePage, Name("First", None, "Last")).success.value
+      .set(DateOfBirthPage, LocalDate.of(1972, 9, 18)).success.value
+      .set(DateOfBirthYesNoPage, true).success.value
+      .set(DateOfDeathPage, LocalDate.of(2018, 2, 23)).success.value
+      .set(NationalInsuranceNumberYesNoPage, true).success.value
+      .set(NationalInsuranceNumberPage, "AA111111B").success.value
+
+    verify(sessionRepository).set(expectedAnswers)
+
+    application.stop()
   }
 }

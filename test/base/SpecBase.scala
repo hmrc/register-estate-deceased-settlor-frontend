@@ -16,6 +16,8 @@
 
 package base
 
+import java.time.LocalDateTime
+
 import config.FrontendAppConfig
 import controllers.actions._
 import models.UserAnswers
@@ -27,13 +29,21 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.{Injector, bind}
 import play.api.libs.json.Json
+import play.api.mvc.{AnyContent, AnyContentAsEmpty}
 import play.api.test.FakeRequest
+import services.LocalDateTimeService
 
 trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with ScalaFutures with IntegrationPatience {
 
+  val currentDateTime: LocalDateTime = LocalDateTime.of(1999, 3, 14, 13, 33)
+
+  object LocalDateTimeServiceStub extends LocalDateTimeService {
+    override def now: LocalDateTime = currentDateTime
+  }
+
   val userAnswersId = "id"
 
-  def emptyUserAnswers = UserAnswers(userAnswersId, Json.obj())
+  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, Json.obj(), currentDateTime)
 
   def injector: Injector = app.injector
 
@@ -41,7 +51,7 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Sca
 
   def messagesApi: MessagesApi = injector.instanceOf[MessagesApi]
 
-  def fakeRequest = FakeRequest("", "")
+  def fakeRequest: FakeRequest[AnyContent] = FakeRequest("", "")
 
   implicit def messages: Messages = messagesApi.preferred(fakeRequest)
 
@@ -50,6 +60,7 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Sca
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
+        bind[LocalDateTimeService].toInstance(LocalDateTimeServiceStub)
       )
 }

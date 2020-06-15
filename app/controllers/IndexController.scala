@@ -16,33 +16,48 @@
 
 package controllers
 
+import connectors.EstatesConnector
 import controllers.actions.Actions
 import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.I18nSupport
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.LocalDateTimeService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import utils.extractors.DeceasedExtractor
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  actions: Actions,
-                                 repository: SessionRepository
+                                 repository: SessionRepository,
+                                 estatesConnector: EstatesConnector,
+                                 localDateTimeService: LocalDateTimeService,
+                                 deceasedExtractor: DeceasedExtractor
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authWithSession.async {
     implicit request =>
 
-      request.userAnswers match {
-        case Some(_) =>
-          Future.successful(Redirect(controllers.routes.NameController.onPageLoad()))
+      val userAnswers: UserAnswers = UserAnswers(request.internalId, Json.obj(), localDateTimeService.now)
+
+      estatesConnector.getDeceased() flatMap {
+        case Some(deceased) =>
+          for {
+            updatedAnswers <- Future.fromTry(deceasedExtractor(deceased, userAnswers))
+            _ <- repository.set(updatedAnswers)
+          } yield {
+            Redirect(controllers.routes.CheckDetailsController.onPageLoad())
+          }
+
         case None =>
-          val userAnswers: UserAnswers = UserAnswers(request.internalId)
           repository.set(userAnswers).map { _ =>
             Redirect(controllers.routes.NameController.onPageLoad())
           }
       }
   }
-}
+
+  }

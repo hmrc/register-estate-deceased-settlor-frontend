@@ -15,10 +15,12 @@
  *@
 
 @import controllers.routes._
+@import config.FrontendAppConfig
 
 @this(
         main_template: MainTemplate,
-        formHelper: FormWithCSRF
+        formHelper: FormWithCSRF,
+        appConfig: FrontendAppConfig
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
@@ -51,5 +53,8 @@
         )
 
         @components.submit_button()
+
+        <p><a href="@appConfig.registrationProgressUrl">@messages("site.returnToRegistrationProgress")</a></p>
+
     }
 }

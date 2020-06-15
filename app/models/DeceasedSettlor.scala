@@ -33,7 +33,7 @@ object DeceasedSettlor {
     ((__ \ 'name).read[Name] and
       (__ \ 'dateOfBirth).readNullable[LocalDate] and
       (__ \ 'dateOfDeath).readNullable[LocalDate] and
-      __.lazyRead(readNullableAtSubPath[NationalInsuranceNumber](__ \ 'identification \ 'nino)) and
+      __.lazyRead(readNullableAtSubPath[NationalInsuranceNumber](__ \ 'identification)) and
       __.lazyRead(readNullableAtSubPath[Address](__ \ 'identification \ 'address))).tupled.map{
 
       case (name, dob, dod, nino, identification) =>
@@ -45,7 +45,7 @@ object DeceasedSettlor {
     ((__ \ 'name).write[Name] and
       (__ \ 'dateOfBirth).writeNullable[LocalDate] and
       (__ \ 'dateOfDeath).writeNullable[LocalDate] and
-      (__ \ 'identification \ 'nino).writeNullable[NationalInsuranceNumber] and
+      (__ \ 'identification).writeNullable[NationalInsuranceNumber] and
       (__ \ 'identification \ 'address).writeNullable[Address]
       ).apply(settlor => (
       settlor.name,

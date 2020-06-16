@@ -45,6 +45,7 @@ ukAddress.error.line2.invalidCharacters = Address line 2 must only include lette
 ukAddress.error.line3.invalidCharacters = Address line 3 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
 ukAddress.error.line4.invalidCharacters = Address line 4 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
 ukAddress.error.postcode.invalidCharacters = Enter a real postcode
+error.postcodeInvalid = Enter a real postcode
 
 nonUkAddress.error.line1.required = Enter address line 1
 nonUkAddress.error.line2.required = Enter address line 2
@@ -117,6 +118,7 @@ deceasedSettlor.dateOfBirth.error.required = The date of birth of the person who
 deceasedSettlor.dateOfBirth.error.invalid = Enter a real date of birth
 deceasedSettlor.dateOfBirth.error.future = The date of birth of the person who died must be today or in the past
 deceasedSettlor.dateOfBirth.error.past = The date of birth of the person who died must be after 31 December 1499
+deceasedSettlor.dateOfBirth.error.afterDateOfDeath = Date of birth must be on or before the date of death
 
 deceasedSettlor.nationalInsuranceNumberYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 deceasedSettlor.nationalInsuranceNumberYesNo.title = Do you know the National Insurance number of the person who died?

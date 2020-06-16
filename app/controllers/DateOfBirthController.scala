@@ -16,12 +16,16 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import controllers.actions.Actions
 import forms.DateOfBirthFormProvider
 import javax.inject.Inject
 import models.NormalMode
+import models.requests.NameRequest
 import navigation.Navigator
-import pages.DateOfBirthPage
+import pages.{DateOfBirthPage, DateOfDeathPage}
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -40,14 +44,15 @@ class DateOfBirthController @Inject()(
                                        view: DateOfBirthView
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form = formProvider.withPrefix("deceasedSettlor.dateOfBirth")
+  private def form(maxDate: (LocalDate, String)): Form[LocalDate] =
+    formProvider.withConfig("deceasedSettlor.dateOfBirth", maxDate)
 
   def onPageLoad(): Action[AnyContent] = actions.authWithName {
-    implicit request =>
+    implicit request: NameRequest[AnyContent] =>
 
       val preparedForm = request.userAnswers.get(DateOfBirthPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+        case None => form(maxDate)
+        case Some(value) => form(maxDate).fill(value)
       }
 
       Ok(view(preparedForm, request.name))
@@ -56,7 +61,7 @@ class DateOfBirthController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.authWithName.async {
     implicit request =>
 
-      form.bindFromRequest().fold(
+      form(maxDate).bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, request.name))),
         value =>
@@ -65,5 +70,14 @@ class DateOfBirthController @Inject()(
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(DateOfBirthPage, NormalMode, updatedAnswers))
       )
+  }
+
+  private def maxDate(implicit request: NameRequest[AnyContent]): (LocalDate, String) = {
+    request.userAnswers.get(DateOfDeathPage) match {
+      case Some(dateOfDeath) =>
+        (dateOfDeath, "afterDateOfDeath")
+      case None =>
+        (LocalDate.now, "future")
+    }
   }
 }

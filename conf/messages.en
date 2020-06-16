@@ -118,6 +118,7 @@ deceasedSettlor.dateOfBirth.error.required = The date of birth of the person who
 deceasedSettlor.dateOfBirth.error.invalid = Enter a real date of birth
 deceasedSettlor.dateOfBirth.error.future = The date of birth of the person who died must be today or in the past
 deceasedSettlor.dateOfBirth.error.past = The date of birth of the person who died must be after 31 December 1499
+deceasedSettlor.dateOfBirth.error.afterDateOfDeath = Date of birth must be on or before the date of death
 
 deceasedSettlor.nationalInsuranceNumberYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 deceasedSettlor.nationalInsuranceNumberYesNo.title = Do you know the National Insurance number of the person who died?

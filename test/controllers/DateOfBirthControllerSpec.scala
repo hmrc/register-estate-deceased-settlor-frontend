@@ -20,12 +20,12 @@ import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBase
 import forms.DateOfBirthFormProvider
-import models.Name
+import models.{Name, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{DateOfBirthPage, NamePage}
+import pages.{DateOfBirthPage, DateOfDeathPage, NamePage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
@@ -38,17 +38,19 @@ import scala.concurrent.Future
 class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new DateOfBirthFormProvider()
-  private def form = formProvider.withPrefix("deceasedSettlor.dateOfBirth")
-
-  def onwardRoute = Call("GET", "/foo")
+  private def form = formProvider.withConfig("deceasedSettlor.dateOfBirth")
 
   private val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  private val invalidAnswer: LocalDate = LocalDate.parse("2020-02-03")
   private val name = Name("FirstName", None, "LastName")
-  private val index: Int = 0
+  private val dateOfDeath: LocalDate = LocalDate.parse("2019-02-03")
 
   private lazy val dateOfBirthRoute = routes.DateOfBirthController.onPageLoad().url
 
-  private val userAnswersWithName = emptyUserAnswers.set(NamePage, name).success.value
+  private val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(NamePage, name).success.value
+    .set(DateOfDeathPage, dateOfDeath).success.value
+
 
   private lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, dateOfBirthRoute)
@@ -65,7 +67,7 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswersWithName)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val result = route(application, getRequest).value
 
@@ -101,6 +103,8 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when valid data is submitted" in {
 
+      val onwardRoute = Call("GET", "/foo")
+
       val mockPlaybackRepository = mock[SessionRepository]
 
       when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
@@ -125,7 +129,7 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswersWithName)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, dateOfBirthRoute)
@@ -144,6 +148,39 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
       application.stop()
     }
+
+    "return a Bad Request and errors when submitted date is after date of death" in {
+
+      val form = formProvider.withConfig("deceasedSettlor.dateOfBirth", (dateOfDeath, "afterDateOfDeath"))
+
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+
+      val request =
+        FakeRequest(POST, dateOfBirthRoute)
+          .withFormUrlEncodedBody(
+            "value.day"   -> invalidAnswer.getDayOfMonth.toString,
+            "value.month" -> invalidAnswer.getMonthValue.toString,
+            "value.year"  -> invalidAnswer.getYear.toString
+          )
+
+      val boundForm = form.bind(Map(
+        "value.day"   -> invalidAnswer.getDayOfMonth.toString,
+        "value.month" -> invalidAnswer.getMonthValue.toString,
+        "value.year"  -> invalidAnswer.getYear.toString
+      ))
+
+      val view = application.injector.instanceOf[DateOfBirthView]
+
+      val result = route(application, request).value
+
+      status(result) mustEqual BAD_REQUEST
+
+      contentAsString(result) mustEqual
+        view(boundForm, name.displayName)(fakeRequest, messages).toString
+
+      application.stop()
+    }
+
 
     "redirect to Session Expired for a GET if no existing data is found" in {
 

@@ -20,11 +20,12 @@ import config.{ErrorHandler, FrontendAppConfig}
 import connectors.{EstatesConnector, EstatesStoreConnector}
 import controllers.actions._
 import javax.inject.Inject
-import models.UserAnswers
+import models.{DeceasedSettlor, UserAnswers}
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import repositories.SessionRepository
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.mappers.DeceasedSettlorMapper
 import utils.print.DeceasedSettlorPrintHelper
@@ -68,17 +69,31 @@ class CheckDetailsController @Inject()(
 
       mapper(request.userAnswers) match {
         case Some(deceasedSettlor) =>
-          for {
-            _ <- estatesConnector.setDeceased(deceasedSettlor)
-            _ <- estatesConnector.resetTaxLiability()
-            _ <- estatesStoreConnector.setTaskComplete()
-            _ <- estatesStoreConnector.resetTaxLiabilityTask()
-          } yield {
-            Redirect(appConfig.registrationProgressUrl)
+          estatesConnector.getDeceased() flatMap {
+            case Some(DeceasedSettlor(_, _, Some(previousDateOfDeath), _, _)) =>
+              if(!deceasedSettlor.dateOfDeath.contains(previousDateOfDeath)) {
+                Logger.info(s"[CheckDetailsController] previous date $previousDateOfDeath, new date: ${deceasedSettlor.dateOfDeath}")
+                for {
+                  redirect <- sendDeceased(deceasedSettlor)
+                  _ <- estatesConnector.resetTaxLiability()
+                  _ <- estatesStoreConnector.resetTaxLiabilityTask()
+                } yield redirect
+              } else {
+                sendDeceased(deceasedSettlor)
+              }
+            case _ =>
+              sendDeceased(deceasedSettlor)
           }
         case None =>
           Logger.warn("[CheckDetailsController][submit] Unable to generate agent details to submit.")
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
+  }
+
+  private def sendDeceased(deceasedSettlor : DeceasedSettlor)(implicit hc: HeaderCarrier): Future[Result] = for {
+    _ <- estatesConnector.setDeceased(deceasedSettlor)
+    _ <- estatesStoreConnector.setTaskComplete()
+  } yield {
+    Redirect(appConfig.registrationProgressUrl)
   }
 }

@@ -106,7 +106,9 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
           .build()
 
       when(mockEstatesConnector.setDeceased(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
+      when(mockEstatesConnector.resetTaxLiability()(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
       when(mockEstatesStoreConnector.setTaskComplete()(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
+      when(mockEstatesStoreConnector.resetTaxLiabilityTask()(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
 
       val request = FakeRequest(POST, submitRoute)
 

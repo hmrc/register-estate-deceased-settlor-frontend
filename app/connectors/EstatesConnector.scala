@@ -42,4 +42,9 @@ class EstatesConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
     http.POST[JsValue, HttpResponse](deceasedUrl, Json.toJson(deceasedSettlor))
   }
 
+  private lazy val resetTaxLiabilityUrl = s"${config.estatesUrl}/estates/reset-tax-liability"
+
+  def resetTaxLiability()(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
+    http.POSTEmpty[HttpResponse](resetTaxLiabilityUrl)
+  }
 }

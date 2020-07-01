@@ -41,10 +41,8 @@ class CheckDetailsController @Inject()(
                                         estatesConnector: EstatesConnector,
                                         estatesStoreConnector: EstatesStoreConnector,
                                         val appConfig: FrontendAppConfig,
-                                        sessionRepository: SessionRepository,
                                         printHelper: DeceasedSettlorPrintHelper,
                                         mapper: DeceasedSettlorMapper,
-                                        nameAction: NameRequiredAction,
                                         errorHandler: ErrorHandler
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
@@ -72,7 +70,9 @@ class CheckDetailsController @Inject()(
         case Some(deceasedSettlor) =>
           for {
             _ <- estatesConnector.setDeceased(deceasedSettlor)
+            _ <- estatesConnector.resetTaxLiability()
             _ <- estatesStoreConnector.setTaskComplete()
+            _ <- estatesStoreConnector.resetTaxLiabilityTask()
           } yield {
             Redirect(appConfig.registrationProgressUrl)
           }

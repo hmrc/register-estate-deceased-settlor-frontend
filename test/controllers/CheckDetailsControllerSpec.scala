@@ -21,7 +21,7 @@ import java.time.LocalDate
 import base.SpecBase
 import config.FrontendAppConfig
 import connectors.{EstatesConnector, EstatesStoreConnector}
-import models.{Name, UserAnswers}
+import models.{DeceasedSettlor, Name, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -94,7 +94,7 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
     }
 
 
-    "redirect to the estates progress when submitted" in {
+    "redirect to the estates progress when submitted and reset tax liability when date of death changes" in {
 
       val mockEstatesConnector = mock[EstatesConnector]
       val mockEstatesStoreConnector = mock[EstatesStoreConnector]
@@ -105,10 +105,39 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
           .overrides(bind[EstatesStoreConnector].toInstance(mockEstatesStoreConnector))
           .build()
 
+      val existingDeceased = DeceasedSettlor(Name("Fred", None, "Wilson"), None, Some(LocalDate.of(2010, 10, 10)), None, None)
+
+      when(mockEstatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(Some(existingDeceased)))
       when(mockEstatesConnector.setDeceased(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
       when(mockEstatesConnector.resetTaxLiability()(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
       when(mockEstatesStoreConnector.setTaskComplete()(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
       when(mockEstatesStoreConnector.resetTaxLiabilityTask()(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
+
+      val request = FakeRequest(POST, submitRoute)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual completedRoute
+
+      application.stop()
+    }
+
+    "redirect to the estates progress when submitted and date of death does not changes" in {
+
+      val mockEstatesConnector = mock[EstatesConnector]
+      val mockEstatesStoreConnector = mock[EstatesStoreConnector]
+
+      val application =
+        applicationBuilder(userAnswers = Some(goodAnswers))
+          .overrides(bind[EstatesConnector].toInstance(mockEstatesConnector))
+          .overrides(bind[EstatesStoreConnector].toInstance(mockEstatesStoreConnector))
+          .build()
+      
+      when(mockEstatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(None))
+      when(mockEstatesConnector.setDeceased(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
+      when(mockEstatesStoreConnector.setTaskComplete()(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
 
       val request = FakeRequest(POST, submitRoute)
 

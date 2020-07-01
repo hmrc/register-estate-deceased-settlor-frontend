@@ -48,7 +48,7 @@ class EstatesConnectorSpec extends SpecBase
 
   private implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  "trusts store connector" must {
+  "estates connector" must {
 
     "submit deceased as JSON" in {
 
@@ -191,6 +191,28 @@ class EstatesConnectorSpec extends SpecBase
       application.stop()
     }
 
+    "call reset endpoint for tax liability" in {
+
+      val application: Application = createApplication
+
+      implicit def ec: ExecutionContext = application.injector.instanceOf[ExecutionContext]
+
+      val connector = application.injector.instanceOf[EstatesConnector]
+
+      server.stubFor(
+        post(urlEqualTo("/estates/reset-tax-liability"))
+          .willReturn(ok())
+      )
+
+      val futureResult = connector.resetTaxLiability()
+
+      whenReady(futureResult) {
+        r =>
+          r.status mustBe OK
+      }
+
+      application.stop()
+    }
   }
 
   private def createApplication = {

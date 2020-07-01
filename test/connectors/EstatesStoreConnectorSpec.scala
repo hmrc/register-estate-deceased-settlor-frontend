@@ -63,5 +63,35 @@ class EstatesStoreConnectorSpec extends SpecBase
 
       application.stop()
     }
+
+    "return OK with the current task status for resetTaxLiability" in {
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.estates-store.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      implicit def ec: ExecutionContext = application.injector.instanceOf[ExecutionContext]
+
+      val connector = application.injector.instanceOf[EstatesStoreConnector]
+
+      val json = Json.obj()
+
+      server.stubFor(
+        post(urlEqualTo("/estates-store/register/tasks/tax-liability/reset"))
+          .willReturn(okJson(json.toString))
+      )
+
+      val futureResult = connector.resetTaxLiabilityTask()
+
+      whenReady(futureResult) {
+        r =>
+          r.status mustBe 200
+      }
+
+      application.stop()
+    }
   }
 }

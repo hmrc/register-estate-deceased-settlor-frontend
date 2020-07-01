@@ -31,4 +31,7 @@ class EstatesStoreConnector @Inject()(http: HttpClient, config: FrontendAppConfi
     http.POSTEmpty[HttpResponse](registerTasksUrl())
   }
 
+  def resetTaxLiabilityTask()(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
+    http.POSTEmpty[HttpResponse](registerTasksUrl())
+  }
 }

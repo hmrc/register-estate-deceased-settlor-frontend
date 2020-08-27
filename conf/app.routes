@@ -8,6 +8,10 @@ GET        /language/:lang                      controllers.LanguageSwitchContro
 
 GET        /this-service-has-been-reset         controllers.SessionExpiredController.onPageLoad
 
+GET        /keep-alive                          controllers.SessionTimeoutController.keepAlive
+
+GET        /timeout                             controllers.SessionTimeoutController.timeout
+
 GET        /unauthorised                        controllers.UnauthorisedController.onPageLoad
 
 GET        /logout                              controllers.LogoutController.logout()

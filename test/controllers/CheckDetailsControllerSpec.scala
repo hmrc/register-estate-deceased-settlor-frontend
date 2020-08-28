@@ -73,7 +73,7 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
         view(
           answerSection,
           name.displayName
-        )(fakeRequest, messages).toString
+        )(request, messages).toString
 
       application.stop()
     }

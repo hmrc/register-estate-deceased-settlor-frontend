@@ -9,7 +9,7 @@ site.delete = Remove
 site.edit = Change
 site.hidden-delete = Delete {0}
 site.hidden-edit = Change {0}
-site.date.hint = For example, 31 3 1980
+site.date.hint = For example, 31 3 1980.
 site.no = No
 site.yes = Yes
 site.continue = Continue
@@ -31,7 +31,7 @@ site.address.uk.line2 = Address line 2
 site.address.uk.line3 = Address line 3 (optional)
 site.address.uk.line4 = Address line 4 (optional)
 site.address.uk.postcode = Postcode
-site.address.uk.postcode.hint = For example AB1 1AB
+site.address.uk.postcode.hint = For example, AB1 1AB.
 
 address.country.select = Select a country
 site.address.nonUk.title = What is the address?

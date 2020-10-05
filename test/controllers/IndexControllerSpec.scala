@@ -16,7 +16,7 @@
 
 package controllers
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDate
 
 import base.SpecBase
 import connectors.EstatesConnector
@@ -24,12 +24,11 @@ import models.{DeceasedSettlor, Name, NationalInsuranceNumber, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{DateOfBirthPage, DateOfBirthYesNoPage, DateOfDeathPage, NamePage, NationalInsuranceNumberPage, NationalInsuranceNumberYesNoPage}
+import pages._
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import services.LocalDateTimeService
 
 import scala.concurrent.Future
 

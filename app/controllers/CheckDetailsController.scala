@@ -24,7 +24,6 @@ import models.{DeceasedSettlor, UserAnswers}
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
-import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.mappers.DeceasedSettlorMapper

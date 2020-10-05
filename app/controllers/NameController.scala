@@ -19,14 +19,14 @@ package controllers
 import controllers.actions.Actions
 import forms.NameFormProvider
 import javax.inject.Inject
+import models.NormalMode
 import navigation.Navigator
+import pages.NamePage
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import models.{Name, NormalMode}
-import pages.NamePage
 import repositories.SessionRepository
+import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.NameView
 
 import scala.concurrent.{ExecutionContext, Future}

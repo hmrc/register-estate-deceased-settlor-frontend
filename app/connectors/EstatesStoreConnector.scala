@@ -18,6 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import javax.inject.Inject
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 

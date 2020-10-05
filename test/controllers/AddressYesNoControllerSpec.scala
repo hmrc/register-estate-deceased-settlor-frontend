@@ -16,7 +16,7 @@
 
 package controllers
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDateTime
 
 import base.SpecBase
 import forms.YesNoFormProvider

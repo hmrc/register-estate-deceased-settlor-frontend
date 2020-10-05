@@ -30,7 +30,6 @@ class DeceasedExtractorSpec extends SpecBase {
   private val dateOfDeath = LocalDate.parse("2019-03-09")
   private val ukAddress = UkAddress("line1", "line2", Some("line3"), Some("line4"), "POSTCODE")
   private val country: String = "country"
-  private val number: String = "12345"
   private val nonUkAddress = NonUkAddress("line1", "line2", Some("line3"), country)
 
   "Deceased Extractor" when {

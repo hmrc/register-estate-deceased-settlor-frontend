@@ -108,10 +108,10 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
       val existingDeceased = DeceasedSettlor(Name("Fred", None, "Wilson"), None, Some(LocalDate.of(2010, 10, 10)), None, None)
 
       when(mockEstatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(Some(existingDeceased)))
-      when(mockEstatesConnector.setDeceased(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
-      when(mockEstatesConnector.resetTaxLiability()(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
-      when(mockEstatesStoreConnector.setTaskComplete()(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
-      when(mockEstatesStoreConnector.resetTaxLiabilityTask()(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
+      when(mockEstatesConnector.setDeceased(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockEstatesConnector.resetTaxLiability()(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockEstatesStoreConnector.setTaskComplete()(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockEstatesStoreConnector.resetTaxLiabilityTask()(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
       val request = FakeRequest(POST, submitRoute)
 
@@ -136,8 +136,8 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
           .build()
       
       when(mockEstatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(None))
-      when(mockEstatesConnector.setDeceased(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
-      when(mockEstatesStoreConnector.setTaskComplete()(any(), any())).thenReturn(Future.successful(HttpResponse(OK)))
+      when(mockEstatesConnector.setDeceased(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockEstatesStoreConnector.setTaskComplete()(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
       val request = FakeRequest(POST, submitRoute)
 

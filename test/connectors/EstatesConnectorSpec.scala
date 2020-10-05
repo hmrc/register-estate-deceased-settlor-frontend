@@ -25,11 +25,10 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import play.api.Application
 import play.api.libs.json.Json
 import play.api.test.Helpers.{CONTENT_TYPE, _}
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, InternalServerException, Upstream5xxResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.WireMockHelper
 
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.ExecutionContext
 
 class EstatesConnectorSpec extends SpecBase
   with ScalaFutures
@@ -95,8 +94,6 @@ class EstatesConnectorSpec extends SpecBase
 
       val connector = application.injector.instanceOf[EstatesConnector]
 
-      val json = Json.obj()
-
       server.stubFor(
         post(urlEqualTo("/estates/deceased"))
           .withHeader(CONTENT_TYPE, containing("application/json"))
@@ -105,8 +102,12 @@ class EstatesConnectorSpec extends SpecBase
           .willReturn(serverError)
       )
 
-      val result = connector.setDeceased(deceased)
-      assertThrows[Upstream5xxResponse] { Await.result(result, Duration.Inf) }
+      val futureResult = connector.setDeceased(deceased)
+
+      whenReady(futureResult) {
+        r =>
+          r.status mustBe INTERNAL_SERVER_ERROR
+      }
 
       application.stop()
     }
@@ -119,8 +120,6 @@ class EstatesConnectorSpec extends SpecBase
 
       val connector = application.injector.instanceOf[EstatesConnector]
 
-      val json = Json.obj()
-
       server.stubFor(
         post(urlEqualTo("/estates/deceased"))
           .withHeader(CONTENT_TYPE, containing("application/json"))
@@ -129,8 +128,12 @@ class EstatesConnectorSpec extends SpecBase
           .willReturn(badRequest)
       )
 
-      val result = connector.setDeceased(deceased)
-      assertThrows[BadRequestException] { Await.result(result, Duration.Inf) }
+      val futureResult = connector.setDeceased(deceased)
+
+      whenReady(futureResult) {
+        r =>
+          r.status mustBe BAD_REQUEST
+      }
 
       application.stop()
     }

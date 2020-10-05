@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.NameFormProvider
-import models.{Name, NormalMode}
+import models.Name
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.Matchers._
 import org.mockito.Mockito._
@@ -39,7 +39,6 @@ class NameControllerSpec extends SpecBase with MockitoSugar {
 
   private val formProvider = new NameFormProvider()
   private val form = formProvider.withPrefix("deceasedSettlor.name")
-  private val name = Name("FirstName", None, "LastName")
 
   private lazy val nameRoute = routes.NameController.onPageLoad().url
 

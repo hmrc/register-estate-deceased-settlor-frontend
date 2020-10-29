@@ -68,6 +68,7 @@
     <logger name="sun.net.www.protocol.http" level="INFO"/>
 
     <logger name="controllers" level="INFO"/>
+    <logger name="utils" level="INFO"/>
     <logger name="services" level="INFO"/>
     <logger name="models" level="INFO"/>
     <logger name="repositories" level="INFO"/>

@@ -8,6 +8,7 @@
     <logger name="uk.gov" level="WARN"/>
 
     <logger name="controllers" level="${logger.application:-INFO}"/>
+    <logger name="utils" level="${logger.application:-INFO}"/>
     <logger name="services" level="${logger.application:-INFO}"/>
     <logger name="models" level="${logger.application:-INFO}"/>
     <logger name="repositories" level="${logger.application:-INFO}"/>

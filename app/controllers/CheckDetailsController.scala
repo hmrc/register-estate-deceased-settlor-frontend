@@ -26,6 +26,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import utils.Session
 import utils.mappers.DeceasedSettlorMapper
 import utils.print.DeceasedSettlorPrintHelper
 import viewmodels.AnswerSection
@@ -46,6 +47,8 @@ class CheckDetailsController @Inject()(
                                         errorHandler: ErrorHandler
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
+  private val logger: Logger = Logger(getClass)
+  
   private def render(userAnswers: UserAnswers,
                      name: String)(implicit request: Request[AnyContent]): Result = {
     val section: AnswerSection = printHelper(userAnswers, name)
@@ -71,7 +74,8 @@ class CheckDetailsController @Inject()(
           estatesConnector.getDeceased() flatMap {
             case Some(DeceasedSettlor(_, _, Some(previousDateOfDeath), _, _)) =>
               if(!deceasedSettlor.dateOfDeath.contains(previousDateOfDeath)) {
-                Logger.info(s"[CheckDetailsController] previous date $previousDateOfDeath, new date: ${deceasedSettlor.dateOfDeath}")
+                logger.info(s"[submit][Session ID: ${Session.id(hc)}]" +
+                  s" previous date $previousDateOfDeath, new date: ${deceasedSettlor.dateOfDeath}")
                 for {
                   redirect <- sendDeceased(deceasedSettlor)
                   _ <- estatesConnector.resetTaxLiability()
@@ -84,7 +88,7 @@ class CheckDetailsController @Inject()(
               sendDeceased(deceasedSettlor)
           }
         case None =>
-          Logger.warn("[CheckDetailsController][submit] Unable to generate agent details to submit.")
+          logger.warn(s"[submit][Session ID: ${Session.id(hc)}] Unable to generate agent details to submit.")
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
   }

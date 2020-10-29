@@ -20,9 +20,8 @@ import java.time.LocalDateTime
 
 import javax.inject.Inject
 import models.UserAnswers
-import org.slf4j.LoggerFactory
-import play.api.Configuration
 import play.api.libs.json._
+import play.api.{Configuration, Logger}
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.BSONDocument
@@ -36,7 +35,7 @@ class DefaultSessionRepository @Inject()(
                                           config: Configuration
                                         )(implicit ec: ExecutionContext) extends SessionRepository {
 
-  private val logger = LoggerFactory.getLogger("application." + this.getClass.getCanonicalName)
+  private val logger: Logger = Logger(getClass)
 
   private val collectionName: String = "user-answers"
 

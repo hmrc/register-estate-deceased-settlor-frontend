@@ -21,11 +21,11 @@ import connectors.{EstatesConnector, EstatesStoreConnector}
 import controllers.actions._
 import javax.inject.Inject
 import models.{DeceasedSettlor, UserAnswers}
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 import utils.mappers.DeceasedSettlorMapper
 import utils.print.DeceasedSettlorPrintHelper
@@ -45,10 +45,9 @@ class CheckDetailsController @Inject()(
                                         printHelper: DeceasedSettlorPrintHelper,
                                         mapper: DeceasedSettlorMapper,
                                         errorHandler: ErrorHandler
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                      )(implicit ec: ExecutionContext
+) extends FrontendBaseController with I18nSupport with Logging {
 
-  private val logger: Logger = Logger(getClass)
-  
   private def render(userAnswers: UserAnswers,
                      name: String)(implicit request: Request[AnyContent]): Result = {
     val section: AnswerSection = printHelper(userAnswers, name)

@@ -20,13 +20,11 @@ import java.time.LocalDate
 
 import models.{Address, DeceasedSettlor, Name, NationalInsuranceNumber, NonUkAddress, UkAddress, UserAnswers}
 import pages._
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsError, JsSuccess, Reads}
 
-class DeceasedSettlorMapper {
-
-  private val logger: Logger = Logger(getClass)
+class DeceasedSettlorMapper extends Logging {
 
   def apply(answers: UserAnswers): Option[DeceasedSettlor] = {
     val readFromUserAnswers: Reads[DeceasedSettlor] =

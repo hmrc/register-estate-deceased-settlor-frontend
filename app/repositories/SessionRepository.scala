@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 import models.UserAnswers
 import play.api.libs.json._
-import play.api.{Configuration, Logger}
+import play.api.{Configuration, Logging}
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.BSONDocument
@@ -33,9 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DefaultSessionRepository @Inject()(
                                           mongo: ReactiveMongoApi,
                                           config: Configuration
-                                        )(implicit ec: ExecutionContext) extends SessionRepository {
-
-  private val logger: Logger = Logger(getClass)
+                                        )(implicit ec: ExecutionContext) extends SessionRepository with Logging {
 
   private val collectionName: String = "user-answers"
 

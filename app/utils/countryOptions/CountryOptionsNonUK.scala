@@ -20,12 +20,15 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import javax.inject.Singleton
 import play.api.Environment
+import play.api.i18n.Messages
 
 @Singleton
 class CountryOptionsNonUK @Inject()(
                                      environment: Environment,
                                      config: FrontendAppConfig
-                                   ) extends CountryOptions {
+                                   ) extends CountryOptions(environment, config) {
 
-  override def options: Seq[InputOption] = getCountries(environment, config.locationCanonicalListNonUK)
+  override def options()(implicit messages: Messages): Seq[InputOption] = {
+    CountryOptions.getCountries(environment, getFileName).filterNot(x => x.value == config.UK_COUNTRY_CODE)
+  }
 }

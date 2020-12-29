@@ -19,11 +19,14 @@ package utils.countryOptions
 import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
 import play.api.Environment
+import play.api.i18n.Messages
 
 @Singleton
 class AllCountryOptions @Inject()(environment: Environment, config: FrontendAppConfig)
-  extends CountryOptions {
+  extends CountryOptions(environment, config) {
 
-  override def options: Seq[InputOption] = getCountries(environment, config.locationCanonicalList)
+  override def options()(implicit messages: Messages): Seq[InputOption] = {
+    CountryOptions.getCountries(environment, getFileName)
+  }
 
 }

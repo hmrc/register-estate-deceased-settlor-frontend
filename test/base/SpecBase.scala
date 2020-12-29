@@ -35,6 +35,9 @@ import services.LocalDateTimeService
 
 trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with ScalaFutures with IntegrationPatience {
 
+  final val ENGLISH = "en"
+  final val WELSH = "cy"
+
   val currentDateTime: LocalDateTime = LocalDateTime.of(1999, 3, 14, 13, 33)
 
   object LocalDateTimeServiceStub extends LocalDateTimeService {

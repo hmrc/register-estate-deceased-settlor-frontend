@@ -20,17 +20,13 @@ import com.google.inject.Inject
 import models.UserAnswers
 import pages._
 import play.api.i18n.Messages
-import utils.countryOptions.AllCountryOptions
 import viewmodels.AnswerSection
 
-class DeceasedSettlorPrintHelper @Inject()(answerRowConverter: AnswerRowConverter,
-                                           countryOptions: AllCountryOptions
-                                            ) {
+class DeceasedSettlorPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) {
 
-  def apply(userAnswers: UserAnswers,
-            settlorName: String)(implicit messages: Messages): AnswerSection = {
+  def apply(userAnswers: UserAnswers, settlorName: String)(implicit messages: Messages): AnswerSection = {
 
-    val bound = answerRowConverter.bind(userAnswers, settlorName, countryOptions)
+    val bound = answerRowConverter.bind(userAnswers, settlorName)
 
     AnswerSection(
       None,

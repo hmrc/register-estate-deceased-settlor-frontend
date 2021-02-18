@@ -16,24 +16,22 @@
 
 package utils.print
 
-import java.time.LocalDate
-
 import com.google.inject.Inject
 import models.{Address, Name, UserAnswers}
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
 import play.twirl.api.HtmlFormat
 import queries.Gettable
-import utils.countryOptions.CountryOptions
-import utils.print.CheckAnswersFormatters._
 import viewmodels.AnswerRow
 
-class AnswerRowConverter @Inject()() {
+import java.time.LocalDate
 
-  def bind(userAnswers: UserAnswers, name: String, countryOptions: CountryOptions)
-          (implicit messages: Messages): Bound = new Bound(userAnswers, name, countryOptions)
+class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatters) {
 
-  class Bound(userAnswers: UserAnswers, name: String, countryOptions: CountryOptions)(implicit messages: Messages) {
+  def bind(userAnswers: UserAnswers, name: String)
+          (implicit messages: Messages): Bound = new Bound(userAnswers, name)
+
+  class Bound(userAnswers: UserAnswers, name: String)(implicit messages: Messages) {
 
     def nameQuestion(query: Gettable[Name],
                      labelKey: String,
@@ -65,7 +63,7 @@ class AnswerRowConverter @Inject()() {
       userAnswers.get(query) map {x =>
         AnswerRow(
           HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
-          yesOrNo(x),
+          checkAnswersFormatters.yesOrNo(x),
           changeUrl
         )
       }
@@ -77,7 +75,7 @@ class AnswerRowConverter @Inject()() {
       userAnswers.get(query) map {x =>
         AnswerRow(
           HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
-          HtmlFormat.escape(x.format(dateFormatter)),
+          HtmlFormat.escape(checkAnswersFormatters.formatDate(x)),
           changeUrl
         )
       }
@@ -89,7 +87,7 @@ class AnswerRowConverter @Inject()() {
       userAnswers.get(query) map {x =>
         AnswerRow(
           HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
-          formatNino(x),
+          checkAnswersFormatters.formatNino(x),
           changeUrl
         )
       }
@@ -102,7 +100,7 @@ class AnswerRowConverter @Inject()() {
       userAnswers.get(query) map { x =>
         AnswerRow(
           HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
-          formatAddress(x, countryOptions),
+          checkAnswersFormatters.formatAddress(x),
           changeUrl
         )
       }

@@ -16,26 +16,30 @@
 
 package repositories
 
-import java.time.LocalDateTime
 
-import javax.inject.Inject
 import models.UserAnswers
 import play.api.libs.json._
-import play.api.{Configuration, Logging}
+import play.api.Configuration
 import play.modules.reactivemongo.ReactiveMongoApi
-import reactivemongo.api.indexes.{Index, IndexType}
-import reactivemongo.bson.BSONDocument
-import reactivemongo.play.json.ImplicitBSONHandlers.JsObjectDocumentWriter
+import reactivemongo.api.indexes.IndexType
 import reactivemongo.play.json.collection.JSONCollection
+import java.time.LocalDateTime
+import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultSessionRepository @Inject()(
-                                          mongo: ReactiveMongoApi,
+                                          override val mongo: ReactiveMongoApi,
                                           config: Configuration
-                                        )(implicit ec: ExecutionContext) extends SessionRepository with Logging {
+                                        )(override implicit val ec: ExecutionContext) extends SessionRepository
+  with IndexManager {
 
-  private val collectionName: String = "user-answers"
+  implicit final val jsObjectWrites: OWrites[JsObject] = OWrites[JsObject](identity)
+
+  override val collectionName: String = "user-answers"
+
+  override val dropIndexes: Boolean =
+    config.get[Boolean]("microservice.services.features.mongo.dropIndexes")
 
   private val cacheTtl = config.get[Int]("mongodb.timeToLiveInSeconds")
 
@@ -45,15 +49,15 @@ class DefaultSessionRepository @Inject()(
       res <- mongo.database.map(_.collection[JSONCollection](collectionName))
     } yield res
 
-  private val lastUpdatedIndex = Index(
+  private val lastUpdatedIndex = MongoIndex(
     key = Seq("updatedAt" -> IndexType.Ascending),
-    name = Some("user-answers-updated-at-index"),
-    options = BSONDocument("expireAfterSeconds" -> cacheTtl)
+    name    = "user-answers-last-updated-index",
+    expireAfterSeconds = Some(cacheTtl)
   )
 
-  private val internalAuthIdIndex = Index(
+  private val internalAuthIdIndex = MongoIndex(
     key = Seq("_id" -> IndexType.Ascending),
-    name = Some("internal-auth-id-index")
+    name = "internal-auth-id-index"
   )
 
   private lazy val ensureIndexes = {

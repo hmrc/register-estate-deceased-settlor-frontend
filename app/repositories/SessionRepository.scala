@@ -16,30 +16,27 @@
 
 package repositories
 
+import java.time.LocalDateTime
 
+import javax.inject.Inject
 import models.UserAnswers
-import play.api.libs.json._
 import play.api.Configuration
+import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.indexes.IndexType
+import reactivemongo.play.json.collection.Helpers.idWrites
 import reactivemongo.play.json.collection.JSONCollection
-import java.time.LocalDateTime
-import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultSessionRepository @Inject()(
-                                          override val mongo: ReactiveMongoApi,
-                                          config: Configuration
-                                        )(override implicit val ec: ExecutionContext) extends SessionRepository
-  with IndexManager {
-
-  implicit final val jsObjectWrites: OWrites[JsObject] = OWrites[JsObject](identity)
+                                          val mongo: ReactiveMongoApi,
+                                          val config: Configuration
+                                        )(implicit val ec: ExecutionContext)
+  extends SessionRepository
+    with IndexManager {
 
   override val collectionName: String = "user-answers"
-
-  override val dropIndexes: Boolean =
-    config.get[Boolean]("microservice.services.features.mongo.dropIndexes")
 
   private val cacheTtl = config.get[Int]("mongodb.timeToLiveInSeconds")
 
@@ -60,7 +57,7 @@ class DefaultSessionRepository @Inject()(
     name = "internal-auth-id-index"
   )
 
-  private lazy val ensureIndexes = {
+  private def ensureIndexes: Future[Boolean] = {
     logger.info("Ensuring collection indexes")
     for {
       collection              <- mongo.database.map(_.collection[JSONCollection](collectionName))
@@ -68,8 +65,7 @@ class DefaultSessionRepository @Inject()(
       createdIdIndex          <- collection.indexesManager.ensure(internalAuthIdIndex)
     } yield createdLastUpdatedIndex && createdIdIndex
   }
-
-
+  
   override def get(id: String): Future[Option[UserAnswers]] =
     collection.flatMap(_.find(Json.obj("_id" -> id), None).one[UserAnswers])
 

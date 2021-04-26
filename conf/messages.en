@@ -2,8 +2,6 @@ date.day = Day
 date.month = Month
 date.year = Year
 
-footer.links.accessibility.text = Accessibility
-
 site.back = Back
 site.delete = Remove
 site.edit = Change

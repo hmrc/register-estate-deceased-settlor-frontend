@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import models.{Address, Name, UserAnswers}
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import queries.Gettable
 import viewmodels.AnswerRow
 
@@ -36,72 +36,51 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     def nameQuestion(query: Gettable[Name],
                      labelKey: String,
                      changeUrl: Option[String]): Option[AnswerRow] = {
-      userAnswers.get(query) map {x =>
-        AnswerRow(
-          HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel")),
-          HtmlFormat.escape(x.displayFullName),
-          changeUrl
-        )
-      }
+      val format = (x: Name) => HtmlFormat.escape(x.displayFullName)
+      question(query, labelKey, format, changeUrl)
     }
 
     def stringQuestion(query: Gettable[String],
                        labelKey: String,
                        changeUrl: Option[String]): Option[AnswerRow] = {
-      userAnswers.get(query) map {x =>
-        AnswerRow(
-          HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
-          HtmlFormat.escape(x),
-          changeUrl
-        )
-      }
+      question(query, labelKey, HtmlFormat.escape, changeUrl)
     }
 
     def yesNoQuestion(query: Gettable[Boolean],
                      labelKey: String,
                      changeUrl: Option[String]): Option[AnswerRow] = {
-      userAnswers.get(query) map {x =>
-        AnswerRow(
-          HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
-          checkAnswersFormatters.yesOrNo(x),
-          changeUrl
-        )
-      }
+      question(query, labelKey, checkAnswersFormatters.yesOrNo, changeUrl)
     }
 
     def dateQuestion(query: Gettable[LocalDate],
                      labelKey: String,
                      changeUrl: Option[String]): Option[AnswerRow] = {
-      userAnswers.get(query) map {x =>
-        AnswerRow(
-          HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
-          HtmlFormat.escape(checkAnswersFormatters.formatDate(x)),
-          changeUrl
-        )
-      }
+      question(query, labelKey, checkAnswersFormatters.formatDate, changeUrl)
     }
 
     def ninoQuestion(query: Gettable[String],
                      labelKey: String,
                      changeUrl: Option[String]): Option[AnswerRow] = {
-      userAnswers.get(query) map {x =>
-        AnswerRow(
-          HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
-          checkAnswersFormatters.formatNino(x),
-          changeUrl
-        )
-      }
+      question(query, labelKey, checkAnswersFormatters.formatNino, changeUrl)
     }
 
     def addressQuestion[T <: Address](query: Gettable[T],
                                       labelKey: String,
                                       changeUrl: Option[String])
                                      (implicit messages:Messages, reads: Reads[T]): Option[AnswerRow] = {
+      question(query, labelKey, checkAnswersFormatters.formatAddress, changeUrl)
+    }
+
+    private def question[T](query: Gettable[T],
+                            labelKey: String,
+                            format: T => Html,
+                            changeUrl: Option[String])
+                           (implicit rds: Reads[T]): Option[AnswerRow] = {
       userAnswers.get(query) map { x =>
         AnswerRow(
-          HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
-          checkAnswersFormatters.formatAddress(x),
-          changeUrl
+          label = HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel", name)),
+          answer = format(x),
+          changeUrl = changeUrl
         )
       }
     }

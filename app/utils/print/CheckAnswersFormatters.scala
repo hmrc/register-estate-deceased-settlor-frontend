@@ -17,7 +17,6 @@
 package utils.print
 
 import models.{Address, NonUkAddress, UkAddress}
-import org.joda.time.{LocalDate => JodaDate}
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import play.twirl.api.HtmlFormat.escape
@@ -25,15 +24,14 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.language.LanguageUtils
 import utils.countryOptions.CountryOptions
 
-import java.time.{LocalDate => JavaDate}
+import java.time.LocalDate
 import javax.inject.Inject
 
 class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils,
                                        countryOptions: CountryOptions) {
 
-  def formatDate(date: JavaDate)(implicit messages: Messages): String = {
-    val convertedDate: JodaDate = new JodaDate(date.getYear, date.getMonthValue, date.getDayOfMonth)
-    languageUtils.Dates.formatDate(convertedDate)
+  def formatDate(date: LocalDate)(implicit messages: Messages): Html = {
+    escape(languageUtils.Dates.formatDate(date))
   }
 
   def yesOrNo(answer: Boolean)(implicit messages: Messages): Html = {
@@ -63,7 +61,7 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils,
         Some(escape(address.postcode))
       ).flatten
 
-    Html(lines.mkString("<br />"))
+    breakLines(lines)
   }
 
   private def formatNonUkAddress(address: NonUkAddress)(implicit messages: Messages): Html = {
@@ -75,10 +73,14 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils,
         Some(country(address.country))
       ).flatten
 
-    Html(lines.mkString("<br />"))
+    breakLines(lines)
   }
 
-  private def country(code: String)(implicit messages: Messages): String =
-    countryOptions.options.find(_.value.equals(code)).map(_.label).getOrElse("")
+  private def country(code: String)(implicit messages: Messages): Html =
+    escape(countryOptions.options.find(_.value.equals(code)).map(_.label).getOrElse(""))
+
+  private def breakLines(lines: Seq[Html]): Html = {
+    Html(lines.mkString("<br />"))
+  }
 
 }

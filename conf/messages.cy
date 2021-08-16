@@ -1,3 +1,4 @@
+service.name=Cofrestru a Chynnal Ystâd
 date.day=Diwrnod
 date.month=Mis
 date.year=Blwyddyn
@@ -10,7 +11,6 @@ site.date.hint=Er enghraifft, 31 3 1980.
 site.no=Na
 site.yes=Iawn
 site.continue=Yn eich blaen
-site.service_name=Cofrestru a Chynnal Ystâd
 site.service_section=Enw’r person a fu farw
 site.textarea.char_limit=(Y terfyn yw {0} o gymeriadau)
 site.returnToRegistrationProgress=Yn ôl i gynnydd cofrestru

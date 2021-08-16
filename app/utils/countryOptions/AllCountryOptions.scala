@@ -20,6 +20,7 @@ import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
 import play.api.Environment
 import play.api.i18n.Messages
+import utils.InputOption
 
 @Singleton
 class AllCountryOptions @Inject()(environment: Environment, config: FrontendAppConfig)

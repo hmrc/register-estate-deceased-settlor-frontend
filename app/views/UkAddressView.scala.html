@@ -16,11 +16,16 @@
 
 @import controllers.routes._
 @import config.FrontendAppConfig
+@import views.html.components.{ErrorSummary, UKAddress, SubmitButton, Link}
 
 @this(
-  main_template: MainTemplate,
-  formHelper: FormWithCSRF,
-  appConfig: FrontendAppConfig
+    main_template: MainTemplate,
+    formHelper: FormWithCSRF,
+    appConfig: FrontendAppConfig,
+    errorSummary: ErrorSummary,
+    ukAddress: UKAddress,
+    submitButton: SubmitButton,
+    link: Link
 )
 
 @(form: Form[_], name: String)(implicit request: Request[_], messages: Messages)
@@ -32,14 +37,16 @@
 
   @formHelper(action = UkAddressController.onSubmit(), 'autoComplete -> "off") {
 
-    @components.error_summary(form.errors)
+    @errorSummary(form.errors)
 
-    @components.heading("deceasedSettlor.ukAddress.heading", Some(name))
+    @ukAddress(
+        form = form,
+        legend = messages("deceasedSettlor.ukAddress.heading", Some(name)),
+        legendAsHeading = true
+    )
 
-    @components.uk_address(form)
+    @submitButton()
 
-    @components.submit_button()
-
-    <p><a href="@appConfig.registrationProgressUrl">@messages("site.returnToRegistrationProgress")</a></p>
+    <p>@link(appConfig.registrationProgressUrl, "returnToRegistration", "site.returnToRegistrationProgress")</p>
   }
 }

@@ -21,7 +21,8 @@ import forms.NonUkAddressFormProvider
 import models.{Name, NonUkAddress}
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
-import utils.countryOptions.{CountryOptionsNonUK, InputOption}
+import utils.InputOption
+import utils.countryOptions.CountryOptionsNonUK
 import views.behaviours.NonUkAddressViewBehaviours
 import views.html.NonUkAddressView
 

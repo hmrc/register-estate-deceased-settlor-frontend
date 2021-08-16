@@ -17,10 +17,16 @@
 @import controllers.routes._
 @import config.FrontendAppConfig
 
+@import views.html.components.{ErrorSummary, InputYesNo, SubmitButton, Link}
+
 @this(
     main_template: MainTemplate,
     formHelper: FormWithCSRF,
-    appConfig: FrontendAppConfig
+    appConfig: FrontendAppConfig,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton,
+    link: Link
 )
 
 @(form: Form[_], name: String)(implicit request: Request[_], messages: Messages)
@@ -32,16 +38,15 @@
 
     @formHelper(action = DateOfBirthYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.error_summary(form.errors)
+        @errorSummary(form.errors)
 
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
-            legend = messages("deceasedSettlor.dateOfBirthYesNo.heading", name),
-            headingIsLegend = true
+            label = messages("deceasedSettlor.dateOfBirthYesNo.heading", name)
         )
 
-        @components.submit_button()
+        @submitButton()
 
-        <p><a href="@appConfig.registrationProgressUrl">@messages("site.returnToRegistrationProgress")</a></p>
+        <p>@link(appConfig.registrationProgressUrl, "returnToRegistration", "site.returnToRegistrationProgress")</p>
     }
 }

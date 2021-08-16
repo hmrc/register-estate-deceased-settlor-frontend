@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@(langMap: Map[String, Lang], langToCall: String => Call, customClass: Option[String] = None, appName: Option[String] = None)(implicit messages: Messages)
+package viewmodels
 
-<p class="@if(customClass.isDefined) {@customClass.get}">
-
-@langMap.map { case (key: String, value: Lang) =>
-    @if(messages.lang.code != value.code) {
-        <a href="@langToCall(key)" id="@{key}-switch" data-journey-click="click : language : @value.code" >
-            @key.capitalize
-        </a>
-    } else {
-        @key.capitalize
-    }
-    @if(key != langMap.last._1) {
-        @Html(" | ")
-    }
-}
-</p>
+case class Link(text: String, url: String)

@@ -16,6 +16,7 @@ site.textarea.char_limit=(Y terfyn yw {0} o gymeriadau)
 site.returnToRegistrationProgress=Yn ôl i gynnydd cofrestru
 site.sign_out=Allgofnodi
 site.sign_in=Mewngofnodi
+site.error = Gwall:
 timeout.title=Bydd eich cais yn dod i ben cyn hir
 timeout.message=Byddwn yn ailosod eich cais os na fyddwch yn ymateb cyn pen
 timeout.keep-alive-button=Yn eich blaen â’r cais

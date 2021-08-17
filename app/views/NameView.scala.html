@@ -45,18 +45,21 @@
         @inputText(
             field = form("firstName"),
             label = messages("deceasedSettlor.name.firstName"),
+            inputClass = Some("govuk-!-width-one-half"),
             autocomplete = Some("given-name")
         )
 
         @inputText(
             field = form("middleName"),
             label = messages("deceasedSettlor.name.middleName"),
+            inputClass = Some("govuk-!-width-one-half"),
             autocomplete = Some("additional-name")
         )
 
         @inputText(
             field = form("lastName"),
             label = messages("deceasedSettlor.name.lastName"),
+            inputClass = Some("govuk-!-width-one-half"),
             autocomplete = Some("family-name")
         )
 

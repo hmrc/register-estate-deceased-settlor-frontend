@@ -22,18 +22,13 @@ import base.SpecBase
 import forms.DateOfDeathFormProvider
 import models.Name
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{DateOfDeathPage, NamePage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
 import views.html.DateOfDeathView
-
-import scala.concurrent.Future
 
 class DateOfDeathControllerSpec extends SpecBase with MockitoSugar {
 
@@ -100,10 +95,6 @@ class DateOfDeathControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "redirect to the next page when valid data is submitted" in {
-
-      val mockPlaybackRepository = mock[SessionRepository]
-
-      when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
 
       val userAnswers = emptyUserAnswers
         .set(NamePage, name).success.value

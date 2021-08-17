@@ -28,7 +28,6 @@ import pages._
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
 
 import scala.concurrent.Future
 
@@ -40,12 +39,8 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
       val estatesConnector = mock[EstatesConnector]
       when(estatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(None))
 
-      val sessionRepository = mock[SessionRepository]
-      when(sessionRepository.set(any[UserAnswers])).thenReturn(Future.successful(true))
-
       val application = applicationBuilder(userAnswers = None)
         .overrides(bind[EstatesConnector].toInstance(estatesConnector))
-        .overrides(bind[SessionRepository].toInstance(sessionRepository))
         .build()
 
       val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
@@ -55,7 +50,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.NameController.onPageLoad().url
 
-      verify(sessionRepository).set(emptyUserAnswers)
+      verify(mockPlaybackRepository).set(emptyUserAnswers)
 
       application.stop()
     }
@@ -73,12 +68,8 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
     val estatesConnector = mock[EstatesConnector]
     when(estatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(Some(deceased)))
 
-    val sessionRepository = mock[SessionRepository]
-    when(sessionRepository.set(any[UserAnswers])).thenReturn(Future.successful(true))
-
     val application = applicationBuilder(userAnswers = None)
       .overrides(bind[EstatesConnector].toInstance(estatesConnector))
-      .overrides(bind[SessionRepository].toInstance(sessionRepository))
       .build()
 
     val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
@@ -96,7 +87,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
       .set(NationalInsuranceNumberYesNoPage, true).success.value
       .set(NationalInsuranceNumberPage, "AA111111B").success.value
 
-    verify(sessionRepository).set(expectedAnswers)
+    verify(mockPlaybackRepository).set(expectedAnswers)
 
     application.stop()
   }

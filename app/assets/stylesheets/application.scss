@@ -1,6 +1,7 @@
 @import "lib/govuk-frontend/govuk/base";
 @import "lib/govuk-frontend/govuk/core/typography";
 @import "location-autocomplete.min";
+@import "lib/govuk-frontend/govuk/core/links";
 
 $govuk-global-styles: true;
 
@@ -16,18 +17,6 @@ body:not(.js-enabled) {
         width: 0;
         height: 0;
     }
-}
-
-// ----------------
-// Trusts Add-to-list pattern as a 4th column
-// this ensures the second column moves down correctly underneath on mobile devices
-// ----------------
-@include govuk-media-query($until: desktop) {
-  .hmrc-add-to-a-list__identifier__second {
-    position: absolute;
-    top: inherit;
-    left: 0;
-  }
 }
 
 // provides padding between the 1st and 2nd column unless on mobile
@@ -52,11 +41,26 @@ body:not(.js-enabled) {
     overflow-wrap: break-word;
 }
 
+// ----------------
+// Trusts Add-to-list pattern as a 4th column
+// this ensures the second column moves down correctly underneath on mobile devices
+// ----------------
+@include govuk-media-query($until: desktop) {
+  .hmrc-add-to-a-list__identifier__second {
+    position: absolute;
+    top: inherit;
+    left: 0;
+  }
+}
 
 p {
   @extend .govuk-body;
 }
 
+a {
+  @extend .govuk-link;
+}
+
 h2 {
- @extend .govuk-heading-m
+  @extend .govuk-heading-m;
 }

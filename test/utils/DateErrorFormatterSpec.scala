@@ -17,6 +17,7 @@
 package utils
 
 import base.SpecBase
+import play.api.data.FormError
 import play.api.i18n.{Lang, MessagesImpl}
 
 class DateErrorFormatterSpec extends SpecBase {
@@ -45,6 +46,28 @@ class DateErrorFormatterSpec extends SpecBase {
         result mustEqual Seq("diwrnod", "mis", "blwyddyn")
       }
     }
+
+    "addErrorClass" when {
+      "args is empty returns govuk-input--error" in {
+        val formError = FormError("errorKey", Nil, Nil)
+        DateErrorFormatter.addErrorClass(Some(formError), "date") mustEqual "govuk-input--error"
+      }
+
+      "error contains dateArg returns govuk-input--error" in {
+        val formError = FormError("errorKey", Nil, Seq("date", "time"))
+        DateErrorFormatter.addErrorClass(Some(formError), "date") mustEqual "govuk-input--error"
+      }
+
+      "error contains does not contain dateArg returns empty string" in {
+        val formError = FormError("errorKey", Nil, Seq("location", "time"))
+        DateErrorFormatter.addErrorClass(Some(formError), "date") mustEqual ""
+      }
+
+      "no errors empty string" in {
+        DateErrorFormatter.addErrorClass(None, "date") mustEqual ""
+      }
+    }
+
   }
 
 }

@@ -27,14 +27,6 @@ object DateErrorFormatter {
   }
 
   def addErrorClass(error: Option[FormError], dateArg: String): String = {
-    if(error.isDefined){
-      if(error.get.args.contains(dateArg) || error.get.args.isEmpty) {
-        s"govuk-input--error"
-      } else {
-        ""
-      }
-    } else {
-      ""
-    }
+    error.collect{case fe if fe.args.isEmpty || fe.args.contains(dateArg) => "govuk-input--error"}.getOrElse("")
   }
 }

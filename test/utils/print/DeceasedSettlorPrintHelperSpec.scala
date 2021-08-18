@@ -64,16 +64,16 @@ class DeceasedSettlorPrintHelperSpec extends SpecBase {
       result mustBe AnswerSection(
         headingKey = None,
         rows = Seq(
-          AnswerRow(label = Html(messages("deceasedSettlor.name.checkYourAnswersLabel")), answer = Html("First Middle Last"), changeUrl = Some(controllers.routes.NameController.onPageLoad().url)),
-          AnswerRow(label = Html(messages("deceasedSettlor.dateOfDeath.checkYourAnswersLabel", name.displayName)), answer = Html("10 October 2011"), changeUrl = Some(controllers.routes.DateOfDeathController.onPageLoad().url)),
-          AnswerRow(label = Html(messages("deceasedSettlor.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName)), answer = Html("Yes"), changeUrl = Some(controllers.routes.DateOfBirthYesNoController.onPageLoad().url)),
-          AnswerRow(label = Html(messages("deceasedSettlor.dateOfBirth.checkYourAnswersLabel", name.displayName)), answer = Html("10 October 2010"), changeUrl = Some(controllers.routes.DateOfBirthController.onPageLoad().url)),
-          AnswerRow(label = Html(messages("deceasedSettlor.nationalInsuranceNumberYesNo.checkYourAnswersLabel", name.displayName)), answer = Html("Yes"), changeUrl = Some(controllers.routes.NationalInsuranceNumberYesNoController.onPageLoad().url)),
-          AnswerRow(label = Html(messages("deceasedSettlor.nationalInsuranceNumber.checkYourAnswersLabel", name.displayName)), answer = Html("AA 00 00 00 A"), changeUrl = Some(controllers.routes.NationalInsuranceNumberController.onPageLoad().url)),
-          AnswerRow(label = Html(messages("deceasedSettlor.addressYesNo.checkYourAnswersLabel", name.displayName)), answer = Html("Yes"), changeUrl = Some(controllers.routes.AddressYesNoController.onPageLoad().url)),
-          AnswerRow(label = Html(messages("deceasedSettlor.livedInTheUkYesNo.checkYourAnswersLabel", name.displayName)), answer = Html("Yes"), changeUrl = Some(controllers.routes.LivedInTheUkYesNoController.onPageLoad().url)),
-          AnswerRow(label = Html(messages("deceasedSettlor.ukAddress.checkYourAnswersLabel", name.displayName)), answer = Html("value 1<br />value 2<br />AB1 1AB"), changeUrl = Some(controllers.routes.UkAddressController.onPageLoad().url)),
-          AnswerRow(label = Html(messages("deceasedSettlor.nonUkAddress.checkYourAnswersLabel", name.displayName)), answer = Html("value 1<br />value 2<br />Germany"), changeUrl = Some(controllers.routes.NonUkAddressController.onPageLoad().url))
+          AnswerRow(label = messages("deceasedSettlor.name.checkYourAnswersLabel"), answer = Html("First Middle Last"), changeUrl = Some(controllers.routes.NameController.onPageLoad().url)),
+          AnswerRow(label = messages("deceasedSettlor.dateOfDeath.checkYourAnswersLabel", name.displayName), answer = Html("10 October 2011"), changeUrl = Some(controllers.routes.DateOfDeathController.onPageLoad().url)),
+          AnswerRow(label = messages("deceasedSettlor.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), changeUrl = Some(controllers.routes.DateOfBirthYesNoController.onPageLoad().url)),
+          AnswerRow(label = messages("deceasedSettlor.dateOfBirth.checkYourAnswersLabel", name.displayName), answer = Html("10 October 2010"), changeUrl = Some(controllers.routes.DateOfBirthController.onPageLoad().url)),
+          AnswerRow(label = messages("deceasedSettlor.nationalInsuranceNumberYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), changeUrl = Some(controllers.routes.NationalInsuranceNumberYesNoController.onPageLoad().url)),
+          AnswerRow(label = messages("deceasedSettlor.nationalInsuranceNumber.checkYourAnswersLabel", name.displayName), answer = Html("AA 00 00 00 A"), changeUrl = Some(controllers.routes.NationalInsuranceNumberController.onPageLoad().url)),
+          AnswerRow(label = messages("deceasedSettlor.addressYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), changeUrl = Some(controllers.routes.AddressYesNoController.onPageLoad().url)),
+          AnswerRow(label = messages("deceasedSettlor.livedInTheUkYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), changeUrl = Some(controllers.routes.LivedInTheUkYesNoController.onPageLoad().url)),
+          AnswerRow(label = messages("deceasedSettlor.ukAddress.checkYourAnswersLabel", name.displayName), answer = Html("value 1<br />value 2<br />AB1 1AB"), changeUrl = Some(controllers.routes.UkAddressController.onPageLoad().url)),
+          AnswerRow(label = messages("deceasedSettlor.nonUkAddress.checkYourAnswersLabel", name.displayName), answer = Html("value 1<br />value 2<br />Germany"), changeUrl = Some(controllers.routes.NonUkAddressController.onPageLoad().url))
        )
       )
     }

@@ -15,29 +15,32 @@
  *@
 
 @import viewmodels.AnswerSection
+@import viewmodels.Section
+@import utils.SectionFormatter.formatSections
 @import controllers.routes._
+@import views.html.components.{Heading, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    heading: Heading,
+    submitButton: SubmitButton,
+    govukSummaryList: GovukSummaryList
 )
 
-@(answerSection: AnswerSection,
-    name: String
-    )(implicit request: Request[_], messages: Messages)
+@(answerSection: AnswerSection, name: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("deceasedSettlor.checkDetails.title")
-    ) {
+    title = messages("deceasedSettlor.checkDetails.title"),
+    showBackLink = true
+) {
 
     @formHelper(action = CheckDetailsController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @heading("deceasedSettlor.checkDetails.heading")
 
-        @components.heading("deceasedSettlor.checkDetails.heading")
+        @govukSummaryList(SummaryList(rows = formatSections(Seq(answerSection))))
 
-        @components.answer_section(answerSection)
-
-        @components.submit_button()
+        @submitButton()
     }
 }

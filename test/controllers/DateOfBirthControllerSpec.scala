@@ -22,18 +22,13 @@ import base.SpecBase
 import forms.DateOfBirthFormProvider
 import models.{Name, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{DateOfBirthPage, DateOfDeathPage, NamePage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
 import views.html.DateOfBirthView
-
-import scala.concurrent.Future
 
 class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
@@ -105,9 +100,6 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
       val onwardRoute = Call("GET", "/foo")
 
-      val mockPlaybackRepository = mock[SessionRepository]
-
-      when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
       val userAnswers = emptyUserAnswers
         .set(NamePage, name).success.value
 

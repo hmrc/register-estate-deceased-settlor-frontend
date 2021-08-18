@@ -31,9 +31,10 @@ import play.api.inject.{Injector, bind}
 import play.api.libs.json.Json
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
+import repositories.SessionRepository
 import services.LocalDateTimeService
 
-trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with ScalaFutures with IntegrationPatience {
+trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Mocked with ScalaFutures with IntegrationPatience {
 
   final val ENGLISH = "en"
   final val WELSH = "cy"
@@ -64,6 +65,7 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Sca
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[LocalDateTimeService].toInstance(LocalDateTimeServiceStub)
+        bind[LocalDateTimeService].toInstance(LocalDateTimeServiceStub),
+        bind[SessionRepository].toInstance(mockPlaybackRepository)
       )
 }

@@ -16,34 +16,40 @@
 
 @import controllers.routes._
 @import config.FrontendAppConfig
+@import views.html.components.{ErrorSummary, InputText, SubmitButton, Link}
 
 @this(
-        main_template: MainTemplate,
-        formHelper: FormWithCSRF,
-        appConfig: FrontendAppConfig
+    main_template: MainTemplate,
+    formHelper: FormWithCSRF,
+    appConfig: FrontendAppConfig,
+    errorSummary: ErrorSummary,
+    inputText: InputText,
+    submitButton: SubmitButton,
+    link: Link
 )
 
 @(form: Form[_], name: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("deceasedSettlor.nationalInsuranceNumber.title")}"
+    title = s"${errorPrefix(form)}${messages("deceasedSettlor.nationalInsuranceNumber.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = NationalInsuranceNumberController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
-
-        @components.input_nino(
+        @inputText(
             field = form("value"),
             label = messages("deceasedSettlor.nationalInsuranceNumber.heading", name),
-            headingIsLabel = true,
+            labelAsHeading = true,
+            labelClass = Some("govuk-label--l"),
+            inputClass = Some("govuk-!-width-one-half"),
             hint = Some(messages("deceasedSettlor.nationalInsuranceNumber.hint"))
         )
 
-        @components.submit_button()
+        @submitButton()
 
-        <p><a href="@appConfig.registrationProgressUrl">@messages("site.returnToRegistrationProgress")</a></p>
+        <p>@link(appConfig.registrationProgressUrl, "returnToRegistration", "site.returnToRegistrationProgress")</p>
     }
 }

@@ -1,3 +1,5 @@
+service.name = Register and Maintain an Estate
+
 date.day = Day
 date.month = Month
 date.year = Year
@@ -11,12 +13,12 @@ site.date.hint = For example, 31 3 1980.
 site.no = No
 site.yes = Yes
 site.continue = Continue
-site.service_name = Register and Maintain an Estate
 site.service_section = Person who died
 site.textarea.char_limit = (Limit is {0} characters)
 site.returnToRegistrationProgress = Return to registration progress
 site.sign_out = Sign out
 site.sign_in = Sign in
+site.error = Error:
 
 #timeout dialog
 timeout.title=Your application will time out soon
@@ -32,7 +34,7 @@ site.address.uk.line4 = Address line 4 (optional)
 site.address.uk.postcode = Postcode
 site.address.uk.postcode.hint = For example, AB1 1AB.
 
-address.country.select = Select a country
+site.address.country.select = Select a country
 site.address.nonUk.title = What is the address?
 site.address.nonUk.heading = What is {0}’s address?
 site.address.nonUk.line1 = Address line 1

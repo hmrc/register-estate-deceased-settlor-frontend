@@ -15,33 +15,40 @@
  *@
 
 @import controllers.routes._
-@import utils.countryOptions.InputOption
+@import utils.InputOption
 @import config.FrontendAppConfig
+@import views.html.components.{ErrorSummary, InternationalAddress, SubmitButton, Link}
 
 @this(
-        main_template: MainTemplate,
-        formHelper: FormWithCSRF,
-        appConfig: FrontendAppConfig
+    main_template: MainTemplate,
+    formHelper: FormWithCSRF,
+    appConfig: FrontendAppConfig,
+    errorSummary: ErrorSummary,
+    internationalAddress: InternationalAddress,
+    submitButton: SubmitButton,
+    link: Link
 )
 
 @(form: Form[_], countryOptions: Seq[InputOption], name: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("deceasedSettlor.nonUkAddress.title")}"
+    title = s"${errorPrefix(form)}${messages("deceasedSettlor.nonUkAddress.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = NonUkAddressController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
+        @internationalAddress(
+            form = form,
+            legend = messages("deceasedSettlor.nonUkAddress.heading", name),
+            legendAsHeading = true,
+            countryOptions = countryOptions
+        )
 
-        @components.heading("deceasedSettlor.nonUkAddress.heading", Some(name))
+        @submitButton()
 
-        @components.non_uk_address(form, countryOptions)
-
-        @components.submit_button()
-
-        <p><a href="@appConfig.registrationProgressUrl">@messages("site.returnToRegistrationProgress")</a></p>
+        <p>@link(appConfig.registrationProgressUrl, "returnToRegistration", "site.returnToRegistrationProgress")</p>
     }
 }

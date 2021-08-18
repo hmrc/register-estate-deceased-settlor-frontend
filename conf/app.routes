@@ -1,3 +1,6 @@
+->         /govuk-frontend                     govuk.Routes
+->         /hmrc-frontend                      hmrcfrontend.Routes
+
 # microservice specific routes
 
 GET        /                                    controllers.IndexController.onPageLoad
@@ -7,6 +10,7 @@ GET        /assets/*file                        controllers.Assets.versioned(pat
 GET        /language/:lang                      controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
 GET        /this-service-has-been-reset         controllers.SessionExpiredController.onPageLoad
+POST       /this-service-has-been-reset         controllers.SessionExpiredController.onSubmit
 
 GET        /keep-alive                          controllers.SessionTimeoutController.keepAlive
 

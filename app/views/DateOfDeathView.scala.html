@@ -42,7 +42,8 @@
         @inputDate(
             field = form("value"),
             legend = messages("deceasedSettlor.dateOfDeath.heading", name),
-            hint = Some(messages(s"site.date.hint"))
+            hint = Some(messages(s"site.date.hint")),
+            legendAsHeading = true
         )
 
         @submitButton()

@@ -1,7 +1,14 @@
+# Register estate deceased settlor
 
-# register-estate-deceased-settlor-frontend
+This service is responsible collecting information about the deceased settlor for the estate that is being registered.
 
-This is a placeholder README.md for a new repository
+To run locally using the micro-service provided by the service manager:
+
+***sm --start ESTATES_ALL -r***
+
+If you want to run your local copy, then stop the frontend ran by the service manager and run your local code by using the following (port number is 8824 but is defaulted to that in build.sbt).
+
+`sbt run`
 
 ### License
 

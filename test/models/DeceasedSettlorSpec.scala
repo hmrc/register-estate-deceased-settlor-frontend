@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@
 
 package models
 
-import java.time.LocalDate
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-import org.scalatest.{MustMatchers, WordSpec}
+import java.time.LocalDate
 import play.api.libs.json.Json
 
-class DeceasedSettlorSpec extends WordSpec with MustMatchers {
+class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
   private val settlorWithNino = DeceasedSettlor(
     Name("First", None, "Last"),
     Some(LocalDate.of(1878, 4, 10)),

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,10 @@ class DeceasedSettlorPrintHelper @Inject()(answerRowConverter: AnswerRowConverte
         bound.dateQuestion(DateOfDeathPage, "deceasedSettlor.dateOfDeath", Some(controllers.routes.DateOfDeathController.onPageLoad().url)),
         bound.yesNoQuestion(DateOfBirthYesNoPage, "deceasedSettlor.dateOfBirthYesNo", Some(controllers.routes.DateOfBirthYesNoController.onPageLoad().url)),
         bound.dateQuestion(DateOfBirthPage, "deceasedSettlor.dateOfBirth",Some(controllers.routes.DateOfBirthController.onPageLoad().url)),
-        bound.yesNoQuestion(NationalInsuranceNumberYesNoPage, "deceasedSettlor.nationalInsuranceNumberYesNo", Some(controllers.routes.NationalInsuranceNumberYesNoController.onPageLoad().url)),
-        bound.ninoQuestion(NationalInsuranceNumberPage, "deceasedSettlor.nationalInsuranceNumber", Some(controllers.routes.NationalInsuranceNumberController.onPageLoad().url)),
+        bound.yesNoQuestion(NationalInsuranceNumberYesNoPage, "deceasedSettlor.nationalInsuranceNumberYesNo",
+          Some(controllers.routes.NationalInsuranceNumberYesNoController.onPageLoad().url)),
+        bound.ninoQuestion(NationalInsuranceNumberPage, "deceasedSettlor.nationalInsuranceNumber",
+          Some(controllers.routes.NationalInsuranceNumberController.onPageLoad().url)),
         bound.yesNoQuestion(AddressYesNoPage, "deceasedSettlor.addressYesNo", Some(controllers.routes.AddressYesNoController.onPageLoad().url)),
         bound.yesNoQuestion(LivedInTheUkYesNoPage, "deceasedSettlor.livedInTheUkYesNo", Some(controllers.routes.LivedInTheUkYesNoController.onPageLoad().url)),
         bound.addressQuestion(UkAddressPage, "deceasedSettlor.ukAddress", Some(controllers.routes.UkAddressController.onPageLoad().url)),

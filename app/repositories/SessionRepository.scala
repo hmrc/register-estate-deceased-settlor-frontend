@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ class DefaultSessionRepository @Inject()(
       createdIdIndex          <- collection.indexesManager.ensure(internalAuthIdIndex)
     } yield createdLastUpdatedIndex && createdIdIndex
   }
-  
+
   override def get(id: String): Future[Option[UserAnswers]] =
     collection.flatMap(_.find(Json.obj("_id" -> id), None).one[UserAnswers])
 

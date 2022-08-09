@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -181,7 +181,7 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
       val result = route(application, getRequest).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
 
       application.stop()
     }
@@ -194,7 +194,7 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
 
       application.stop()
     }

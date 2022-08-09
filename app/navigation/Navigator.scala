@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ class Navigator @Inject()() {
     navRoute(page)(userAnswers)
 
   private val defaultRoute: PartialFunction[Page, UserAnswers => Call] = {
-    case _ => _ => routes.IndexController.onPageLoad()
+    case _ => _ => routes.IndexController.onPageLoad
   }
 
   private lazy val checkYourAnswersRoute: Call = routes.CheckDetailsController.onPageLoad()
@@ -63,6 +63,6 @@ class Navigator @Inject()() {
   private def yesNoNav(ua: UserAnswers, fromPage: QuestionPage[Boolean], yesCall: => Call, noCall: => Call): Call = {
     ua.get(fromPage)
       .map(if (_) yesCall else noCall)
-      .getOrElse(controllers.routes.SessionExpiredController.onPageLoad())
+      .getOrElse(controllers.routes.SessionExpiredController.onPageLoad)
   }
 }

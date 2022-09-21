@@ -40,31 +40,21 @@ class DefaultSessionRepository @Inject()(
 
   private val cacheTtl = config.get[Int]("mongodb.timeToLiveInSeconds")
 
-  private def collection: Future[JSONCollection] =
-    for {
-      _ <- ensureIndexes
-      res <- mongo.database.map(_.collection[JSONCollection](collectionName))
-    } yield res
+  private def collection: Future[JSONCollection] = for {
+    _ <- ensureIndexes
+    col <- mongo.database.map(_.collection[JSONCollection](collectionName))
+  } yield col
 
   private val lastUpdatedIndex = MongoIndex(
-    key = Seq("updatedAt" -> IndexType.Ascending),
-    name    = "user-answers-last-updated-index",
+    key = Seq("lastUpdated" -> IndexType.Ascending),
+    name = "user-answers-last-updated-index",
     expireAfterSeconds = Some(cacheTtl)
   )
 
-  private val internalAuthIdIndex = MongoIndex(
-    key = Seq("_id" -> IndexType.Ascending),
-    name = "internal-auth-id-index"
-  )
-
-  private def ensureIndexes: Future[Boolean] = {
-    logger.info("Ensuring collection indexes")
-    for {
-      collection              <- mongo.database.map(_.collection[JSONCollection](collectionName))
-      createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
-      createdIdIndex          <- collection.indexesManager.ensure(internalAuthIdIndex)
-    } yield createdLastUpdatedIndex && createdIdIndex
-  }
+  private def ensureIndexes: Future[Unit] = for {
+    col <- mongo.database.map(_.collection[JSONCollection](collectionName))
+    _ <- col.indexesManager.ensure(lastUpdatedIndex)
+  } yield ()
 
   override def get(id: String): Future[Option[UserAnswers]] =
     collection.flatMap(_.find(Json.obj("_id" -> id), None).one[UserAnswers])
@@ -82,8 +72,8 @@ class DefaultSessionRepository @Inject()(
     collection.flatMap {
       _.update(ordered = false)
         .one(selector, modifier, upsert = true).map {
-          lastError =>
-            lastError.ok
+        lastError =>
+          lastError.ok
       }
     }
   }

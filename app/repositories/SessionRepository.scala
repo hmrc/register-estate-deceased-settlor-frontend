@@ -47,7 +47,7 @@ class DefaultSessionRepository @Inject()(
 
   private val lastUpdatedIndex = MongoIndex(
     key = Seq("lastUpdated" -> IndexType.Ascending),
-    name = "user-answers-last-updated-index",
+    name = "user-answers-lastupdated-index",
     expireAfterSeconds = Some(cacheTtl)
   )
 

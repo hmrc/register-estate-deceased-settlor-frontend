@@ -16,24 +16,22 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import base.SpecBase
 import connectors.EstatesConnector
 import models.{DeceasedSettlor, Name, NationalInsuranceNumber, UserAnswers}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.{verify, when}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.ArgumentMatchers.any
+import org.mockito.MockitoSugar
 import pages._
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class IndexControllerSpec extends SpecBase with MockitoSugar {
 
-    "Index Controller" must {
+  "Index Controller" must {
 
     "return redirect to name controller if no existing deceased data" in {
       val estatesConnector = mock[EstatesConnector]
@@ -50,7 +48,14 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.NameController.onPageLoad().url
 
-      verify(mockPlaybackRepository).set(emptyUserAnswers)
+      val expectedAnswers: UserAnswers = emptyUserAnswers
+      val called = 1
+
+      verify(mockPlaybackRepository, times(called)).set(userAnswerArgumentCaptor.capture())
+      val userAnswers = userAnswerArgumentCaptor.getValue
+      userAnswers.internalAuthId mustBe expectedAnswers.internalAuthId
+      userAnswers.data mustBe expectedAnswers.data
+      userAnswers.lastUpdated mustNot be(expectedAnswers.lastUpdated)
 
       application.stop()
     }
@@ -87,7 +92,13 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
       .set(NationalInsuranceNumberYesNoPage, true).success.value
       .set(NationalInsuranceNumberPage, "AA111111B").success.value
 
-    verify(mockPlaybackRepository).set(expectedAnswers)
+    val called = 2
+
+    verify(mockPlaybackRepository, times(called)).set(userAnswerArgumentCaptor.capture())
+    val userAnswers = userAnswerArgumentCaptor.getValue
+    userAnswers.internalAuthId mustBe expectedAnswers.internalAuthId
+    userAnswers.data mustBe expectedAnswers.data
+    userAnswers.lastUpdated mustNot be(expectedAnswers.lastUpdated)
 
     application.stop()
   }

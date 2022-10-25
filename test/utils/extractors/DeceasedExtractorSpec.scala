@@ -16,11 +16,11 @@
 
 package utils.extractors
 
-import java.time.LocalDate
-
 import base.SpecBase
 import models._
 import pages._
+
+import java.time.LocalDate
 
 class DeceasedExtractorSpec extends SpecBase {
 
@@ -48,15 +48,15 @@ class DeceasedExtractorSpec extends SpecBase {
 
       val result = extractor(deceased, emptyUserAnswers).success.value
 
-      result.get(NamePage)                          mustBe Some(name)
-      result.get(DateOfDeathPage)                   mustBe Some(dateOfDeath)
-      result.get(DateOfBirthYesNoPage)              mustBe Some(false)
-      result.get(NationalInsuranceNumberYesNoPage)  mustBe Some(false)
-      result.get(NationalInsuranceNumberPage)       mustBe None
-      result.get(AddressYesNoPage)                  mustBe Some(false)
-      result.get(LivedInTheUkYesNoPage)             mustBe None
-      result.get(UkAddressPage)                     mustBe None
-      result.get(NonUkAddressPage)                  mustBe None
+      result.get(NamePage) mustBe Some(name)
+      result.get(DateOfDeathPage) mustBe Some(dateOfDeath)
+      result.get(DateOfBirthYesNoPage) mustBe Some(false)
+      result.get(NationalInsuranceNumberYesNoPage) mustBe Some(false)
+      result.get(NationalInsuranceNumberPage) mustBe None
+      result.get(AddressYesNoPage) mustBe Some(false)
+      result.get(LivedInTheUkYesNoPage) mustBe None
+      result.get(UkAddressPage) mustBe None
+      result.get(NonUkAddressPage) mustBe None
     }
 
     "extract answers for deceased with date of birth" in {
@@ -87,12 +87,12 @@ class DeceasedExtractorSpec extends SpecBase {
 
       val result = extractor(deceased, emptyUserAnswers).success.value
 
-      result.get(NationalInsuranceNumberYesNoPage)  mustBe Some(true)
-      result.get(NationalInsuranceNumberPage)       mustBe Some(nino)
-      result.get(AddressYesNoPage)                  mustBe None
-      result.get(LivedInTheUkYesNoPage)             mustBe None
-      result.get(UkAddressPage)                     mustBe None
-      result.get(NonUkAddressPage)                  mustBe None
+      result.get(NationalInsuranceNumberYesNoPage) mustBe Some(true)
+      result.get(NationalInsuranceNumberPage) mustBe Some(nino)
+      result.get(AddressYesNoPage) mustBe None
+      result.get(LivedInTheUkYesNoPage) mustBe None
+      result.get(UkAddressPage) mustBe None
+      result.get(NonUkAddressPage) mustBe None
     }
 
     "extract answers for deceased with UK address" in {
@@ -107,12 +107,12 @@ class DeceasedExtractorSpec extends SpecBase {
 
       val result = extractor(deceased, emptyUserAnswers).success.value
 
-      result.get(NationalInsuranceNumberYesNoPage)  mustBe Some(false)
-      result.get(NationalInsuranceNumberPage)       mustBe None
-      result.get(AddressYesNoPage)                  mustBe Some(true)
-      result.get(LivedInTheUkYesNoPage)             mustBe Some(true)
-      result.get(UkAddressPage)                     mustBe Some(ukAddress)
-      result.get(NonUkAddressPage)                  mustBe None
+      result.get(NationalInsuranceNumberYesNoPage) mustBe Some(false)
+      result.get(NationalInsuranceNumberPage) mustBe None
+      result.get(AddressYesNoPage) mustBe Some(true)
+      result.get(LivedInTheUkYesNoPage) mustBe Some(true)
+      result.get(UkAddressPage) mustBe Some(ukAddress)
+      result.get(NonUkAddressPage) mustBe None
     }
 
     "extract answers for deceased with non-UK address" in {
@@ -127,12 +127,12 @@ class DeceasedExtractorSpec extends SpecBase {
 
       val result = extractor(deceased, emptyUserAnswers).success.value
 
-      result.get(NationalInsuranceNumberYesNoPage)  mustBe Some(false)
-      result.get(NationalInsuranceNumberPage)       mustBe None
-      result.get(AddressYesNoPage)                  mustBe Some(true)
-      result.get(LivedInTheUkYesNoPage)             mustBe Some(false)
-      result.get(UkAddressPage)                     mustBe None
-      result.get(NonUkAddressPage)                  mustBe Some(nonUkAddress)
+      result.get(NationalInsuranceNumberYesNoPage) mustBe Some(false)
+      result.get(NationalInsuranceNumberPage) mustBe None
+      result.get(AddressYesNoPage) mustBe Some(true)
+      result.get(LivedInTheUkYesNoPage) mustBe Some(false)
+      result.get(UkAddressPage) mustBe None
+      result.get(NonUkAddressPage) mustBe Some(nonUkAddress)
     }
 
   }

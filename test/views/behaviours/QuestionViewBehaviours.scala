@@ -29,12 +29,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
 
   val form: Form[A]
 
-  def pageWithTextFields(form: Form[A],
-                         createView: Form[A] => HtmlFormat.Appendable,
-                         messageKeyPrefix: String,
-                         messageKeyParam: Option[String],
-                         expectedFormAction: String,
-                         fields: String*): Unit = {
+  def pageWithTextFields(form: Form[A], createView: Form[A] => HtmlFormat.Appendable, messageKeyPrefix: String, messageKeyParam: Option[String], fields: String*): Unit = {
 
     "behave like a question page" when {
 
@@ -89,7 +84,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
 
         s"show an error associated with the field '$field'" in {
 
-          val fieldId = if(field.contains("_")) {
+          val fieldId = if (field.contains("_")) {
             field.replace("_", ".")
           } else {
             field
@@ -117,7 +112,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
                                             createView: Form[A] => HtmlFormat.Appendable,
                                             messageKeyPrefix: String,
                                             textFields: Seq[(String, Option[String])],
-                                            dateKey : String,
+                                            dateKey: String,
                                             args: String*): Unit = {
 
     val dateFields = Seq(s"$dateKey.day", s"$dateKey.month", s"$dateKey.year")
@@ -206,7 +201,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
                          createView: Form[A] => HtmlFormat.Appendable,
                          messageKeyPrefix: String,
                          dateKey: String,
-                         args: String*) = {
+                         args: String*): Unit = {
 
     val dateFields = Seq(s"$dateKey.day", s"$dateKey.month", s"$dateKey.year")
 

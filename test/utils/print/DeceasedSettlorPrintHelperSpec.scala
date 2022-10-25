@@ -16,14 +16,14 @@
 
 package utils.print
 
-import java.time.{LocalDate, LocalDateTime}
-
 import base.SpecBase
 import models.{Name, NonUkAddress, UkAddress, UserAnswers}
 import pages._
 import play.api.libs.json.Json
 import play.twirl.api.Html
 import viewmodels.{AnswerRow, AnswerSection}
+
+import java.time.{LocalDate, LocalDateTime}
 
 class DeceasedSettlorPrintHelperSpec extends SpecBase {
 
@@ -74,7 +74,7 @@ class DeceasedSettlorPrintHelperSpec extends SpecBase {
           AnswerRow(label = messages("deceasedSettlor.livedInTheUkYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), changeUrl = Some(controllers.routes.LivedInTheUkYesNoController.onPageLoad().url)),
           AnswerRow(label = messages("deceasedSettlor.ukAddress.checkYourAnswersLabel", name.displayName), answer = Html("value 1<br />value 2<br />AB1 1AB"), changeUrl = Some(controllers.routes.UkAddressController.onPageLoad().url)),
           AnswerRow(label = messages("deceasedSettlor.nonUkAddress.checkYourAnswersLabel", name.displayName), answer = Html("value 1<br />value 2<br />Germany"), changeUrl = Some(controllers.routes.NonUkAddressController.onPageLoad().url))
-       )
+        )
       )
     }
   }

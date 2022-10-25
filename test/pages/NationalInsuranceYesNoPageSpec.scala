@@ -16,11 +16,11 @@
 
 package pages
 
-import java.time.LocalDateTime
-
 import models.{UkAddress, UserAnswers}
 import pages.behaviours.PageBehaviours
 import play.api.libs.json.Json
+
+import java.time.LocalDateTime
 
 class NationalInsuranceYesNoPageSpec extends PageBehaviours {
 
@@ -38,7 +38,7 @@ class NationalInsuranceYesNoPageSpec extends PageBehaviours {
         .set(UkAddressPage, UkAddress("line1", "line2", None, None, "postcode")).success.value
         .set(LivedInTheUkYesNoPage, true)
         .flatMap(_.set(AddressYesNoPage, true))
-          .flatMap(_.set(NationalInsuranceNumberYesNoPage, true))
+        .flatMap(_.set(NationalInsuranceNumberYesNoPage, true))
 
       userAnswers.get.get(UkAddressPage) mustNot be(defined)
       userAnswers.get.get(LivedInTheUkYesNoPage) mustNot be(defined)

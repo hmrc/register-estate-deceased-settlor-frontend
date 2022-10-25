@@ -16,16 +16,13 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import base.SpecBase
 import config.FrontendAppConfig
 import connectors.{EstatesConnector, EstatesStoreConnector}
 import models.{DeceasedSettlor, Name, UserAnswers}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
+import org.mockito.ArgumentMatchers.any
+import org.mockito.MockitoSugar
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -34,11 +31,12 @@ import uk.gov.hmrc.http.HttpResponse
 import utils.print.DeceasedSettlorPrintHelper
 import views.html.CheckDetailsView
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
-  lazy val submitRoute : String = controllers.routes.CheckDetailsController.onSubmit().url
+  lazy val submitRoute: String = controllers.routes.CheckDetailsController.onSubmit().url
   private val config = injector.instanceOf[FrontendAppConfig]
   private lazy val completedRoute = config.registrationProgressUrl
   private val name: Name = Name("First", Some("Middle"), "Last")
@@ -134,7 +132,7 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
           .overrides(bind[EstatesConnector].toInstance(mockEstatesConnector))
           .overrides(bind[EstatesStoreConnector].toInstance(mockEstatesStoreConnector))
           .build()
-      
+
       when(mockEstatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(None))
       when(mockEstatesConnector.setDeceased(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
       when(mockEstatesStoreConnector.setTaskComplete()(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))

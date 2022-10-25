@@ -22,7 +22,6 @@ import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
 import views.html.NationalInsuranceNumberYesNoView
-import controllers.routes
 
 class NationalInsuranceNumberYesNoViewSpec extends YesNoViewBehaviours {
 
@@ -42,7 +41,7 @@ class NationalInsuranceNumberYesNoViewSpec extends YesNoViewBehaviours {
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix, Some(name.displayName), routes.NationalInsuranceNumberYesNoController.onSubmit().url)
+    behave like yesNoPage(form, applyView, messageKeyPrefix, Some(name.displayName))
 
     behave like pageWithASubmitButton(applyView(form))
   }

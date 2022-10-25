@@ -34,12 +34,12 @@ trait UserAnswersGenerator extends TryValues {
 
     Arbitrary {
       for {
-        internalAuthId      <- nonEmptyString
-        data    <- generators match {
+        internalAuthId <- nonEmptyString
+        data <- generators match {
           case Nil => Gen.const(Map[QuestionPage[_], JsValue]())
-          case _   => Gen.mapOf(oneOf(generators))
+          case _ => Gen.mapOf(oneOf(generators))
         }
-      } yield UserAnswers (
+      } yield UserAnswers(
         internalAuthId = internalAuthId,
         data = data.foldLeft(Json.obj()) {
           case (obj, (path, value)) =>

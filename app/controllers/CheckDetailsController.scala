@@ -68,7 +68,7 @@ class CheckDetailsController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
 
-      mapper(request.userAnswers) match {
+      mapper(request.userAnswers.data) match {
         case Some(deceasedSettlor) =>
           estatesConnector.getDeceased() flatMap {
             case Some(DeceasedSettlor(_, _, Some(previousDateOfDeath), _, _)) =>

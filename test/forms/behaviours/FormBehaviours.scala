@@ -16,9 +16,9 @@
 
 package forms.behaviours
 
-import play.api.data.Form
 import forms.FormSpec
 import models._
+import play.api.data.Form
 
 trait FormBehaviours extends FormSpec {
 
@@ -43,7 +43,7 @@ trait FormBehaviours extends FormSpec {
     }
   }
 
-  def formWithMandatoryTextFields(fields: Field*) = {
+  def formWithMandatoryTextFields(fields: Field*): Unit = {
     for (field <- fields) {
       s"fail to bind when ${field.name} is omitted" in {
         val data = validData - field.name

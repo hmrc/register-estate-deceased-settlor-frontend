@@ -16,11 +16,11 @@
 
 package pages
 
-import java.time.{LocalDate, LocalDateTime}
-
 import models.UserAnswers
 import pages.behaviours.PageBehaviours
 import play.api.libs.json.Json
+
+import java.time.{LocalDate, LocalDateTime}
 
 
 class DateOfBirthYesNoPageSpec extends PageBehaviours {

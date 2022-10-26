@@ -16,16 +16,17 @@
 
 package base
 
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
+import models.UserAnswers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.{ArgumentCaptor, MockitoSugar}
 import repositories.SessionRepository
 
 import scala.concurrent.Future
 
 trait Mocked extends MockitoSugar {
 
-  val mockPlaybackRepository = mock[SessionRepository]
+  val mockPlaybackRepository: SessionRepository = mock[SessionRepository]
+  val userAnswerArgumentCaptor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
 
   when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
 

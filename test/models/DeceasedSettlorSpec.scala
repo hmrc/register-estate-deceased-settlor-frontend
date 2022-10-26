@@ -18,9 +18,9 @@ package models
 
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import play.api.libs.json.Json
 
 import java.time.LocalDate
-import play.api.libs.json.Json
 
 class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
   private val settlorWithNino = DeceasedSettlor(

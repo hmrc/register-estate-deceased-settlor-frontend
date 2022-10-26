@@ -16,11 +16,11 @@
 
 package utils.mappers
 
-import java.time.LocalDate
-
 import base.SpecBase
 import models.{Name, NationalInsuranceNumber, NonUkAddress, UkAddress}
 import pages._
+
+import java.time.LocalDate
 
 class DeceasedSettlorMapperSpec extends SpecBase {
 
@@ -45,7 +45,7 @@ class DeceasedSettlorMapperSpec extends SpecBase {
         .set(NationalInsuranceNumberYesNoPage, true).success.value
         .set(NationalInsuranceNumberPage, nino).success.value
 
-      val result = mapper(userAnswers).get
+      val result = mapper(userAnswers.data).get
 
       result.name mustBe name
       result.dateOfDeath mustBe Some(dateOfDeath)
@@ -66,7 +66,7 @@ class DeceasedSettlorMapperSpec extends SpecBase {
         .set(LivedInTheUkYesNoPage, true).success.value
         .set(UkAddressPage, ukAddress).success.value
 
-      val result = mapper(userAnswers).get
+      val result = mapper(userAnswers.data).get
 
       result.name mustBe name
       result.dateOfDeath mustBe Some(dateOfDeath)
@@ -87,7 +87,7 @@ class DeceasedSettlorMapperSpec extends SpecBase {
         .set(LivedInTheUkYesNoPage, false).success.value
         .set(NonUkAddressPage, nonUkAddress).success.value
 
-      val result = mapper(userAnswers).get
+      val result = mapper(userAnswers.data).get
 
       result.name mustBe name
       result.dateOfDeath mustBe Some(dateOfDeath)
@@ -107,7 +107,7 @@ class DeceasedSettlorMapperSpec extends SpecBase {
         .set(NationalInsuranceNumberYesNoPage, false).success.value
         .set(AddressYesNoPage, false).success.value
 
-      val result = mapper(userAnswers).get
+      val result = mapper(userAnswers.data).get
 
       result.name mustBe name
       result.dateOfDeath mustBe Some(dateOfDeath)

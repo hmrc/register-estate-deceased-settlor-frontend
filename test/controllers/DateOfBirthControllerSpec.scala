@@ -16,13 +16,11 @@
 
 package controllers
 
-import java.time.{LocalDate, ZoneOffset}
-
 import base.SpecBase
 import forms.DateOfBirthFormProvider
 import models.{Name, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar
 import pages.{DateOfBirthPage, DateOfDeathPage, NamePage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
@@ -30,9 +28,12 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.DateOfBirthView
 
+import java.time.{LocalDate, ZoneOffset}
+
 class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new DateOfBirthFormProvider()
+
   private def form = formProvider.withConfig("deceasedSettlor.dateOfBirth")
 
   private val validAnswer = LocalDate.now(ZoneOffset.UTC)
@@ -53,9 +54,9 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
   private lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, dateOfBirthRoute)
       .withFormUrlEncodedBody(
-        "value.day"   -> validAnswer.getDayOfMonth.toString,
+        "value.day" -> validAnswer.getDayOfMonth.toString,
         "value.month" -> validAnswer.getMonthValue.toString,
-        "value.year"  -> validAnswer.getYear.toString
+        "value.year" -> validAnswer.getYear.toString
       )
 
   "DateOfBirth Controller" must {
@@ -150,15 +151,15 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
       val request =
         FakeRequest(POST, dateOfBirthRoute)
           .withFormUrlEncodedBody(
-            "value.day"   -> invalidAnswer.getDayOfMonth.toString,
+            "value.day" -> invalidAnswer.getDayOfMonth.toString,
             "value.month" -> invalidAnswer.getMonthValue.toString,
-            "value.year"  -> invalidAnswer.getYear.toString
+            "value.year" -> invalidAnswer.getYear.toString
           )
 
       val boundForm = form.bind(Map(
-        "value.day"   -> invalidAnswer.getDayOfMonth.toString,
+        "value.day" -> invalidAnswer.getDayOfMonth.toString,
         "value.month" -> invalidAnswer.getMonthValue.toString,
-        "value.year"  -> invalidAnswer.getYear.toString
+        "value.year" -> invalidAnswer.getYear.toString
       ))
 
       val view = application.injector.instanceOf[DateOfBirthView]

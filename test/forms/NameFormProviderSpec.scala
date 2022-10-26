@@ -18,7 +18,6 @@ package forms
 
 import forms.behaviours.{OptionalFieldBehaviours, StringFieldBehaviours}
 import play.api.data.FormError
-
 import wolfendale.scalacheck.regexp.RegexpGen
 
 class NameFormProviderSpec extends StringFieldBehaviours with OptionalFieldBehaviours {

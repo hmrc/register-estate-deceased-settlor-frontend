@@ -16,11 +16,11 @@
 
 package pages
 
-import java.time.LocalDateTime
-
 import models.{UkAddress, UserAnswers}
 import pages.behaviours.PageBehaviours
 import play.api.libs.json.Json
+
+import java.time.LocalDateTime
 
 
 class LivedInTheUkYesNoPageSpec extends PageBehaviours {

@@ -16,10 +16,8 @@
 
 package connectors
 
-import java.time.LocalDate
-
 import base.SpecBase
-import com.github.tomakehurst.wiremock.client.WireMock.{okJson, urlEqualTo, _}
+import com.github.tomakehurst.wiremock.client.WireMock._
 import models.{DeceasedSettlor, Name, NationalInsuranceNumber}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import play.api.Application
@@ -28,6 +26,7 @@ import play.api.test.Helpers.{CONTENT_TYPE, _}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.WireMockHelper
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext
 
 class EstatesConnectorSpec extends SpecBase

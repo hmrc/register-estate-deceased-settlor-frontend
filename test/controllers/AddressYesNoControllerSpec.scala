@@ -16,13 +16,11 @@
 
 package controllers
 
-import java.time.LocalDateTime
-
 import base.SpecBase
 import forms.YesNoFormProvider
 import models.{Name, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar
 import pages.{AddressYesNoPage, NamePage}
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -30,6 +28,8 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.AddressYesNoView
+
+import java.time.LocalDateTime
 
 class AddressYesNoControllerSpec extends SpecBase with MockitoSugar {
 

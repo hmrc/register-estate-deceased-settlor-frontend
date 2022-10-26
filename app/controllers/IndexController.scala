@@ -18,16 +18,14 @@ package controllers
 
 import connectors.EstatesConnector
 import controllers.actions.Actions
-import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.I18nSupport
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import services.LocalDateTimeService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.extractors.DeceasedExtractor
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class IndexController @Inject()(
@@ -35,14 +33,13 @@ class IndexController @Inject()(
                                  actions: Actions,
                                  repository: SessionRepository,
                                  estatesConnector: EstatesConnector,
-                                 localDateTimeService: LocalDateTimeService,
                                  deceasedExtractor: DeceasedExtractor
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authWithSession.async {
     implicit request =>
 
-      val userAnswers: UserAnswers = UserAnswers(request.internalId, Json.obj(), localDateTimeService.now)
+      val userAnswers: UserAnswers = UserAnswers(request.internalId)
 
       estatesConnector.getDeceased() flatMap {
         case Some(deceased) =>

@@ -16,17 +16,17 @@
 
 package utils.mappers
 
-import java.time.LocalDate
-
-import models.{Address, DeceasedSettlor, Name, NationalInsuranceNumber, NonUkAddress, UkAddress, UserAnswers}
+import models.{Address, DeceasedSettlor, Name, NationalInsuranceNumber, NonUkAddress, UkAddress}
 import pages._
 import play.api.Logging
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsError, JsSuccess, Reads}
+import play.api.libs.json.{JsError, JsObject, JsSuccess, Reads}
+
+import java.time.LocalDate
 
 class DeceasedSettlorMapper extends Logging {
 
-  def apply(answers: UserAnswers): Option[DeceasedSettlor] = {
+  def apply(answersData: JsObject): Option[DeceasedSettlor] = {
     val readFromUserAnswers: Reads[DeceasedSettlor] =
       (
         NamePage.path.read[Name] and
@@ -36,7 +36,7 @@ class DeceasedSettlorMapper extends Logging {
         readAddress
       ) (DeceasedSettlor.apply _)
 
-    answers.data.validate[DeceasedSettlor](readFromUserAnswers) match {
+    answersData.validate[DeceasedSettlor](readFromUserAnswers) match {
       case JsSuccess(value, _) =>
         Some(value)
       case JsError(errors) =>

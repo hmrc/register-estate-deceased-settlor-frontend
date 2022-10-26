@@ -20,9 +20,8 @@ import base.SpecBase
 import forms.YesNoFormProvider
 import models.{Name, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.ArgumentMatchers.any
+import org.mockito.MockitoSugar
 import pages.{DateOfBirthYesNoPage, NamePage}
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -42,7 +41,7 @@ class DateOfBirthYesNoControllerSpec extends SpecBase with MockitoSugar {
 
   private lazy val dateOfBirthYesNoRoute = routes.DateOfBirthYesNoController.onPageLoad().url
 
-  val name = Name("New", None, "Settlor")
+  val name: Name = Name("New", None, "Settlor")
 
   override val emptyUserAnswers: UserAnswers = super.emptyUserAnswers
     .set(NamePage, name).success.value

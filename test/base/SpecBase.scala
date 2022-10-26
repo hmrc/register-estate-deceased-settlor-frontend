@@ -16,8 +16,6 @@
 
 package base
 
-import java.time.LocalDateTime
-
 import config.FrontendAppConfig
 import controllers.actions._
 import models.UserAnswers
@@ -32,7 +30,8 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import repositories.SessionRepository
-import services.LocalDateTimeService
+
+import java.time.LocalDateTime
 
 trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Mocked with ScalaFutures with IntegrationPatience {
 
@@ -40,10 +39,6 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Moc
   final val WELSH = "cy"
 
   val currentDateTime: LocalDateTime = LocalDateTime.of(1999, 3, 14, 13, 33)
-
-  object LocalDateTimeServiceStub extends LocalDateTimeService {
-    override def now: LocalDateTime = currentDateTime
-  }
 
   val userAnswersId = "id"
 
@@ -65,7 +60,6 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Moc
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[LocalDateTimeService].toInstance(LocalDateTimeServiceStub),
         bind[SessionRepository].toInstance(mockPlaybackRepository)
       )
 }

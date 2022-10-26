@@ -16,13 +16,11 @@
 
 package controllers
 
-import java.time.LocalDateTime
-
 import base.SpecBase
 import forms.NonUkAddressFormProvider
 import models.{Name, NonUkAddress, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar
 import pages.{NamePage, NonUkAddressPage}
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -32,6 +30,8 @@ import play.api.test.Helpers._
 import utils.InputOption
 import utils.countryOptions.CountryOptionsNonUK
 import views.html.NonUkAddressView
+
+import java.time.LocalDateTime
 
 class NonUkAddressControllerSpec extends SpecBase with MockitoSugar {
 

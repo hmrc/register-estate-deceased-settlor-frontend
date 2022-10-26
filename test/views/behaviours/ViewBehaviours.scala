@@ -33,7 +33,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "have the correct banner title" in {
 
           val doc = asDocument(view)
-          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+          val bannerTitle = doc.getElementsByClass("hmrc-header__service-name hmrc-header__service-name--linked")
           bannerTitle.html() mustBe messages("service.name")
         }
 
@@ -74,7 +74,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "have the correct banner title" in {
 
           val doc = asDocument(view)
-          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+          val bannerTitle = doc.getElementsByClass("hmrc-header__service-name hmrc-header__service-name--linked")
           bannerTitle.html() mustBe messages("service.name")
         }
 
@@ -111,7 +111,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "have the correct banner title" in {
 
           val doc = asDocument(view)
-          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+          val bannerTitle = doc.getElementsByClass("hmrc-header__service-name hmrc-header__service-name--linked")
           bannerTitle.html() mustBe messages("service.name")
         }
 
@@ -143,8 +143,8 @@ trait ViewBehaviours extends ViewSpecBase {
   }
 
   def pageWithHint[A](form: Form[A],
-    createView: Form[A] => HtmlFormat.Appendable,
-    expectedHintKey: String): Unit = {
+                      createView: Form[A] => HtmlFormat.Appendable,
+                      expectedHintKey: String): Unit = {
 
     "behave like a page with hint text" in {
 
@@ -154,8 +154,8 @@ trait ViewBehaviours extends ViewSpecBase {
   }
 
   def pageWithDynamicHint(view: HtmlFormat.Appendable,
-                      expectedHintKey: String,
-                      expectedHintParam: String): Unit = {
+                          expectedHintKey: String,
+                          expectedHintParam: String): Unit = {
 
     "behave like a page with hint text" in {
 
@@ -220,7 +220,7 @@ trait ViewBehaviours extends ViewSpecBase {
     }
   }
 
-  def pageWithTitleAndSectionSubheading(view: HtmlFormat.Appendable, messageKeyPrefix: String) : Unit = {
+  def pageWithTitleAndSectionSubheading(view: HtmlFormat.Appendable, messageKeyPrefix: String): Unit = {
     "display the correct page title with section" in {
 
       val doc = asDocument(view)
@@ -241,7 +241,7 @@ trait ViewBehaviours extends ViewSpecBase {
     }
   }
 
-  def pageWithoutLogoutButton(view: HtmlFormat.Appendable) = {
+  def pageWithoutLogoutButton(view: HtmlFormat.Appendable): Unit = {
 
     "behave like a page without a logout button" must {
       "not have a logout button" in {

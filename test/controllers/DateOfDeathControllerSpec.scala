@@ -16,19 +16,19 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import base.SpecBase
 import forms.DateOfDeathFormProvider
 import models.Name
 import navigation.{FakeNavigator, Navigator}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar
 import pages.{DateOfDeathPage, NamePage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.DateOfDeathView
+
+import java.time.LocalDate
 
 class DateOfDeathControllerSpec extends SpecBase with MockitoSugar {
 
@@ -38,6 +38,7 @@ class DateOfDeathControllerSpec extends SpecBase with MockitoSugar {
   private val name = Name("FirstName", None, "LastName")
 
   private val formProvider = new DateOfDeathFormProvider()
+
   private def form = formProvider.withConfig("deceasedSettlor.dateOfDeath")
 
   private lazy val dateOfDeathRoute = routes.DateOfDeathController.onPageLoad().url
@@ -51,9 +52,9 @@ class DateOfDeathControllerSpec extends SpecBase with MockitoSugar {
   private def getPOSTRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, dateOfDeathRoute)
       .withFormUrlEncodedBody(
-        "value.day"   -> validAnswer.getDayOfMonth.toString,
+        "value.day" -> validAnswer.getDayOfMonth.toString,
         "value.month" -> validAnswer.getMonthValue.toString,
-        "value.year"  -> validAnswer.getYear.toString
+        "value.year" -> validAnswer.getYear.toString
       )
 
   "DateOfDeath Controller" must {

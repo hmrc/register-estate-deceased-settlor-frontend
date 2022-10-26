@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.NameFormProvider
 import models.Name
 import navigation.{FakeNavigator, Navigator}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar
 import pages.NamePage
 import play.api.inject.bind
 import play.api.mvc.Call

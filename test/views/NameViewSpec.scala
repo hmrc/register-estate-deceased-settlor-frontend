@@ -43,16 +43,7 @@ class NameViewSpec extends QuestionViewBehaviours[Name] {
 
     "fields" must {
 
-      behave like pageWithTextFields(
-        form,
-        applyView,
-        messageKeyPrefix,
-        None,
-        "",
-        "firstName",
-        "middleName",
-        "lastName"
-      )
+      behave like pageWithTextFields(form, applyView, messageKeyPrefix, None, "firstName", "middleName", "lastName")
     }
 
     behave like pageWithASubmitButton(applyView(form))

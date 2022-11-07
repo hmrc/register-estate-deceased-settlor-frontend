@@ -31,7 +31,10 @@ trait NonUkAddressViewBehaviours extends ViewBehaviours {
 
   val form: Form[NonUkAddress]
 
-  def nonUkAddressPage(createView: Form[NonUkAddress] => HtmlFormat.Appendable, titleMessagePrefix: Option[String], args: String*): Unit = {
+  def nonUkAddressPage(createView: Form[NonUkAddress] => HtmlFormat.Appendable,
+                       titleMessagePrefix: Option[String],
+                       expectedFormAction: String,
+                       args: String*): Unit = {
 
     val titlePrefix = titleMessagePrefix.getOrElse("site.address.nonUk")
 

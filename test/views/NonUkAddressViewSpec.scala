@@ -16,6 +16,7 @@
 
 package views
 
+import controllers.routes
 import forms.NonUkAddressFormProvider
 import models.{Name, NonUkAddress}
 import play.api.data.Form
@@ -45,7 +46,12 @@ class NonUkAddressViewSpec extends NonUkAddressViewBehaviours {
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like nonUkAddressPage(applyView, Some(messageKeyPrefix), name.displayName)
+    behave like nonUkAddressPage(
+      applyView,
+      Some(messageKeyPrefix),
+      routes.NonUkAddressController.onSubmit().url,
+      name.displayName
+    )
 
     behave like pageWithASubmitButton(applyView(form))
   }

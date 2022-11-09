@@ -33,7 +33,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "have the correct banner title" in {
 
           val doc = asDocument(view)
-          val bannerTitle = doc.getElementsByClass("hmrc-header__service-name hmrc-header__service-name--linked")
+          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
           bannerTitle.html() mustBe messages("service.name")
         }
 
@@ -74,7 +74,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "have the correct banner title" in {
 
           val doc = asDocument(view)
-          val bannerTitle = doc.getElementsByClass("hmrc-header__service-name hmrc-header__service-name--linked")
+          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
           bannerTitle.html() mustBe messages("service.name")
         }
 
@@ -111,7 +111,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "have the correct banner title" in {
 
           val doc = asDocument(view)
-          val bannerTitle = doc.getElementsByClass("hmrc-header__service-name hmrc-header__service-name--linked")
+          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
           bannerTitle.html() mustBe messages("service.name")
         }
 
@@ -220,7 +220,7 @@ trait ViewBehaviours extends ViewSpecBase {
     }
   }
 
-  def pageWithTitleAndSectionSubheading(view: HtmlFormat.Appendable, messageKeyPrefix: String): Unit = {
+  def pageWithTitleAndSectionSubheading(view: HtmlFormat.Appendable, messageKeyPrefix: String) : Unit = {
     "display the correct page title with section" in {
 
       val doc = asDocument(view)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ class DateOfDeathController @Inject()(
                                        view: DateOfDeathView
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form = formProvider.withConfig("deceasedSettlor.dateOfDeath")
+  private def form = formProvider.withConfig("deceasedSettlor.dateOfDeath")
 
   def onPageLoad(): Action[AnyContent] = actions.authWithName.apply {
     implicit request =>

@@ -71,7 +71,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
           "show an error summary" in {
 
             val doc = asDocument(createView(form.withError(FormError(field, "error"))))
-            assertRenderedById(doc, "error-summary-title")
+            assertNotRenderedById(doc, "govuk-error-summary")
           }
 
           s"show an error associated with the field '$field'" in {
@@ -165,7 +165,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
           "show an error summary" in {
 
             val doc = asDocument(createView(form.withError(FormError(field._1, "error"))))
-            assertRenderedById(doc, "error-summary-title")
+            assertNotRenderedById(doc, "govuk-error-summary")
           }
 
           s"show an error in the label for field '$field'" in {
@@ -243,7 +243,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
         "show an error summary" in {
 
           val doc = asDocument(createView(form.withError(FormError(dateKey, "error"))))
-          assertRenderedById(doc, "error-summary-title")
+          assertNotRenderedById(doc, "govuk-error-summary")
         }
 
         s"show an error in the legend" in {

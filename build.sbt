@@ -11,7 +11,6 @@ lazy val root = (project in file("."))
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(scalaSettings: _*)
   .settings(defaultSettings(): _*)
-  .settings(SbtDistributablesPlugin.publishingSettings: _*)
   .settings(inConfig(Test)(testSettings): _*)
   .settings(majorVersion := 0)
   .settings(

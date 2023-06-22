@@ -25,6 +25,7 @@ final case class DeceasedSettlor(name: Name,
                                  dateOfBirth: Option[LocalDate],
                                  dateOfDeath: Option[LocalDate],
                                  nino: Option[NationalInsuranceNumber],
+                                 addressYesNo: Option[Boolean],
                                  address : Option[Address])
 
 object DeceasedSettlor {
@@ -34,10 +35,11 @@ object DeceasedSettlor {
       (__ \ 'dateOfBirth).readNullable[LocalDate] and
       (__ \ 'dateOfDeath).readNullable[LocalDate] and
       __.lazyRead(readNullableAtSubPath[NationalInsuranceNumber](__ \ 'identification)) and
+      (__ \ 'addressYesNo).readNullable[Boolean] and
       __.lazyRead(readNullableAtSubPath[Address](__ \ 'identification \ 'address))).tupled.map{
 
-      case (name, dob, dod, nino, identification) =>
-        DeceasedSettlor(name, dob, dod, nino, identification)
+      case (name, dob, dod, nino, addressYesNo, identification) =>
+        DeceasedSettlor(name, dob, dod, nino, addressYesNo, identification)
 
     }
 
@@ -46,12 +48,14 @@ object DeceasedSettlor {
       (__ \ 'dateOfBirth).writeNullable[LocalDate] and
       (__ \ 'dateOfDeath).writeNullable[LocalDate] and
       (__ \ 'identification).writeNullable[NationalInsuranceNumber] and
+      (__ \ 'addressYesNo).writeNullable[Boolean] and
       (__ \ 'identification \ 'address).writeNullable[Address]
       ).apply(settlor => (
       settlor.name,
       settlor.dateOfBirth,
       settlor.dateOfDeath,
       settlor.nino,
+      settlor.addressYesNo,
       settlor.address
     ))
 

@@ -103,7 +103,7 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
           .overrides(bind[EstatesStoreConnector].toInstance(mockEstatesStoreConnector))
           .build()
 
-      val existingDeceased = DeceasedSettlor(Name("Fred", None, "Wilson"), None, Some(LocalDate.of(2010, 10, 10)), None, None)
+      val existingDeceased = DeceasedSettlor(Name("Fred", None, "Wilson"), None, Some(LocalDate.of(2010, 10, 10)), None, Some(false), None)
 
       when(mockEstatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(Some(existingDeceased)))
       when(mockEstatesConnector.setDeceased(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))

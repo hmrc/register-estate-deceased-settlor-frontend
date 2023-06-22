@@ -43,6 +43,7 @@ class DeceasedExtractorSpec extends SpecBase {
         dateOfBirth = None,
         dateOfDeath = Some(dateOfDeath),
         nino = None,
+        addressYesNo = Some(false),
         address = None
       )
 
@@ -66,6 +67,7 @@ class DeceasedExtractorSpec extends SpecBase {
         dateOfBirth = Some(dateOfBirth),
         dateOfDeath = Some(dateOfDeath),
         nino = None,
+        addressYesNo = Some(false),
         address = None
       )
 
@@ -82,6 +84,7 @@ class DeceasedExtractorSpec extends SpecBase {
         dateOfBirth = None,
         dateOfDeath = Some(dateOfDeath),
         nino = Some(NationalInsuranceNumber(nino)),
+        addressYesNo = None,
         address = None
       )
 
@@ -102,6 +105,7 @@ class DeceasedExtractorSpec extends SpecBase {
         dateOfBirth = None,
         dateOfDeath = Some(dateOfDeath),
         nino = None,
+        addressYesNo = Some(true),
         address = Some(ukAddress)
       )
 
@@ -122,6 +126,7 @@ class DeceasedExtractorSpec extends SpecBase {
         dateOfBirth = None,
         dateOfDeath = Some(dateOfDeath),
         nino = None,
+        addressYesNo = Some(true),
         address = Some(nonUkAddress)
       )
 

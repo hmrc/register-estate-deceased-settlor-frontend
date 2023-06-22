@@ -28,6 +28,7 @@ class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
     Some(LocalDate.of(1878, 4, 10)),
     Some(LocalDate.of(1960, 8, 2)),
     Some(NationalInsuranceNumber("Neenoh")),
+    None,
     None)
 
   private val jsonWithNino = Json.parse(
@@ -50,6 +51,7 @@ class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
     Some(LocalDate.of(1878, 4, 10)),
     Some(LocalDate.of(1960, 8, 2)),
     None,
+    Some(true),
     Some(UkAddress("Line1", "Line2", None, None, "PostCode")))
 
   private val jsonWithUkAddress = Json.parse(
@@ -61,6 +63,7 @@ class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
       | },
       | "dateOfBirth": "1878-04-10",
       | "dateOfDeath": "1960-08-02",
+      | "addressYesNo": true,
       | "identification": {
       |   "address": {
       |     "line1": "Line1",
@@ -88,7 +91,7 @@ class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
     }
 
     "not write an empty identification" in {
-      val settlor = DeceasedSettlor(Name("First", None, "Last"), None, None, None, None)
+      val settlor = DeceasedSettlor(Name("First", None, "Last"), None, None, None, None, None)
 
       val json = Json.toJson(settlor)
       json mustBe Json.parse(

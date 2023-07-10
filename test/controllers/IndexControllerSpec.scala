@@ -67,6 +67,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
       Some(LocalDate.of(1972, 9, 18)),
       Some(LocalDate.of(2018, 2, 23)),
       Some(NationalInsuranceNumber("AA111111B")),
+      None,
       None
     )
 

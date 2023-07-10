@@ -33,6 +33,7 @@ class DeceasedSettlorMapper extends Logging {
         DateOfBirthPage.path.readNullable[LocalDate] and
         DateOfDeathPage.path.readNullable[LocalDate] and
         readNationalInsuranceNumber and
+        AddressYesNoPage.path.readNullable[Boolean] and
         readAddress
       ) (DeceasedSettlor.apply _)
 

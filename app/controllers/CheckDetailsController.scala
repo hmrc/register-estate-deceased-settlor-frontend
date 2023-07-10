@@ -67,11 +67,10 @@ class CheckDetailsController @Inject()(
 
   def onSubmit(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-
       mapper(request.userAnswers.data) match {
         case Some(deceasedSettlor) =>
           estatesConnector.getDeceased() flatMap {
-            case Some(DeceasedSettlor(_, _, Some(previousDateOfDeath), _, _)) =>
+            case Some(DeceasedSettlor(_, _, Some(previousDateOfDeath), _, _, _)) =>
               if(!deceasedSettlor.dateOfDeath.contains(previousDateOfDeath)) {
                 logger.info(s"[submit][Session ID: ${Session.id(hc)}]" +
                   s" previous date $previousDateOfDeath, new date: ${deceasedSettlor.dateOfDeath}")

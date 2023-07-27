@@ -31,12 +31,12 @@ final case class DeceasedSettlor(name: Name,
 object DeceasedSettlor {
 
   implicit val reads: Reads[DeceasedSettlor] =
-    ((__ \ 'name).read[Name] and
-      (__ \ 'dateOfBirth).readNullable[LocalDate] and
-      (__ \ 'dateOfDeath).readNullable[LocalDate] and
-      __.lazyRead(readNullableAtSubPath[NationalInsuranceNumber](__ \ 'identification)) and
-      (__ \ 'addressYesNo).readNullable[Boolean] and
-      __.lazyRead(readNullableAtSubPath[Address](__ \ 'identification \ 'address))).tupled.map{
+    ((__ \ Symbol("name")).read[Name] and
+      (__ \ Symbol("dateOfBirth")).readNullable[LocalDate] and
+      (__ \ Symbol("dateOfDeath")).readNullable[LocalDate] and
+      __.lazyRead(readNullableAtSubPath[NationalInsuranceNumber](__ \ Symbol("identification"))) and
+      (__ \ Symbol("addressYesNo")).readNullable[Boolean] and
+      __.lazyRead(readNullableAtSubPath[Address](__ \ Symbol("identification") \ Symbol("address")))).tupled.map{
 
       case (name, dob, dod, nino, addressYesNo, identification) =>
         DeceasedSettlor(name, dob, dod, nino, addressYesNo, identification)
@@ -44,12 +44,12 @@ object DeceasedSettlor {
     }
 
   implicit val writes: Writes[DeceasedSettlor] =
-    ((__ \ 'name).write[Name] and
-      (__ \ 'dateOfBirth).writeNullable[LocalDate] and
-      (__ \ 'dateOfDeath).writeNullable[LocalDate] and
-      (__ \ 'identification).writeNullable[NationalInsuranceNumber] and
-      (__ \ 'addressYesNo).writeNullable[Boolean] and
-      (__ \ 'identification \ 'address).writeNullable[Address]
+    ((__ \ Symbol("name")).write[Name] and
+      (__ \ Symbol("dateOfBirth")).writeNullable[LocalDate] and
+      (__ \ Symbol("dateOfDeath")).writeNullable[LocalDate] and
+      (__ \ Symbol("identification")).writeNullable[NationalInsuranceNumber] and
+      (__ \ Symbol("addressYesNo")).writeNullable[Boolean] and
+      (__ \ Symbol("identification") \ Symbol("address")).writeNullable[Address]
       ).apply(settlor => (
       settlor.name,
       settlor.dateOfBirth,
@@ -59,7 +59,7 @@ object DeceasedSettlor {
       settlor.address
     ))
 
-  def readNullableAtSubPath[T:Reads](subPath : JsPath) : Reads[Option[T]] = Reads (
+  private def readNullableAtSubPath[T:Reads](subPath : JsPath) : Reads[Option[T]] = Reads (
     _.transform(subPath.json.pick)
       .flatMap(_.validate[T])
       .map(Some(_))

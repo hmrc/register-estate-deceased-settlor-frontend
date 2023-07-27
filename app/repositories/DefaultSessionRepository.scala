@@ -44,13 +44,13 @@ class DefaultSessionRepository @Inject()(
         IndexOptions()
           .unique(false)
           .name("user-answers-updated-at-index")
-          .expireAfter(config.cacheTtlSeconds, TimeUnit.SECONDS))),
+          .expireAfter(config.cacheTtlSeconds, TimeUnit.SECONDS))).toList,
     replaceIndexes = config.dropIndexes
   )
     with SessionRepository {
 
   override def get(id: String): Future[Option[UserAnswers]] =
-    collection.find(Filters.eq("_id", id)) headOption()
+    collection.find(Filters.eq("_id", id)).headOption()
 
   override def set(userAnswers: UserAnswers): Future[Boolean] = {
     val selector = Filters.eq("_id", userAnswers.internalAuthId)

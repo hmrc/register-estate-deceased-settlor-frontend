@@ -30,6 +30,6 @@ class CountryOptionsNonUK @Inject()(
                                    ) extends CountryOptions(environment, config) {
 
   override def options()(implicit messages: Messages): Seq[InputOption] = {
-    CountryOptions.getCountries(environment, getFileName).filterNot(x => x.value == config.UK_COUNTRY_CODE)
+    CountryOptions.getCountries(environment, getFileName()).filterNot(x => x.value == config.UK_COUNTRY_CODE)
   }
 }

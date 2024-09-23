@@ -17,6 +17,7 @@
 package forms
 
 import forms.behaviours.StringFieldBehaviours
+import models.NonUkAddress
 import play.api.data.FormError
 import wolfendale.scalacheck.regexp.RegexpGen
 
@@ -150,5 +151,16 @@ class NonUkAddressFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey, Seq(fieldName))
     )
+  }
+
+  "address lines" must {
+    "bind whitespace, trim text, and replace smart apostrophes with single quotes" in {
+      val addressLine = s"‘AddressLine’  "
+      val result = form.bind(
+        Map("line1" -> addressLine, "line2" -> addressLine, "line3" -> addressLine, "country" -> "England")
+      )
+
+      result.value.value shouldBe NonUkAddress("'AddressLine'", "'AddressLine'", Some("'AddressLine'"), "England")
+    }
   }
 }

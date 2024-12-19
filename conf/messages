@@ -15,7 +15,6 @@ site.yes = Yes
 site.continue = Continue
 site.service_section = Person who died
 site.textarea.char_limit = (Limit is {0} characters)
-site.returnToRegistrationProgress = Return to registration progress
 site.sign_out = Sign out
 site.sign_in = Sign in
 site.error = Error:

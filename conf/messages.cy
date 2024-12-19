@@ -13,7 +13,6 @@ site.yes=Iawn
 site.continue=Yn eich blaen
 site.service_section=Enw’r person a fu farw
 site.textarea.char_limit=(Y terfyn yw {0} o gymeriadau)
-site.returnToRegistrationProgress=Yn ôl i gynnydd cofrestru
 site.sign_out=Allgofnodi
 site.sign_in=Mewngofnodi
 site.error = Gwall:

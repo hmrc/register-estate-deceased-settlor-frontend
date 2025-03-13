@@ -18,7 +18,9 @@ package base
 
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.{ArgumentCaptor, MockitoSugar}
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import repositories.SessionRepository
 
 import scala.concurrent.Future

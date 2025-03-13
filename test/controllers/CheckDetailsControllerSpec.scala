@@ -21,8 +21,9 @@ import config.FrontendAppConfig
 import connectors.{EstatesConnector, EstatesStoreConnector}
 import models.{DeceasedSettlor, Name, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import play.api.inject.bind
 import play.api.test.FakeRequest

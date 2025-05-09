@@ -29,7 +29,7 @@
     link: Link
 )
 
-@(form: Form[_], name: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], name: String)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)}${messages("deceasedSettlor.dateOfBirthYesNo.title", name)}",

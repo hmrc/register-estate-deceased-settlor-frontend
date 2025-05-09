@@ -28,7 +28,7 @@
     govukSummaryList: GovukSummaryList
 )
 
-@(answerSection: AnswerSection, name: String)(implicit request: Request[_], messages: Messages)
+@(answerSection: AnswerSection, name: String)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = messages("deceasedSettlor.checkDetails.title"),

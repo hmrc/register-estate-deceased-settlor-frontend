@@ -45,7 +45,7 @@ class CheckDetailsController @Inject()(
                                         printHelper: DeceasedSettlorPrintHelper,
                                         mapper: DeceasedSettlorMapper,
                                         errorHandler: ErrorHandler
-                                      )(implicit ec: ExecutionContext
+                                      )(implicit val ec: ExecutionContext
 ) extends FrontendBaseController with I18nSupport with Logging {
 
   private def render(userAnswers: UserAnswers,
@@ -87,7 +87,7 @@ class CheckDetailsController @Inject()(
           }
         case None =>
           logger.warn(s"[submit][Session ID: ${Session.id(hc)}] Unable to generate agent details to submit.")
-          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
       }
   }
 

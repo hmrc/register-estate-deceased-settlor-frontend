@@ -1,6 +1,6 @@
 import scoverage.ScoverageKeys
 
-ThisBuild / scalaVersion := "2.13.14"
+ThisBuild / scalaVersion := "2.13.16"
 ThisBuild / majorVersion := 0
 
 lazy val root = Project("register-estate-deceased-settlor-frontend", file("."))

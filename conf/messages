@@ -133,6 +133,7 @@ deceasedSettlor.dateOfBirth.error.afterDateOfDeath = Date of birth must be on or
 deceasedSettlor.nationalInsuranceNumberYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 deceasedSettlor.nationalInsuranceNumberYesNo.title = Do you know the National Insurance number of the person who died?
 deceasedSettlor.nationalInsuranceNumberYesNo.heading = Do you know {0}’s National Insurance number?
+deceasedSettlor.nationalInsuranceNumberYesNo.hint = It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
 deceasedSettlor.nationalInsuranceNumberYesNo.error.required = Select yes if you know the National Insurance number of the person who died
 
 deceasedSettlor.nationalInsuranceNumber.checkYourAnswersLabel = What is {0}’s National Insurance number?

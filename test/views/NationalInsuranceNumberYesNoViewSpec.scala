@@ -45,5 +45,7 @@ class NationalInsuranceNumberYesNoViewSpec extends YesNoViewBehaviours {
     behave like yesNoPage(form, applyView, messageKeyPrefix, Some(name.displayName), routes.NationalInsuranceNumberYesNoController.onSubmit().url)
 
     behave like pageWithASubmitButton(applyView(form))
+
+    behave like pageWithHint(form, applyView, messageKeyPrefix + ".hint")
   }
 }

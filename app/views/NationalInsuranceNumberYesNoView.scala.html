@@ -41,7 +41,8 @@
 
         @inputYesNo(
             field = form("value"),
-            label = messages("deceasedSettlor.nationalInsuranceNumberYesNo.heading", name)
+            label = messages("deceasedSettlor.nationalInsuranceNumberYesNo.heading", name),
+            hint = Some(messages("deceasedSettlor.nationalInsuranceNumberYesNo.hint"))
         )
 
         @submitButton()

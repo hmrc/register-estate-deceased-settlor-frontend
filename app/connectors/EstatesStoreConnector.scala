@@ -17,24 +17,27 @@
 package connectors
 
 import config.FrontendAppConfig
+
 import javax.inject.Inject
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EstatesStoreConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
-
-  private def registerTasksUrl() = s"${config.estatesStoreUrl}/estates-store/register/tasks/deceased"
+class EstatesStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConfig) {
 
   def setTaskComplete()(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
-    http.POSTEmpty[HttpResponse](registerTasksUrl())
+    val registerTasksUrl = s"${config.estatesStoreUrl}/estates-store/register/tasks/deceased"
+    http
+      .post(url"$registerTasksUrl")
+      .execute[HttpResponse]
   }
 
-  private def resetTaxLiabilityUrl() = s"${config.estatesStoreUrl}/estates-store/register/tasks/tax-liability/reset"
-
   def resetTaxLiabilityTask()(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
-    http.POSTEmpty[HttpResponse](resetTaxLiabilityUrl())
+    val resetTaxLiabilityUrl = s"${config.estatesStoreUrl}/estates-store/register/tasks/tax-liability/reset"
+    http
+      .post(url"$resetTaxLiabilityUrl")
+      .execute[HttpResponse]
   }
 }

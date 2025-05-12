@@ -17,35 +17,44 @@
 package connectors
 
 import config.FrontendAppConfig
+
 import javax.inject.Inject
 import models.DeceasedSettlor
 import play.api.libs.json.{JsSuccess, JsValue, Json}
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EstatesConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
+class EstatesConnector @Inject()(http: HttpClientV2, config: FrontendAppConfig) {
 
   private lazy val deceasedUrl = s"${config.estatesUrl}/estates/deceased"
 
   def getDeceased()(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[Option[DeceasedSettlor]] = {
-    http.GET[JsValue](deceasedUrl) flatMap {
-      _.validate[DeceasedSettlor] match {
-        case JsSuccess(value, _) => Future.successful(Some(value))
-        case _ => Future.successful(None)
+    http
+      .get(url"$deceasedUrl")
+      .execute[JsValue]
+      .flatMap {
+        _.validate[DeceasedSettlor] match {
+          case JsSuccess(value, _) => Future.successful(Some(value))
+          case _ => Future.successful(None)
+        }
       }
-    }
   }
 
   def setDeceased(deceasedSettlor: DeceasedSettlor)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
-    http.POST[JsValue, HttpResponse](deceasedUrl, Json.toJson(deceasedSettlor))
+    http
+      .post(url"$deceasedUrl")
+      .withBody(Json.toJson(deceasedSettlor))
+      .execute[HttpResponse]
   }
 
   private lazy val resetTaxLiabilityUrl = s"${config.estatesUrl}/estates/reset-tax-liability"
 
   def resetTaxLiability()(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
-    http.POSTEmpty[HttpResponse](resetTaxLiabilityUrl)
+    http
+      .post(url"$resetTaxLiabilityUrl")
+      .execute[HttpResponse]
   }
 }

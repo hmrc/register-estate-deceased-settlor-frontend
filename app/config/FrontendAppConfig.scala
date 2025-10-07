@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,10 @@ package config
 import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
-class FrontendAppConfig @Inject()(configuration: Configuration) {
+class FrontendAppConfig @Inject()(configuration: Configuration, servicesConfig: ServicesConfig) {
 
   final val ENGLISH = "en"
   final val WELSH = "cy"
@@ -37,8 +38,8 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
   lazy val countdownLength: Int = configuration.get[Int]("timeout.countdown")
   lazy val timeoutLength: Int = configuration.get[Int]("timeout.length")
 
-  lazy val estatesUrl: String = configuration.get[Service]("microservice.services.estates").baseUrl
-  lazy val estatesStoreUrl: String = configuration.get[Service]("microservice.services.estates-store").baseUrl
+  lazy val estatesUrl: String = servicesConfig.baseUrl("estates")
+  lazy val estatesStoreUrl: String = servicesConfig.baseUrl("estates-store")
   lazy val registrationProgressUrl: String = configuration.get[String]("urls.registrationProgress")
 
   lazy val locationCanonicalList: String = configuration.get[String]("location.canonical.list.all")

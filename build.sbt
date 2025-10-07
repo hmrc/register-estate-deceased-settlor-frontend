@@ -1,5 +1,3 @@
-import scoverage.ScoverageKeys
-
 ThisBuild / scalaVersion := "2.13.16"
 ThisBuild / majorVersion := 0
 
@@ -18,6 +16,7 @@ lazy val root = Project("register-estate-deceased-settlor-frontend", file("."))
       "models.Mode",
       "controllers.routes._"
     ),
+    PlayKeys.playDefaultPort := 8824,
     CodeCoverageSettings.settings,
     scalacOptions ++= Seq(
       "-feature",

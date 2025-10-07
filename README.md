@@ -13,7 +13,7 @@ If you want to run your local copy, then stop the frontend ran by the service ma
 ```
 
 ## Testing the service
-Run unit tests before raising a PR to ensure your code changes pass the Jenkins pipeline. This runs all the unit tests and integration tests with scalastyle and checks for dependency updates:
+Run unit tests before raising a PR to ensure your code changes pass the Jenkins pipeline. This runs all the unit tests and integration tests and checks for dependency updates:
 
 ```bash
  ./run_all_tests.sh

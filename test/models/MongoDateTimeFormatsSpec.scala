@@ -19,7 +19,7 @@ package models
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import play.api.libs.json.Json
+import play.api.libs.json.{JsResultException, Json}
 
 import java.time.{LocalDate, LocalDateTime}
 
@@ -48,6 +48,53 @@ class MongoDateTimeFormatsSpec extends AnyFreeSpec with Matchers with OptionValu
     "must serialise/deserialise to the same value" in {
       val result = Json.toJson(date).as[LocalDateTime]
       result mustEqual date
+    }
+
+    "must deserialise when $date is an object containing $numberLong as a string" in {
+      val jsonWithNumberLong = Json.obj(
+        s"$$date" -> Json.obj(
+          s"$$numberLong" -> dateMillis.toString
+        )
+      )
+
+      val result = jsonWithNumberLong.as[LocalDateTime]
+      result mustEqual date
+    }
+
+    "must deserialise when $date is an ISO-8601 string with trailing Z (ZonedDateTime)" in {
+      val jsonWithZString = Json.obj(
+        s"$$date" -> "2018-02-01T00:00:00Z"
+      )
+
+      val result = jsonWithZString.as[LocalDateTime]
+      result mustEqual date
+    }
+
+    "must deserialise when $date is an ISO-8601 string without Z (LocalDateTime)" in {
+      val jsonWithoutZString = Json.obj(
+        s"$$date" -> "2018-02-01T00:00:00"
+      )
+
+      val result = jsonWithoutZString.as[LocalDateTime]
+      result mustEqual date
+    }
+
+    "must fail when $date is an unexpected object shape (missing $numberLong)" in {
+      val badObject = Json.obj(
+        s"$$date" -> Json.obj("notNumberLong" -> "something")
+      )
+
+      intercept[JsResultException] {
+        badObject.as[LocalDateTime]
+      }
+    }
+
+    "must fail when json does not contain $date at the top level" in {
+      val noDateField = Json.obj("foo" -> "bar")
+
+      intercept[JsResultException] {
+        noDateField.as[LocalDateTime]
+      }
     }
   }
 }

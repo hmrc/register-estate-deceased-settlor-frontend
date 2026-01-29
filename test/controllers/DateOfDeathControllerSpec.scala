@@ -35,7 +35,7 @@ class DateOfDeathControllerSpec extends SpecBase with MockitoSugar {
   private def onwardRoute = Call("GET", "/foo")
 
   private val validAnswer = LocalDate.of(2018, 2, 24)
-  private val name = Name("FirstName", None, "LastName")
+  private val name        = Name("FirstName", None, "LastName")
 
   private val formProvider = new DateOfDeathFormProvider()
 
@@ -43,8 +43,7 @@ class DateOfDeathControllerSpec extends SpecBase with MockitoSugar {
 
   private lazy val dateOfDeathRoute = routes.DateOfDeathController.onPageLoad().url
 
-  private val userAnswersWithName = emptyUserAnswers.set(NamePage, name)
-    .success.value
+  private val userAnswersWithName = emptyUserAnswers.set(NamePage, name).success.value
 
   private def getGETRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, dateOfDeathRoute)
@@ -52,9 +51,9 @@ class DateOfDeathControllerSpec extends SpecBase with MockitoSugar {
   private def getPOSTRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, dateOfDeathRoute)
       .withFormUrlEncodedBody(
-        "value.day" -> validAnswer.getDayOfMonth.toString,
+        "value.day"   -> validAnswer.getDayOfMonth.toString,
         "value.month" -> validAnswer.getMonthValue.toString,
-        "value.year" -> validAnswer.getYear.toString
+        "value.year"  -> validAnswer.getYear.toString
       )
 
   "DateOfDeath Controller" must {
@@ -78,8 +77,12 @@ class DateOfDeathControllerSpec extends SpecBase with MockitoSugar {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(DateOfDeathPage, validAnswer).success.value
-        .set(NamePage, name).success.value
+        .set(DateOfDeathPage, validAnswer)
+        .success
+        .value
+        .set(NamePage, name)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -98,7 +101,9 @@ class DateOfDeathControllerSpec extends SpecBase with MockitoSugar {
     "redirect to the next page when valid data is submitted" in {
 
       val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
+        .set(NamePage, name)
+        .success
+        .value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -163,4 +168,5 @@ class DateOfDeathControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

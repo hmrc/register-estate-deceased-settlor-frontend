@@ -21,12 +21,14 @@ import java.time.LocalDate
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-final case class DeceasedSettlor(name: Name,
-                                 dateOfBirth: Option[LocalDate],
-                                 dateOfDeath: Option[LocalDate],
-                                 nino: Option[NationalInsuranceNumber],
-                                 addressYesNo: Option[Boolean],
-                                 address : Option[Address])
+final case class DeceasedSettlor(
+  name: Name,
+  dateOfBirth: Option[LocalDate],
+  dateOfDeath: Option[LocalDate],
+  nino: Option[NationalInsuranceNumber],
+  addressYesNo: Option[Boolean],
+  address: Option[Address]
+)
 
 object DeceasedSettlor {
 
@@ -36,7 +38,7 @@ object DeceasedSettlor {
       (__ \ Symbol("dateOfDeath")).readNullable[LocalDate] and
       __.lazyRead(readNullableAtSubPath[NationalInsuranceNumber](__ \ Symbol("identification"))) and
       (__ \ Symbol("addressYesNo")).readNullable[Boolean] and
-      __.lazyRead(readNullableAtSubPath[Address](__ \ Symbol("identification") \ Symbol("address")))).tupled.map{
+      __.lazyRead(readNullableAtSubPath[Address](__ \ Symbol("identification") \ Symbol("address")))).tupled.map {
 
       case (name, dob, dod, nino, addressYesNo, identification) =>
         DeceasedSettlor(name, dob, dod, nino, addressYesNo, identification)
@@ -49,20 +51,22 @@ object DeceasedSettlor {
       (__ \ Symbol("dateOfDeath")).writeNullable[LocalDate] and
       (__ \ Symbol("identification")).writeNullable[NationalInsuranceNumber] and
       (__ \ Symbol("addressYesNo")).writeNullable[Boolean] and
-      (__ \ Symbol("identification") \ Symbol("address")).writeNullable[Address]
-      ).apply(settlor => (
-      settlor.name,
-      settlor.dateOfBirth,
-      settlor.dateOfDeath,
-      settlor.nino,
-      settlor.addressYesNo,
-      settlor.address
-    ))
+      (__ \ Symbol("identification") \ Symbol("address")).writeNullable[Address]).apply(settlor =>
+      (
+        settlor.name,
+        settlor.dateOfBirth,
+        settlor.dateOfDeath,
+        settlor.nino,
+        settlor.addressYesNo,
+        settlor.address
+      )
+    )
 
-  private def readNullableAtSubPath[T:Reads](subPath : JsPath) : Reads[Option[T]] = Reads (
+  private def readNullableAtSubPath[T: Reads](subPath: JsPath): Reads[Option[T]] = Reads(
     _.transform(subPath.json.pick)
       .flatMap(_.validate[T])
       .map(Some(_))
       .recoverWith(_ => JsSuccess(None))
   )
+
 }

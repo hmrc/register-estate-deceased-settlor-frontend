@@ -38,14 +38,16 @@ class DateOfBirthYesNoControllerSpec extends SpecBase with MockitoSugar {
   private def onwardRoute = Call("GET", "/foo")
 
   private val formProvider = new YesNoFormProvider()
-  private val form = formProvider.withPrefix("deceasedSettlor.dateOfBirthYesNo")
+  private val form         = formProvider.withPrefix("deceasedSettlor.dateOfBirthYesNo")
 
   private lazy val dateOfBirthYesNoRoute = routes.DateOfBirthYesNoController.onPageLoad().url
 
   val name: Name = Name("New", None, "Settlor")
 
   override val emptyUserAnswers: UserAnswers = super.emptyUserAnswers
-    .set(NamePage, name).success.value
+    .set(NamePage, name)
+    .success
+    .value
 
   "DateOfBirthYesNoPage Controller" must {
 
@@ -167,4 +169,5 @@ class DateOfBirthYesNoControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

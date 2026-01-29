@@ -36,7 +36,7 @@ import scala.concurrent.Future
 class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar {
 
   private val formProvider = new NationalInsuranceNumberFormProvider()
-  private val form = formProvider.withPrefix("deceasedSettlor.nationalInsuranceNumber")
+  private val form         = formProvider.withPrefix("deceasedSettlor.nationalInsuranceNumber")
 
   private val name = Name("FirstName", None, "LastName")
 
@@ -67,8 +67,12 @@ class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
-        .set(NationalInsuranceNumberPage, "answer").success.value
+        .set(NamePage, name)
+        .success
+        .value
+        .set(NationalInsuranceNumberPage, "answer")
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -123,7 +127,9 @@ class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar {
       when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
 
       val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
+        .set(NamePage, name)
+        .success
+        .value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -200,4 +206,5 @@ class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

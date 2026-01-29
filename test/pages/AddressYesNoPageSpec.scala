@@ -22,7 +22,6 @@ import play.api.libs.json.Json
 
 import java.time.LocalDateTime
 
-
 class AddressYesNoPageSpec extends PageBehaviours {
 
   "AddressYesNoPage" must {
@@ -35,7 +34,9 @@ class AddressYesNoPageSpec extends PageBehaviours {
 
     "implement cleanup logic when NO selected" in {
       val userAnswers = UserAnswers("id", Json.obj(), LocalDateTime.now)
-        .set(UkAddressPage, UkAddress("line1", "line2", None, None, "postcode")).success.value
+        .set(UkAddressPage, UkAddress("line1", "line2", None, None, "postcode"))
+        .success
+        .value
         .set(LivedInTheUkYesNoPage, false)
 
       userAnswers.get.get(UkAddressPage) mustNot be(defined)
@@ -43,10 +44,13 @@ class AddressYesNoPageSpec extends PageBehaviours {
 
     "implement cleanup logic when YES selected" in {
       val userAnswers = UserAnswers("id", Json.obj(), LocalDateTime.now)
-        .set(NonUkAddressPage, NonUkAddress("line1", "line2", None, "country")).success.value
+        .set(NonUkAddressPage, NonUkAddress("line1", "line2", None, "country"))
+        .success
+        .value
         .set(LivedInTheUkYesNoPage, true)
 
       userAnswers.get.get(NonUkAddressPage) mustNot be(defined)
     }
   }
+
 }

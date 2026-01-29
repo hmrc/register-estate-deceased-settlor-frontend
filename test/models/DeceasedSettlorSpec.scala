@@ -23,16 +23,17 @@ import play.api.libs.json.Json
 import java.time.LocalDate
 
 class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
+
   private val settlorWithNino = DeceasedSettlor(
     Name("First", None, "Last"),
     Some(LocalDate.of(1878, 4, 10)),
     Some(LocalDate.of(1960, 8, 2)),
     Some(NationalInsuranceNumber("Neenoh")),
     None,
-    None)
+    None
+  )
 
-  private val jsonWithNino = Json.parse(
-    """
+  private val jsonWithNino = Json.parse("""
       |{
       | "name": {
       |   "firstName": "First",
@@ -52,10 +53,10 @@ class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
     Some(LocalDate.of(1960, 8, 2)),
     None,
     Some(true),
-    Some(UkAddress("Line1", "Line2", None, None, "PostCode")))
+    Some(UkAddress("Line1", "Line2", None, None, "PostCode"))
+  )
 
-  private val jsonWithUkAddress = Json.parse(
-    """
+  private val jsonWithUkAddress = Json.parse("""
       |{
       | "name": {
       |   "firstName": "First",
@@ -75,10 +76,9 @@ class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
       |}
       |""".stripMargin)
 
-
   ".reads" must {
     "read fields" in {
-      jsonWithNino.validate[DeceasedSettlor].get mustBe settlorWithNino
+      jsonWithNino.validate[DeceasedSettlor].get      mustBe settlorWithNino
       jsonWithUkAddress.validate[DeceasedSettlor].get mustBe settlorWithUkAddress
     }
   }
@@ -86,7 +86,7 @@ class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
   ".writes" must {
 
     "write fields" in {
-      Json.toJson(settlorWithNino) mustBe jsonWithNino
+      Json.toJson(settlorWithNino)      mustBe jsonWithNino
       Json.toJson(settlorWithUkAddress) mustBe jsonWithUkAddress
     }
 
@@ -94,8 +94,7 @@ class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
       val settlor = DeceasedSettlor(Name("First", None, "Last"), None, None, None, None, None)
 
       val json = Json.toJson(settlor)
-      json mustBe Json.parse(
-        """
+      json mustBe Json.parse("""
           |{
           | "name": {
           |   "firstName": "First",
@@ -105,4 +104,5 @@ class DeceasedSettlorSpec extends AnyWordSpec with Matchers {
           |""".stripMargin)
     }
   }
+
 }

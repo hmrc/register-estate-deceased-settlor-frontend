@@ -34,36 +34,34 @@ import views.html.DateOfBirthView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DateOfBirthController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       sessionRepository: SessionRepository,
-                                       navigator: Navigator,
-                                       actions: Actions,
-                                       formProvider: DateOfBirthFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: DateOfBirthView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class DateOfBirthController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  actions: Actions,
+  formProvider: DateOfBirthFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: DateOfBirthView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   private def form(maxDate: (LocalDate, String)): Form[LocalDate] =
     formProvider.withConfig("deceasedSettlor.dateOfBirth", maxDate)
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithName {
-    implicit request: NameRequest[AnyContent] =>
+  def onPageLoad(): Action[AnyContent] = actions.authWithName { implicit request: NameRequest[AnyContent] =>
+    val preparedForm = request.userAnswers.get(DateOfBirthPage) match {
+      case None        => form(maxDate)
+      case Some(value) => form(maxDate).fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(DateOfBirthPage) match {
-        case None => form(maxDate)
-        case Some(value) => form(maxDate).fill(value)
-      }
-
-      Ok(view(preparedForm, request.name))
+    Ok(view(preparedForm, request.name))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.authWithName.async {
-    implicit request =>
-
-      form(maxDate).bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, request.name))),
+  def onSubmit(): Action[AnyContent] = actions.authWithName.async { implicit request =>
+    form(maxDate)
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, request.name))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(DateOfBirthPage, value))
@@ -72,12 +70,12 @@ class DateOfBirthController @Inject()(
       )
   }
 
-  private def maxDate(implicit request: NameRequest[AnyContent]): (LocalDate, String) = {
+  private def maxDate(implicit request: NameRequest[AnyContent]): (LocalDate, String) =
     request.userAnswers.get(DateOfDeathPage) match {
       case Some(dateOfDeath) =>
         (dateOfDeath, "afterDateOfDeath")
-      case None =>
+      case None              =>
         (LocalDate.now, "future")
     }
-  }
+
 }

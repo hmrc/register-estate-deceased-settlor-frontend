@@ -30,36 +30,33 @@ import views.html.UkAddressView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class UkAddressController @Inject()(
-                                     override val messagesApi: MessagesApi,
-                                     sessionRepository: SessionRepository,
-                                     navigator: Navigator,
-                                     actions: Actions,
-                                     formProvider: UkAddressFormProvider,
-                                     val controllerComponents: MessagesControllerComponents,
-                                     view: UkAddressView
-                                   )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class UkAddressController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  actions: Actions,
+  formProvider: UkAddressFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: UkAddressView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   private val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithName {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.authWithName { implicit request =>
+    val preparedForm = request.userAnswers.get(UkAddressPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(UkAddressPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, request.name))
+    Ok(view(preparedForm, request.name))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.authWithName.async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, request.name))),
-
+  def onSubmit(): Action[AnyContent] = actions.authWithName.async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, request.name))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(UkAddressPage, value))
@@ -67,4 +64,5 @@ class UkAddressController @Inject()(
           } yield Redirect(navigator.nextPage(UkAddressPage, NormalMode, updatedAnswers))
       )
   }
+
 }

@@ -38,4 +38,5 @@ class SessionTimeoutController @Inject() (
   val timeout: Action[AnyContent] = Action.async {
     Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad.url).withNewSession)
   }
+
 }

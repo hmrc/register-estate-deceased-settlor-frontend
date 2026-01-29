@@ -22,7 +22,7 @@ import pages._
 import play.api.i18n.Messages
 import viewmodels.AnswerSection
 
-class DeceasedSettlorPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) {
+class DeceasedSettlorPrintHelper @Inject() (answerRowConverter: AnswerRowConverter) {
 
   def apply(userAnswers: UserAnswers, settlorName: String)(implicit messages: Messages): AnswerSection = {
 
@@ -32,18 +32,53 @@ class DeceasedSettlorPrintHelper @Inject()(answerRowConverter: AnswerRowConverte
       None,
       Seq(
         bound.nameQuestion(NamePage, "deceasedSettlor.name", Some(controllers.routes.NameController.onPageLoad().url)),
-        bound.dateQuestion(DateOfDeathPage, "deceasedSettlor.dateOfDeath", Some(controllers.routes.DateOfDeathController.onPageLoad().url)),
-        bound.yesNoQuestion(DateOfBirthYesNoPage, "deceasedSettlor.dateOfBirthYesNo", Some(controllers.routes.DateOfBirthYesNoController.onPageLoad().url)),
-        bound.dateQuestion(DateOfBirthPage, "deceasedSettlor.dateOfBirth",Some(controllers.routes.DateOfBirthController.onPageLoad().url)),
-        bound.yesNoQuestion(NationalInsuranceNumberYesNoPage, "deceasedSettlor.nationalInsuranceNumberYesNo",
-          Some(controllers.routes.NationalInsuranceNumberYesNoController.onPageLoad().url)),
-        bound.ninoQuestion(NationalInsuranceNumberPage, "deceasedSettlor.nationalInsuranceNumber",
-          Some(controllers.routes.NationalInsuranceNumberController.onPageLoad().url)),
-        bound.yesNoQuestion(AddressYesNoPage, "deceasedSettlor.addressYesNo", Some(controllers.routes.AddressYesNoController.onPageLoad().url)),
-        bound.yesNoQuestion(LivedInTheUkYesNoPage, "deceasedSettlor.livedInTheUkYesNo", Some(controllers.routes.LivedInTheUkYesNoController.onPageLoad().url)),
-        bound.addressQuestion(UkAddressPage, "deceasedSettlor.ukAddress", Some(controllers.routes.UkAddressController.onPageLoad().url)),
-        bound.addressQuestion(NonUkAddressPage, "deceasedSettlor.nonUkAddress", Some(controllers.routes.NonUkAddressController.onPageLoad().url))
+        bound.dateQuestion(
+          DateOfDeathPage,
+          "deceasedSettlor.dateOfDeath",
+          Some(controllers.routes.DateOfDeathController.onPageLoad().url)
+        ),
+        bound.yesNoQuestion(
+          DateOfBirthYesNoPage,
+          "deceasedSettlor.dateOfBirthYesNo",
+          Some(controllers.routes.DateOfBirthYesNoController.onPageLoad().url)
+        ),
+        bound.dateQuestion(
+          DateOfBirthPage,
+          "deceasedSettlor.dateOfBirth",
+          Some(controllers.routes.DateOfBirthController.onPageLoad().url)
+        ),
+        bound.yesNoQuestion(
+          NationalInsuranceNumberYesNoPage,
+          "deceasedSettlor.nationalInsuranceNumberYesNo",
+          Some(controllers.routes.NationalInsuranceNumberYesNoController.onPageLoad().url)
+        ),
+        bound.ninoQuestion(
+          NationalInsuranceNumberPage,
+          "deceasedSettlor.nationalInsuranceNumber",
+          Some(controllers.routes.NationalInsuranceNumberController.onPageLoad().url)
+        ),
+        bound.yesNoQuestion(
+          AddressYesNoPage,
+          "deceasedSettlor.addressYesNo",
+          Some(controllers.routes.AddressYesNoController.onPageLoad().url)
+        ),
+        bound.yesNoQuestion(
+          LivedInTheUkYesNoPage,
+          "deceasedSettlor.livedInTheUkYesNo",
+          Some(controllers.routes.LivedInTheUkYesNoController.onPageLoad().url)
+        ),
+        bound.addressQuestion(
+          UkAddressPage,
+          "deceasedSettlor.ukAddress",
+          Some(controllers.routes.UkAddressController.onPageLoad().url)
+        ),
+        bound.addressQuestion(
+          NonUkAddressPage,
+          "deceasedSettlor.nonUkAddress",
+          Some(controllers.routes.NonUkAddressController.onPageLoad().url)
+        )
       ).flatten
     )
   }
+
 }

@@ -30,36 +30,33 @@ import views.html.NationalInsuranceNumberView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NationalInsuranceNumberController @Inject()(
-                                                   override val messagesApi: MessagesApi,
-                                                   sessionRepository: SessionRepository,
-                                                   navigator: Navigator,
-                                                   actions: Actions,
-                                                   formProvider: NationalInsuranceNumberFormProvider,
-                                                   val controllerComponents: MessagesControllerComponents,
-                                                   view: NationalInsuranceNumberView
-                                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class NationalInsuranceNumberController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  actions: Actions,
+  formProvider: NationalInsuranceNumberFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: NationalInsuranceNumberView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   private val form = formProvider.withPrefix("deceasedSettlor.nationalInsuranceNumber")
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithName {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.authWithName { implicit request =>
+    val preparedForm = request.userAnswers.get(NationalInsuranceNumberPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(NationalInsuranceNumberPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, request.name))
+    Ok(view(preparedForm, request.name))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.authWithName.async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, request.name))),
-
+  def onSubmit(): Action[AnyContent] = actions.authWithName.async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, request.name))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(NationalInsuranceNumberPage, value))
@@ -67,4 +64,5 @@ class NationalInsuranceNumberController @Inject()(
           } yield Redirect(navigator.nextPage(NationalInsuranceNumberPage, NormalMode, updatedAnswers))
       )
   }
+
 }

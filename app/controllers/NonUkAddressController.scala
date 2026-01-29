@@ -31,37 +31,34 @@ import views.html.NonUkAddressView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NonUkAddressController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        sessionRepository: SessionRepository,
-                                        navigator: Navigator,
-                                        actions: Actions,
-                                        formProvider: NonUkAddressFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: NonUkAddressView,
-                                        val countryOptions: CountryOptionsNonUK
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class NonUkAddressController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  actions: Actions,
+  formProvider: NonUkAddressFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: NonUkAddressView,
+  val countryOptions: CountryOptionsNonUK
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   private val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithName {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.authWithName { implicit request =>
+    val preparedForm = request.userAnswers.get(NonUkAddressPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(NonUkAddressPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, countryOptions.options(), request.name))
+    Ok(view(preparedForm, countryOptions.options(), request.name))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.authWithName.async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, countryOptions.options(), request.name))),
-
+  def onSubmit(): Action[AnyContent] = actions.authWithName.async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, countryOptions.options(), request.name))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(NonUkAddressPage, value))
@@ -69,4 +66,5 @@ class NonUkAddressController @Inject()(
           } yield Redirect(navigator.nextPage(NonUkAddressPage, NormalMode, updatedAnswers))
       )
   }
+
 }

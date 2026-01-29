@@ -33,10 +33,11 @@ import repositories.SessionRepository
 
 import java.time.LocalDateTime
 
-trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Mocked with ScalaFutures with IntegrationPatience {
+trait SpecBase
+    extends PlaySpec with GuiceOneAppPerSuite with TryValues with Mocked with ScalaFutures with IntegrationPatience {
 
   final val ENGLISH = "en"
-  final val WELSH = "cy"
+  final val WELSH   = "cy"
 
   val currentDateTime: LocalDateTime = LocalDateTime.of(1999, 3, 14, 13, 33)
 
@@ -62,4 +63,5 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Moc
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[SessionRepository].toInstance(mockPlaybackRepository)
       )
+
 }

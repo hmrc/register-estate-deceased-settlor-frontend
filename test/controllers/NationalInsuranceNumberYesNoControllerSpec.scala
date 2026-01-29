@@ -34,11 +34,13 @@ import java.time.LocalDateTime
 class NationalInsuranceNumberYesNoControllerSpec extends SpecBase with MockitoSugar {
 
   private val formProvider = new YesNoFormProvider()
-  private val form = formProvider.withPrefix("deceasedSettlor.nationalInsuranceNumberYesNo")
-  private val name = Name("FirstName", None, "LastName")
+  private val form         = formProvider.withPrefix("deceasedSettlor.nationalInsuranceNumberYesNo")
+  private val name         = Name("FirstName", None, "LastName")
 
   override val emptyUserAnswers: UserAnswers = UserAnswers("id", Json.obj(), LocalDateTime.now())
-    .set(NamePage, name).success.value
+    .set(NamePage, name)
+    .success
+    .value
 
   private lazy val nationalInsuranceNumberYesNoRoute = routes.NationalInsuranceNumberYesNoController.onPageLoad().url
 
@@ -157,4 +159,5 @@ class NationalInsuranceNumberYesNoControllerSpec extends SpecBase with MockitoSu
       application.stop()
     }
   }
+
 }

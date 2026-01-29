@@ -27,34 +27,34 @@ import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EstatesConnector @Inject()(http: HttpClientV2, config: FrontendAppConfig) {
+class EstatesConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) {
 
   private lazy val deceasedUrl = s"${config.estatesUrl}/estates/deceased"
 
-  def getDeceased()(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[Option[DeceasedSettlor]] = {
+  def getDeceased()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[DeceasedSettlor]] =
     http
       .get(url"$deceasedUrl")
       .execute[JsValue]
       .flatMap {
         _.validate[DeceasedSettlor] match {
           case JsSuccess(value, _) => Future.successful(Some(value))
-          case _ => Future.successful(None)
+          case _                   => Future.successful(None)
         }
       }
-  }
 
-  def setDeceased(deceasedSettlor: DeceasedSettlor)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
+  def setDeceased(
+    deceasedSettlor: DeceasedSettlor
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
     http
       .post(url"$deceasedUrl")
       .withBody(Json.toJson(deceasedSettlor))
       .execute[HttpResponse]
-  }
 
   private lazy val resetTaxLiabilityUrl = s"${config.estatesUrl}/estates/reset-tax-liability"
 
-  def resetTaxLiability()(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
+  def resetTaxLiability()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
     http
       .post(url"$resetTaxLiabilityUrl")
       .execute[HttpResponse]
-  }
+
 }

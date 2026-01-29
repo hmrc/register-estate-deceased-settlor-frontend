@@ -50,12 +50,12 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
       redirectLocation(result).value mustEqual routes.NameController.onPageLoad().url
 
       val expectedAnswers: UserAnswers = emptyUserAnswers
-      val called = 1
+      val called                       = 1
 
       verify(mockPlaybackRepository, times(called)).set(userAnswerArgumentCaptor.capture())
       val userAnswers = userAnswerArgumentCaptor.getValue
       userAnswers.internalAuthId mustBe expectedAnswers.internalAuthId
-      userAnswers.data mustBe expectedAnswers.data
+      userAnswers.data           mustBe expectedAnswers.data
       userAnswers.lastUpdated mustNot be(expectedAnswers.lastUpdated)
 
       application.stop()
@@ -87,21 +87,34 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
     redirectLocation(result).value mustEqual routes.CheckDetailsController.onPageLoad().url
 
     val expectedAnswers: UserAnswers = emptyUserAnswers
-      .set(NamePage, Name("First", None, "Last")).success.value
-      .set(DateOfBirthPage, LocalDate.of(1972, 9, 18)).success.value
-      .set(DateOfBirthYesNoPage, true).success.value
-      .set(DateOfDeathPage, LocalDate.of(2018, 2, 23)).success.value
-      .set(NationalInsuranceNumberYesNoPage, true).success.value
-      .set(NationalInsuranceNumberPage, "AA111111B").success.value
+      .set(NamePage, Name("First", None, "Last"))
+      .success
+      .value
+      .set(DateOfBirthPage, LocalDate.of(1972, 9, 18))
+      .success
+      .value
+      .set(DateOfBirthYesNoPage, true)
+      .success
+      .value
+      .set(DateOfDeathPage, LocalDate.of(2018, 2, 23))
+      .success
+      .value
+      .set(NationalInsuranceNumberYesNoPage, true)
+      .success
+      .value
+      .set(NationalInsuranceNumberPage, "AA111111B")
+      .success
+      .value
 
     val called = 2
 
     verify(mockPlaybackRepository, times(called)).set(userAnswerArgumentCaptor.capture())
     val userAnswers = userAnswerArgumentCaptor.getValue
     userAnswers.internalAuthId mustBe expectedAnswers.internalAuthId
-    userAnswers.data mustBe expectedAnswers.data
+    userAnswers.data           mustBe expectedAnswers.data
     userAnswers.lastUpdated mustNot be(expectedAnswers.lastUpdated)
 
     application.stop()
   }
+
 }

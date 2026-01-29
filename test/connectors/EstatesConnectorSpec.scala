@@ -29,10 +29,7 @@ import utils.WireMockHelper
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext
 
-class EstatesConnectorSpec extends SpecBase
-  with ScalaFutures
-  with IntegrationPatience
-  with WireMockHelper {
+class EstatesConnectorSpec extends SpecBase with ScalaFutures with IntegrationPatience with WireMockHelper {
 
   private val deceased = DeceasedSettlor(
     Name("First", None, "Last"),
@@ -45,7 +42,7 @@ class EstatesConnectorSpec extends SpecBase
 
   private val requestBody = Json.toJson(deceased)
 
-  private implicit lazy val hc: HeaderCarrier = HeaderCarrier()
+  implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
   "estates connector" must {
 
@@ -57,7 +54,7 @@ class EstatesConnectorSpec extends SpecBase
 
       val connector = application.injector.instanceOf[EstatesConnector]
 
-      val json = Json.obj()
+      val json     = Json.obj()
       val deceased = DeceasedSettlor(
         Name("First", None, "Last"),
         Some(LocalDate.of(1972, 9, 18)),
@@ -73,15 +70,13 @@ class EstatesConnectorSpec extends SpecBase
         post(urlEqualTo("/estates/deceased"))
           .withHeader(CONTENT_TYPE, containing("application/json"))
           .withRequestBody(equalTo(requestBody.toString))
-
           .willReturn(okJson(json.toString))
       )
 
       val futureResult = connector.setDeceased(deceased)
 
-      whenReady(futureResult) {
-        r =>
-          r.status mustBe OK
+      whenReady(futureResult) { r =>
+        r.status mustBe OK
       }
 
       application.stop()
@@ -99,15 +94,13 @@ class EstatesConnectorSpec extends SpecBase
         post(urlEqualTo("/estates/deceased"))
           .withHeader(CONTENT_TYPE, containing("application/json"))
           .withRequestBody(equalTo(requestBody.toString))
-
           .willReturn(serverError)
       )
 
       val futureResult = connector.setDeceased(deceased)
 
-      whenReady(futureResult) {
-        r =>
-          r.status mustBe INTERNAL_SERVER_ERROR
+      whenReady(futureResult) { r =>
+        r.status mustBe INTERNAL_SERVER_ERROR
       }
 
       application.stop()
@@ -125,15 +118,13 @@ class EstatesConnectorSpec extends SpecBase
         post(urlEqualTo("/estates/deceased"))
           .withHeader(CONTENT_TYPE, containing("application/json"))
           .withRequestBody(equalTo(requestBody.toString))
-
           .willReturn(badRequest)
       )
 
       val futureResult = connector.setDeceased(deceased)
 
-      whenReady(futureResult) {
-        r =>
-          r.status mustBe BAD_REQUEST
+      whenReady(futureResult) { r =>
+        r.status mustBe BAD_REQUEST
       }
 
       application.stop()
@@ -165,9 +156,8 @@ class EstatesConnectorSpec extends SpecBase
 
       val futureResult = connector.getDeceased()
 
-      whenReady(futureResult) {
-        r =>
-          r mustBe Some(deceased)
+      whenReady(futureResult) { r =>
+        r mustBe Some(deceased)
       }
 
       application.stop()
@@ -188,9 +178,8 @@ class EstatesConnectorSpec extends SpecBase
 
       val futureResult = connector.getDeceased()
 
-      whenReady(futureResult) {
-        r =>
-          r mustBe None
+      whenReady(futureResult) { r =>
+        r mustBe None
       }
 
       application.stop()
@@ -211,9 +200,8 @@ class EstatesConnectorSpec extends SpecBase
 
       val futureResult = connector.resetTaxLiability()
 
-      whenReady(futureResult) {
-        r =>
-          r.status mustBe OK
+      whenReady(futureResult) { r =>
+        r.status mustBe OK
       }
 
       application.stop()
@@ -225,9 +213,11 @@ class EstatesConnectorSpec extends SpecBase
       .configure(
         Seq(
           "microservice.services.estates.port" -> server.port(),
-          "auditing.enabled" -> false
+          "auditing.enabled"                   -> false
         ): _*
-      ).build()
+      )
+      .build()
     application
   }
+
 }

@@ -30,34 +30,37 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DefaultSessionRepository @Inject()(
-                                          val mongo: MongoComponent,
-                                          val config: FrontendAppConfig
-                                        )(implicit val ec: ExecutionContext)
-  extends PlayMongoRepository[UserAnswers](
-    collectionName = "user-answers",
-    mongoComponent = mongo,
-    domainFormat = Format(UserAnswers.reads, UserAnswers.writes),
-    indexes = Seq(
-      IndexModel(
-        ascending("updatedAt"),
-        IndexOptions()
-          .unique(false)
-          .name("user-answers-updated-at-index")
-          .expireAfter(config.cacheTtlSeconds, TimeUnit.SECONDS))).toList,
-    replaceIndexes = config.dropIndexes
-  )
+class DefaultSessionRepository @Inject() (
+  val mongo: MongoComponent,
+  val config: FrontendAppConfig
+)(implicit val ec: ExecutionContext)
+    extends PlayMongoRepository[UserAnswers](
+      collectionName = "user-answers",
+      mongoComponent = mongo,
+      domainFormat = Format(UserAnswers.reads, UserAnswers.writes),
+      indexes = Seq(
+        IndexModel(
+          ascending("updatedAt"),
+          IndexOptions()
+            .unique(false)
+            .name("user-answers-updated-at-index")
+            .expireAfter(config.cacheTtlSeconds, TimeUnit.SECONDS)
+        )
+      ).toList,
+      replaceIndexes = config.dropIndexes
+    )
     with SessionRepository {
 
   override def get(id: String): Future[Option[UserAnswers]] =
     collection.find(Filters.eq("_id", id)).headOption()
 
   override def set(userAnswers: UserAnswers): Future[Boolean] = {
-    val selector = Filters.eq("_id", userAnswers.internalAuthId)
-    val options = new ReplaceOptions()
+    val selector      = Filters.eq("_id", userAnswers.internalAuthId)
+    val options       = new ReplaceOptions()
       .upsert(true)
     val updatedObject = userAnswers.copy(lastUpdated = LocalDateTime.now)
 
     collection.replaceOne(selector, updatedObject, options).headOption().map(_.exists(_.wasAcknowledged()))
   }
+
 }

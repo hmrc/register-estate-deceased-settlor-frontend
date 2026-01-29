@@ -30,36 +30,33 @@ import views.html.LivedInTheUkYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class LivedInTheUkYesNoController @Inject()(
-                                             override val messagesApi: MessagesApi,
-                                             playbackRepository: SessionRepository,
-                                             navigator: Navigator,
-                                             actions: Actions,
-                                             formProvider: YesNoFormProvider,
-                                             val controllerComponents: MessagesControllerComponents,
-                                             view: LivedInTheUkYesNoView
-                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class LivedInTheUkYesNoController @Inject() (
+  override val messagesApi: MessagesApi,
+  playbackRepository: SessionRepository,
+  navigator: Navigator,
+  actions: Actions,
+  formProvider: YesNoFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: LivedInTheUkYesNoView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   private val form = formProvider.withPrefix("deceasedSettlor.livedInTheUkYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithName {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.authWithName { implicit request =>
+    val preparedForm = request.userAnswers.get(LivedInTheUkYesNoPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(LivedInTheUkYesNoPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, request.name))
+    Ok(view(preparedForm, request.name))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.authWithName.async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, request.name))),
-
+  def onSubmit(): Action[AnyContent] = actions.authWithName.async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, request.name))),
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(LivedInTheUkYesNoPage, value))
@@ -67,4 +64,5 @@ class LivedInTheUkYesNoController @Inject()(
           } yield Redirect(navigator.nextPage(LivedInTheUkYesNoPage, NormalMode, updatedAnswers))
       )
   }
+
 }

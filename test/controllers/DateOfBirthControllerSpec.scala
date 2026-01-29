@@ -36,17 +36,20 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
   private def form = formProvider.withConfig("deceasedSettlor.dateOfBirth")
 
-  private val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  private val validAnswer              = LocalDate.now(ZoneOffset.UTC)
   private val invalidAnswer: LocalDate = LocalDate.parse("2020-02-03")
-  private val name = Name("FirstName", None, "LastName")
-  private val dateOfDeath: LocalDate = LocalDate.parse("2019-02-03")
+  private val name                     = Name("FirstName", None, "LastName")
+  private val dateOfDeath: LocalDate   = LocalDate.parse("2019-02-03")
 
   private lazy val dateOfBirthRoute = routes.DateOfBirthController.onPageLoad().url
 
   private val baseAnswers: UserAnswers = emptyUserAnswers
-    .set(NamePage, name).success.value
-    .set(DateOfDeathPage, dateOfDeath).success.value
-
+    .set(NamePage, name)
+    .success
+    .value
+    .set(DateOfDeathPage, dateOfDeath)
+    .success
+    .value
 
   private lazy val getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, dateOfBirthRoute)
@@ -54,9 +57,9 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
   private lazy val postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, dateOfBirthRoute)
       .withFormUrlEncodedBody(
-        "value.day" -> validAnswer.getDayOfMonth.toString,
+        "value.day"   -> validAnswer.getDayOfMonth.toString,
         "value.month" -> validAnswer.getMonthValue.toString,
-        "value.year" -> validAnswer.getYear.toString
+        "value.year"  -> validAnswer.getYear.toString
       )
 
   "DateOfBirth Controller" must {
@@ -80,8 +83,12 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(DateOfBirthPage, validAnswer).success.value
-        .set(NamePage, name).success.value
+        .set(DateOfBirthPage, validAnswer)
+        .success
+        .value
+        .set(NamePage, name)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -102,7 +109,9 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
       val onwardRoute = Call("GET", "/foo")
 
       val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
+        .set(NamePage, name)
+        .success
+        .value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -151,16 +160,18 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
       val request =
         FakeRequest(POST, dateOfBirthRoute)
           .withFormUrlEncodedBody(
-            "value.day" -> invalidAnswer.getDayOfMonth.toString,
+            "value.day"   -> invalidAnswer.getDayOfMonth.toString,
             "value.month" -> invalidAnswer.getMonthValue.toString,
-            "value.year" -> invalidAnswer.getYear.toString
+            "value.year"  -> invalidAnswer.getYear.toString
           )
 
-      val boundForm = form.bind(Map(
-        "value.day" -> invalidAnswer.getDayOfMonth.toString,
-        "value.month" -> invalidAnswer.getMonthValue.toString,
-        "value.year" -> invalidAnswer.getYear.toString
-      ))
+      val boundForm = form.bind(
+        Map(
+          "value.day"   -> invalidAnswer.getDayOfMonth.toString,
+          "value.month" -> invalidAnswer.getMonthValue.toString,
+          "value.year"  -> invalidAnswer.getYear.toString
+        )
+      )
 
       val view = application.injector.instanceOf[DateOfBirthView]
 
@@ -173,7 +184,6 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
       application.stop()
     }
-
 
     "redirect to Session Expired for a GET if no existing data is found" in {
 
@@ -200,4 +210,5 @@ class DateOfBirthControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

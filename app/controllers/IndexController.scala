@@ -28,33 +28,30 @@ import utils.extractors.DeceasedExtractor
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class IndexController @Inject()(
-                                 val controllerComponents: MessagesControllerComponents,
-                                 actions: Actions,
-                                 repository: SessionRepository,
-                                 estatesConnector: EstatesConnector,
-                                 deceasedExtractor: DeceasedExtractor
-                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class IndexController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  actions: Actions,
+  repository: SessionRepository,
+  estatesConnector: EstatesConnector,
+  deceasedExtractor: DeceasedExtractor
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = actions.authWithSession.async {
-    implicit request =>
+  def onPageLoad: Action[AnyContent] = actions.authWithSession.async { implicit request =>
+    val userAnswers: UserAnswers = UserAnswers(request.internalId)
 
-      val userAnswers: UserAnswers = UserAnswers(request.internalId)
+    estatesConnector.getDeceased() flatMap {
+      case Some(deceased) =>
+        for {
+          updatedAnswers <- Future.fromTry(deceasedExtractor(deceased, userAnswers))
+          _              <- repository.set(updatedAnswers)
+        } yield Redirect(controllers.routes.CheckDetailsController.onPageLoad())
 
-      estatesConnector.getDeceased() flatMap {
-        case Some(deceased) =>
-          for {
-            updatedAnswers <- Future.fromTry(deceasedExtractor(deceased, userAnswers))
-            _ <- repository.set(updatedAnswers)
-          } yield {
-            Redirect(controllers.routes.CheckDetailsController.onPageLoad())
-          }
-
-        case None =>
-          repository.set(userAnswers).map { _ =>
-            Redirect(controllers.routes.NameController.onPageLoad())
-          }
-      }
+      case None =>
+        repository.set(userAnswers).map { _ =>
+          Redirect(controllers.routes.NameController.onPageLoad())
+        }
+    }
   }
 
-  }
+}

@@ -97,4 +97,5 @@ class MongoDateTimeFormatsSpec extends AnyFreeSpec with Matchers with OptionValu
       }
     }
   }
+
 }

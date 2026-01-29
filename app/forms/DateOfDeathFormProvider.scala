@@ -27,13 +27,16 @@ class DateOfDeathFormProvider @Inject() extends Mappings {
   def withConfig(prefix: String): Form[LocalDate] =
     Form(
       "value" -> localDate(
-        invalidKey     = s"$prefix.error.invalid",
+        invalidKey = s"$prefix.error.invalid",
         allRequiredKey = s"$prefix.error.required.all",
         twoRequiredKey = s"$prefix.error.required.two",
-        requiredKey    = s"$prefix.error.required"
-      ).verifying(firstError(
-        maxDate(LocalDate.now, s"$prefix.error.future", "day", "month", "year"),
-        minDate(LocalDate.of(1500,1,1), s"$prefix.error.past", "day", "month", "year")
-      ))
+        requiredKey = s"$prefix.error.required"
+      ).verifying(
+        firstError(
+          maxDate(LocalDate.now, s"$prefix.error.future", "day", "month", "year"),
+          minDate(LocalDate.of(1500, 1, 1), s"$prefix.error.past", "day", "month", "year")
+        )
+      )
     )
+
 }

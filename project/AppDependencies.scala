@@ -6,10 +6,10 @@ object AppDependencies {
   private val mongoVersion     = "2.11.0"
 
   private lazy val compile = Seq(
-    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"                    % mongoVersion,
-    "uk.gov.hmrc"       %% "play-frontend-hmrc-play-30"            % "12.25.0",
-    "uk.gov.hmrc"       %% "domain-play-30"                        % "11.0.0",
-    "uk.gov.hmrc"       %% "bootstrap-frontend-play-30"            % bootstrapVersion
+    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"         % mongoVersion,
+    "uk.gov.hmrc"       %% "play-frontend-hmrc-play-30" % "12.25.0",
+    "uk.gov.hmrc"       %% "domain-play-30"             % "11.0.0",
+    "uk.gov.hmrc"       %% "bootstrap-frontend-play-30" % bootstrapVersion
   )
 
   private lazy val test: Seq[ModuleID] = Seq(

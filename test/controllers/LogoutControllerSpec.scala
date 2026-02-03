@@ -25,9 +25,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
-
 class LogoutControllerSpec extends SpecBase with MockitoSugar {
-
 
   "LogoutController" when {
 

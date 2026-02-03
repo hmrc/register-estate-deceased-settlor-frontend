@@ -30,44 +30,42 @@ class DeceasedSettlorMapper extends Logging {
     val readFromUserAnswers: Reads[DeceasedSettlor] =
       (
         NamePage.path.read[Name] and
-        DateOfBirthPage.path.readNullable[LocalDate] and
-        DateOfDeathPage.path.readNullable[LocalDate] and
-        readNationalInsuranceNumber and
-        AddressYesNoPage.path.readNullable[Boolean] and
-        readAddress
-      ) (DeceasedSettlor.apply _)
+          DateOfBirthPage.path.readNullable[LocalDate] and
+          DateOfDeathPage.path.readNullable[LocalDate] and
+          readNationalInsuranceNumber and
+          AddressYesNoPage.path.readNullable[Boolean] and
+          readAddress
+      )(DeceasedSettlor.apply _)
 
     answersData.validate[DeceasedSettlor](readFromUserAnswers) match {
       case JsSuccess(value, _) =>
         Some(value)
-      case JsError(errors) =>
+      case JsError(errors)     =>
         logger.error(s"Failed to rehydrate DeceasedSettlor from UserAnswers due to $errors")
         None
     }
   }
 
-  private def readNationalInsuranceNumber: Reads[Option[NationalInsuranceNumber]] = {
+  private def readNationalInsuranceNumber: Reads[Option[NationalInsuranceNumber]] =
     NationalInsuranceNumberYesNoPage.path.read[Boolean].flatMap[Option[NationalInsuranceNumber]] {
-      case true => NationalInsuranceNumberPage.path.read[String].map(nino => Some(NationalInsuranceNumber(nino)))
+      case true  => NationalInsuranceNumberPage.path.read[String].map(nino => Some(NationalInsuranceNumber(nino)))
       case false => Reads(_ => JsSuccess(None))
     }
-  }
 
-  private def readAddress: Reads[Option[Address]] = {
+  private def readAddress: Reads[Option[Address]] =
     NationalInsuranceNumberYesNoPage.path.read[Boolean].flatMap {
-      case true => Reads(_ => JsSuccess(None))
-      case false => AddressYesNoPage.path.read[Boolean].flatMap[Option[Address]] {
-        case true => readUkOrNonUkAddress
-        case false => Reads(_ => JsSuccess(None))
-      }
+      case true  => Reads(_ => JsSuccess(None))
+      case false =>
+        AddressYesNoPage.path.read[Boolean].flatMap[Option[Address]] {
+          case true  => readUkOrNonUkAddress
+          case false => Reads(_ => JsSuccess(None))
+        }
     }
-  }
 
-  private def readUkOrNonUkAddress: Reads[Option[Address]] = {
+  private def readUkOrNonUkAddress: Reads[Option[Address]] =
     LivedInTheUkYesNoPage.path.read[Boolean].flatMap[Option[Address]] {
-      case true => UkAddressPage.path.read[UkAddress].map(Some(_))
+      case true  => UkAddressPage.path.read[UkAddress].map(Some(_))
       case false => NonUkAddressPage.path.read[NonUkAddress].map(Some(_))
     }
-  }
 
 }

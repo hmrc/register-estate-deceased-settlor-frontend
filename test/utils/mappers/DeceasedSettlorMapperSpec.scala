@@ -24,10 +24,10 @@ import java.time.LocalDate
 
 class DeceasedSettlorMapperSpec extends SpecBase {
 
-  private val name = Name("First", None, "Last")
-  private val dateOfDeath = LocalDate.parse("2011-02-03")
-  private val dateOfBirth = LocalDate.parse("2010-02-03")
-  private val ukAddress = UkAddress("line1", "line2", Some("line3"), Some("line4"), "POSTCODE")
+  private val name         = Name("First", None, "Last")
+  private val dateOfDeath  = LocalDate.parse("2011-02-03")
+  private val dateOfBirth  = LocalDate.parse("2010-02-03")
+  private val ukAddress    = UkAddress("line1", "line2", Some("line3"), Some("line4"), "POSTCODE")
   private val nonUkAddress = NonUkAddress("line1", "line2", Some("line3"), "country")
 
   "DeceasedSettlorMapper" must {
@@ -39,61 +39,99 @@ class DeceasedSettlorMapperSpec extends SpecBase {
       val nino = "AA123456A"
 
       val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
-        .set(DateOfDeathPage, dateOfDeath).success.value
-        .set(DateOfBirthPage, dateOfBirth).success.value
-        .set(NationalInsuranceNumberYesNoPage, true).success.value
-        .set(NationalInsuranceNumberPage, nino).success.value
+        .set(NamePage, name)
+        .success
+        .value
+        .set(DateOfDeathPage, dateOfDeath)
+        .success
+        .value
+        .set(DateOfBirthPage, dateOfBirth)
+        .success
+        .value
+        .set(NationalInsuranceNumberYesNoPage, true)
+        .success
+        .value
+        .set(NationalInsuranceNumberPage, nino)
+        .success
+        .value
 
       val result = mapper(userAnswers.data).get
 
-      result.name mustBe name
+      result.name        mustBe name
       result.dateOfDeath mustBe Some(dateOfDeath)
       result.dateOfBirth mustBe Some(dateOfBirth)
-      result.nino mustBe Some(NationalInsuranceNumber(nino))
-      result.address mustBe None
+      result.nino        mustBe Some(NationalInsuranceNumber(nino))
+      result.address     mustBe None
     }
     "generate deceased settlor model with UK address" in {
 
       val mapper = injector.instanceOf[DeceasedSettlorMapper]
 
       val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
-        .set(DateOfDeathPage, dateOfDeath).success.value
-        .set(DateOfBirthPage, dateOfBirth).success.value
-        .set(NationalInsuranceNumberYesNoPage, false).success.value
-        .set(AddressYesNoPage, true).success.value
-        .set(LivedInTheUkYesNoPage, true).success.value
-        .set(UkAddressPage, ukAddress).success.value
+        .set(NamePage, name)
+        .success
+        .value
+        .set(DateOfDeathPage, dateOfDeath)
+        .success
+        .value
+        .set(DateOfBirthPage, dateOfBirth)
+        .success
+        .value
+        .set(NationalInsuranceNumberYesNoPage, false)
+        .success
+        .value
+        .set(AddressYesNoPage, true)
+        .success
+        .value
+        .set(LivedInTheUkYesNoPage, true)
+        .success
+        .value
+        .set(UkAddressPage, ukAddress)
+        .success
+        .value
 
       val result = mapper(userAnswers.data).get
 
-      result.name mustBe name
+      result.name        mustBe name
       result.dateOfDeath mustBe Some(dateOfDeath)
       result.dateOfBirth mustBe Some(dateOfBirth)
-      result.nino mustBe None
-      result.address mustBe Some(ukAddress)
+      result.nino        mustBe None
+      result.address     mustBe Some(ukAddress)
     }
     "generate deceased settlor model with non-UK address" in {
 
       val mapper = injector.instanceOf[DeceasedSettlorMapper]
 
       val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
-        .set(DateOfDeathPage, dateOfDeath).success.value
-        .set(DateOfBirthPage, dateOfBirth).success.value
-        .set(NationalInsuranceNumberYesNoPage, false).success.value
-        .set(AddressYesNoPage, true).success.value
-        .set(LivedInTheUkYesNoPage, false).success.value
-        .set(NonUkAddressPage, nonUkAddress).success.value
+        .set(NamePage, name)
+        .success
+        .value
+        .set(DateOfDeathPage, dateOfDeath)
+        .success
+        .value
+        .set(DateOfBirthPage, dateOfBirth)
+        .success
+        .value
+        .set(NationalInsuranceNumberYesNoPage, false)
+        .success
+        .value
+        .set(AddressYesNoPage, true)
+        .success
+        .value
+        .set(LivedInTheUkYesNoPage, false)
+        .success
+        .value
+        .set(NonUkAddressPage, nonUkAddress)
+        .success
+        .value
 
       val result = mapper(userAnswers.data).get
 
-      result.name mustBe name
+      result.name        mustBe name
       result.dateOfDeath mustBe Some(dateOfDeath)
       result.dateOfBirth mustBe Some(dateOfBirth)
-      result.nino mustBe None
-      result.address mustBe Some(nonUkAddress)
+      result.nino        mustBe None
+      result.address     mustBe Some(nonUkAddress)
     }
 
     "generate deceased settlor model with neither nino nor address" in {
@@ -101,19 +139,30 @@ class DeceasedSettlorMapperSpec extends SpecBase {
       val mapper = injector.instanceOf[DeceasedSettlorMapper]
 
       val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
-        .set(DateOfDeathPage, dateOfDeath).success.value
-        .set(DateOfBirthPage, dateOfBirth).success.value
-        .set(NationalInsuranceNumberYesNoPage, false).success.value
-        .set(AddressYesNoPage, false).success.value
+        .set(NamePage, name)
+        .success
+        .value
+        .set(DateOfDeathPage, dateOfDeath)
+        .success
+        .value
+        .set(DateOfBirthPage, dateOfBirth)
+        .success
+        .value
+        .set(NationalInsuranceNumberYesNoPage, false)
+        .success
+        .value
+        .set(AddressYesNoPage, false)
+        .success
+        .value
 
       val result = mapper(userAnswers.data).get
 
-      result.name mustBe name
+      result.name        mustBe name
       result.dateOfDeath mustBe Some(dateOfDeath)
       result.dateOfBirth mustBe Some(dateOfBirth)
-      result.nino mustBe None
-      result.address mustBe None
+      result.nino        mustBe None
+      result.address     mustBe None
     }
   }
+
 }

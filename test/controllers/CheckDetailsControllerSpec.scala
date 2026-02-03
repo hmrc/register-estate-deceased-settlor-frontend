@@ -37,20 +37,31 @@ import scala.concurrent.Future
 
 class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
-  lazy val submitRoute: String = controllers.routes.CheckDetailsController.onSubmit().url
-  private val config = injector.instanceOf[FrontendAppConfig]
+  lazy val submitRoute: String    = controllers.routes.CheckDetailsController.onSubmit().url
+  private val config              = injector.instanceOf[FrontendAppConfig]
   private lazy val completedRoute = config.registrationProgressUrl
-  private val name: Name = Name("First", Some("Middle"), "Last")
+  private val name: Name          = Name("First", Some("Middle"), "Last")
 
   private val goodAnswers: UserAnswers =
     emptyUserAnswers
-      .set(NamePage, name).success.value
-      .set(DateOfDeathPage, LocalDate.of(2011, 10, 10)).success.value
-      .set(DateOfBirthYesNoPage, true).success.value
-      .set(DateOfBirthPage, LocalDate.of(2010, 10, 10)).success.value
-      .set(NationalInsuranceNumberYesNoPage, true).success.value
-      .set(NationalInsuranceNumberPage, "AA000000A").success.value
-
+      .set(NamePage, name)
+      .success
+      .value
+      .set(DateOfDeathPage, LocalDate.of(2011, 10, 10))
+      .success
+      .value
+      .set(DateOfBirthYesNoPage, true)
+      .success
+      .value
+      .set(DateOfBirthPage, LocalDate.of(2010, 10, 10))
+      .success
+      .value
+      .set(NationalInsuranceNumberYesNoPage, true)
+      .success
+      .value
+      .set(NationalInsuranceNumberPage, "AA000000A")
+      .success
+      .value
 
   "Check Your Answers Controller" must {
 
@@ -62,8 +73,8 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[CheckDetailsView]
-      val printHelper = application.injector.instanceOf[DeceasedSettlorPrintHelper]
+      val view          = application.injector.instanceOf[CheckDetailsView]
+      val printHelper   = application.injector.instanceOf[DeceasedSettlorPrintHelper]
       val answerSection = printHelper(goodAnswers, name.displayName)
 
       status(result) mustEqual OK
@@ -92,10 +103,9 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
       application.stop()
     }
 
-
     "redirect to the estates progress when submitted and reset tax liability when date of death changes" in {
 
-      val mockEstatesConnector = mock[EstatesConnector]
+      val mockEstatesConnector      = mock[EstatesConnector]
       val mockEstatesStoreConnector = mock[EstatesStoreConnector]
 
       val application =
@@ -104,13 +114,16 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
           .overrides(bind[EstatesStoreConnector].toInstance(mockEstatesStoreConnector))
           .build()
 
-      val existingDeceased = DeceasedSettlor(Name("Fred", None, "Wilson"), None, Some(LocalDate.of(2010, 10, 10)), None, Some(false), None)
+      val existingDeceased =
+        DeceasedSettlor(Name("Fred", None, "Wilson"), None, Some(LocalDate.of(2010, 10, 10)), None, Some(false), None)
 
       when(mockEstatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(Some(existingDeceased)))
       when(mockEstatesConnector.setDeceased(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
       when(mockEstatesConnector.resetTaxLiability()(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
-      when(mockEstatesStoreConnector.setTaskComplete()(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
-      when(mockEstatesStoreConnector.resetTaxLiabilityTask()(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockEstatesStoreConnector.setTaskComplete()(any(), any()))
+        .thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockEstatesStoreConnector.resetTaxLiabilityTask()(any(), any()))
+        .thenReturn(Future.successful(HttpResponse(OK, "")))
 
       val request = FakeRequest(POST, submitRoute)
 
@@ -125,7 +138,7 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
 
     "redirect to the estates progress when submitted and date of death does not changes" in {
 
-      val mockEstatesConnector = mock[EstatesConnector]
+      val mockEstatesConnector      = mock[EstatesConnector]
       val mockEstatesStoreConnector = mock[EstatesStoreConnector]
 
       val application =
@@ -136,7 +149,8 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
 
       when(mockEstatesConnector.getDeceased()(any(), any())).thenReturn(Future.successful(None))
       when(mockEstatesConnector.setDeceased(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
-      when(mockEstatesStoreConnector.setTaskComplete()(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockEstatesStoreConnector.setTaskComplete()(any(), any()))
+        .thenReturn(Future.successful(HttpResponse(OK, "")))
 
       val request = FakeRequest(POST, submitRoute)
 
@@ -150,4 +164,5 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
     }
 
   }
+
 }

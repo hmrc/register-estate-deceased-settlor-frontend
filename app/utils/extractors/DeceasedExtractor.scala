@@ -25,45 +25,49 @@ import scala.util.Try
 
 class DeceasedExtractor {
 
-  def apply(deceased: DeceasedSettlor, userAnswers: UserAnswers): Try[UserAnswers] = {
-    userAnswers.set(NamePage, deceased.name)
+  def apply(deceased: DeceasedSettlor, userAnswers: UserAnswers): Try[UserAnswers] =
+    userAnswers
+      .set(NamePage, deceased.name)
       .flatMap(_.set(DateOfDeathPage, deceased.dateOfDeath.get))
       .flatMap(answers => extractDateOfBirth(deceased.dateOfBirth, answers))
       .flatMap(answers => extractIdentification(deceased, answers))
-  }
 
-  private def extractDateOfBirth(dateOfBirth: Option[LocalDate], userAnswers: UserAnswers): Try[UserAnswers] = {
+  private def extractDateOfBirth(dateOfBirth: Option[LocalDate], userAnswers: UserAnswers): Try[UserAnswers] =
     dateOfBirth match {
       case Some(dateOfBirth) =>
-        userAnswers.set(DateOfBirthYesNoPage, true)
+        userAnswers
+          .set(DateOfBirthYesNoPage, true)
           .flatMap(_.set(DateOfBirthPage, dateOfBirth))
 
       case None =>
         userAnswers.set(DateOfBirthYesNoPage, false)
     }
-  }
 
-  private def extractIdentification(deceased: DeceasedSettlor, userAnswers: UserAnswers) = {
+  private def extractIdentification(deceased: DeceasedSettlor, userAnswers: UserAnswers) =
     (deceased.nino, deceased.address) match {
       case (Some(nino), _) =>
-        userAnswers.set(NationalInsuranceNumberYesNoPage, true)
+        userAnswers
+          .set(NationalInsuranceNumberYesNoPage, true)
           .flatMap(_.set(NationalInsuranceNumberPage, nino.nino))
 
       case (None, Some(address: UkAddress)) =>
-        userAnswers.set(NationalInsuranceNumberYesNoPage, false)
+        userAnswers
+          .set(NationalInsuranceNumberYesNoPage, false)
           .flatMap(_.set(AddressYesNoPage, true))
           .flatMap(_.set(LivedInTheUkYesNoPage, true))
           .flatMap(_.set(UkAddressPage, address))
 
       case (None, Some(address: NonUkAddress)) =>
-        userAnswers.set(NationalInsuranceNumberYesNoPage, false)
+        userAnswers
+          .set(NationalInsuranceNumberYesNoPage, false)
           .flatMap(_.set(AddressYesNoPage, true))
           .flatMap(_.set(LivedInTheUkYesNoPage, false))
           .flatMap(_.set(NonUkAddressPage, address))
 
       case (_, _) =>
-        userAnswers.set(NationalInsuranceNumberYesNoPage, false)
+        userAnswers
+          .set(NationalInsuranceNumberYesNoPage, false)
           .flatMap(_.set(AddressYesNoPage, false))
     }
-  }
+
 }

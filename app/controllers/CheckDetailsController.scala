@@ -34,67 +34,64 @@ import views.html.CheckDetailsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CheckDetailsController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        actions: Actions,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: CheckDetailsView,
-                                        estatesConnector: EstatesConnector,
-                                        estatesStoreConnector: EstatesStoreConnector,
-                                        val appConfig: FrontendAppConfig,
-                                        printHelper: DeceasedSettlorPrintHelper,
-                                        mapper: DeceasedSettlorMapper,
-                                        errorHandler: ErrorHandler
-                                      )(implicit val ec: ExecutionContext
-) extends FrontendBaseController with I18nSupport with Logging {
+class CheckDetailsController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  view: CheckDetailsView,
+  estatesConnector: EstatesConnector,
+  estatesStoreConnector: EstatesStoreConnector,
+  val appConfig: FrontendAppConfig,
+  printHelper: DeceasedSettlorPrintHelper,
+  mapper: DeceasedSettlorMapper,
+  errorHandler: ErrorHandler
+)(implicit val ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  private def render(userAnswers: UserAnswers,
-                     name: String)(implicit request: Request[AnyContent]): Result = {
+  private def render(userAnswers: UserAnswers, name: String)(implicit request: Request[AnyContent]): Result = {
     val section: AnswerSection = printHelper(userAnswers, name)
-    Ok(view(
-      section,
-      name
-
-    ))
+    Ok(
+      view(
+        section,
+        name
+      )
+    )
   }
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithName.async {
-    implicit request =>
-        Future.successful(render(
-          request.userAnswers,
-          request.name))
+  def onPageLoad(): Action[AnyContent] = actions.authWithName.async { implicit request =>
+    Future.successful(render(request.userAnswers, request.name))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.authWithData.async {
-    implicit request =>
-      mapper(request.userAnswers.data) match {
-        case Some(deceasedSettlor) =>
-          estatesConnector.getDeceased() flatMap {
-            case Some(DeceasedSettlor(_, _, Some(previousDateOfDeath), _, _, _)) =>
-              if(!deceasedSettlor.dateOfDeath.contains(previousDateOfDeath)) {
-                logger.info(s"[submit][Session ID: ${Session.id(hc)}]" +
-                  s" previous date $previousDateOfDeath, new date: ${deceasedSettlor.dateOfDeath}")
-                for {
-                  redirect <- sendDeceased(deceasedSettlor)
-                  _ <- estatesConnector.resetTaxLiability()
-                  _ <- estatesStoreConnector.resetTaxLiabilityTask()
-                } yield redirect
-              } else {
-                sendDeceased(deceasedSettlor)
-              }
-            case _ =>
+  def onSubmit(): Action[AnyContent] = actions.authWithData.async { implicit request =>
+    mapper(request.userAnswers.data) match {
+      case Some(deceasedSettlor) =>
+        estatesConnector.getDeceased() flatMap {
+          case Some(DeceasedSettlor(_, _, Some(previousDateOfDeath), _, _, _)) =>
+            if (!deceasedSettlor.dateOfDeath.contains(previousDateOfDeath)) {
+              logger.info(
+                s"[submit][Session ID: ${Session.id(hc)}]" +
+                  s" previous date $previousDateOfDeath, new date: ${deceasedSettlor.dateOfDeath}"
+              )
+              for {
+                redirect <- sendDeceased(deceasedSettlor)
+                _        <- estatesConnector.resetTaxLiability()
+                _        <- estatesStoreConnector.resetTaxLiabilityTask()
+              } yield redirect
+            } else {
               sendDeceased(deceasedSettlor)
-          }
-        case None =>
-          logger.warn(s"[submit][Session ID: ${Session.id(hc)}] Unable to generate agent details to submit.")
-          errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
-      }
+            }
+          case _                                                               =>
+            sendDeceased(deceasedSettlor)
+        }
+      case None                  =>
+        logger.warn(s"[submit][Session ID: ${Session.id(hc)}] Unable to generate agent details to submit.")
+        errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
+    }
   }
 
-  private def sendDeceased(deceasedSettlor : DeceasedSettlor)(implicit hc: HeaderCarrier): Future[Result] = for {
+  private def sendDeceased(deceasedSettlor: DeceasedSettlor)(implicit hc: HeaderCarrier): Future[Result] = for {
     _ <- estatesConnector.setDeceased(deceasedSettlor)
     _ <- estatesStoreConnector.setTaskComplete()
-  } yield {
-    Redirect(appConfig.registrationProgressUrl)
-  }
+  } yield Redirect(appConfig.registrationProgressUrl)
+
 }

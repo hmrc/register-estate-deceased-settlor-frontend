@@ -26,56 +26,38 @@ import viewmodels.AnswerRow
 
 import java.time.LocalDate
 
-class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatters) {
+class AnswerRowConverter @Inject() (checkAnswersFormatters: CheckAnswersFormatters) {
 
-  def bind(userAnswers: UserAnswers, name: String)
-          (implicit messages: Messages): Bound = new Bound(userAnswers, name)
+  def bind(userAnswers: UserAnswers, name: String)(implicit messages: Messages): Bound = new Bound(userAnswers, name)
 
   class Bound(userAnswers: UserAnswers, name: String)(implicit messages: Messages) {
 
-    def nameQuestion(query: Gettable[Name],
-                     labelKey: String,
-                     changeUrl: Option[String]): Option[AnswerRow] = {
+    def nameQuestion(query: Gettable[Name], labelKey: String, changeUrl: Option[String]): Option[AnswerRow] = {
       val format = (x: Name) => HtmlFormat.escape(x.displayFullName)
       question(query, labelKey, format, changeUrl)
     }
 
-    def stringQuestion(query: Gettable[String],
-                       labelKey: String,
-                       changeUrl: Option[String]): Option[AnswerRow] = {
+    def stringQuestion(query: Gettable[String], labelKey: String, changeUrl: Option[String]): Option[AnswerRow] =
       question(query, labelKey, HtmlFormat.escape, changeUrl)
-    }
 
-    def yesNoQuestion(query: Gettable[Boolean],
-                     labelKey: String,
-                     changeUrl: Option[String]): Option[AnswerRow] = {
+    def yesNoQuestion(query: Gettable[Boolean], labelKey: String, changeUrl: Option[String]): Option[AnswerRow] =
       question(query, labelKey, checkAnswersFormatters.yesOrNo, changeUrl)
-    }
 
-    def dateQuestion(query: Gettable[LocalDate],
-                     labelKey: String,
-                     changeUrl: Option[String]): Option[AnswerRow] = {
+    def dateQuestion(query: Gettable[LocalDate], labelKey: String, changeUrl: Option[String]): Option[AnswerRow] =
       question(query, labelKey, checkAnswersFormatters.formatDate, changeUrl)
-    }
 
-    def ninoQuestion(query: Gettable[String],
-                     labelKey: String,
-                     changeUrl: Option[String]): Option[AnswerRow] = {
+    def ninoQuestion(query: Gettable[String], labelKey: String, changeUrl: Option[String]): Option[AnswerRow] =
       question(query, labelKey, checkAnswersFormatters.formatNino, changeUrl)
-    }
 
-    def addressQuestion[T <: Address](query: Gettable[T],
-                                      labelKey: String,
-                                      changeUrl: Option[String])
-                                     (implicit messages:Messages, reads: Reads[T]): Option[AnswerRow] = {
+    def addressQuestion[T <: Address](query: Gettable[T], labelKey: String, changeUrl: Option[String])(implicit
+      messages: Messages,
+      reads: Reads[T]
+    ): Option[AnswerRow] =
       question(query, labelKey, checkAnswersFormatters.formatAddress, changeUrl)
-    }
 
-    private def question[T](query: Gettable[T],
-                            labelKey: String,
-                            format: T => Html,
-                            changeUrl: Option[String])
-                           (implicit rds: Reads[T]): Option[AnswerRow] = {
+    private def question[T](query: Gettable[T], labelKey: String, format: T => Html, changeUrl: Option[String])(implicit
+      rds: Reads[T]
+    ): Option[AnswerRow] =
       userAnswers.get(query) map { x =>
         AnswerRow(
           label = messages(s"$labelKey.checkYourAnswersLabel", name),
@@ -83,7 +65,7 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
           changeUrl = changeUrl
         )
       }
-    }
 
   }
+
 }

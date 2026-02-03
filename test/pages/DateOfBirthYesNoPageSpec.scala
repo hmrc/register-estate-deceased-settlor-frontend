@@ -22,7 +22,6 @@ import play.api.libs.json.Json
 
 import java.time.{LocalDate, LocalDateTime}
 
-
 class DateOfBirthYesNoPageSpec extends PageBehaviours {
 
   "DateOfBirthYesNoPage" must {
@@ -41,4 +40,5 @@ class DateOfBirthYesNoPageSpec extends PageBehaviours {
       userAnswers.get.get(DateOfBirthPage) mustNot be(defined)
     }
   }
+
 }

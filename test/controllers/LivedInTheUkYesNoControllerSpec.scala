@@ -34,11 +34,13 @@ import java.time.LocalDateTime
 class LivedInTheUkYesNoControllerSpec extends SpecBase with MockitoSugar {
 
   private val formProvider = new YesNoFormProvider()
-  private val form = formProvider.withPrefix("deceasedSettlor.livedInTheUkYesNo")
-  private val name = Name("FirstName", None, "LastName")
+  private val form         = formProvider.withPrefix("deceasedSettlor.livedInTheUkYesNo")
+  private val name         = Name("FirstName", None, "LastName")
 
   override val emptyUserAnswers: UserAnswers = UserAnswers("id", Json.obj(), LocalDateTime.now())
-    .set(NamePage, name).success.value
+    .set(NamePage, name)
+    .success
+    .value
 
   private lazy val livedInTheUkYesNoControllerRoute = routes.LivedInTheUkYesNoController.onPageLoad().url
 
@@ -158,4 +160,5 @@ class LivedInTheUkYesNoControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

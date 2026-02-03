@@ -22,8 +22,8 @@ import play.api.data.FormError
 class YesNoFormProviderSpec extends BooleanFieldBehaviours {
 
   private val messagePrefix = "yesNo"
-  private val requiredKey = s"$messagePrefix.error.required"
-  private val invalidKey = "error.boolean"
+  private val requiredKey   = s"$messagePrefix.error.required"
+  private val invalidKey    = "error.boolean"
 
   private val form = new YesNoFormProvider().withPrefix(messagePrefix)
 
@@ -45,4 +45,3 @@ class YesNoFormProviderSpec extends BooleanFieldBehaviours {
   }
 
 }
-

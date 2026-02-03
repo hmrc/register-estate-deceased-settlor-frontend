@@ -22,7 +22,6 @@ import play.api.libs.json.Json
 
 import java.time.LocalDateTime
 
-
 class LivedInTheUkYesNoPageSpec extends PageBehaviours {
 
   "LivedInTheUkYesNoPage" must {
@@ -35,7 +34,9 @@ class LivedInTheUkYesNoPageSpec extends PageBehaviours {
 
     "implement cleanup logic when NO selected" in {
       val userAnswers = UserAnswers("id", Json.obj(), LocalDateTime.now)
-        .set(UkAddressPage, UkAddress("line1", "line2", None, None, "postcode")).success.value
+        .set(UkAddressPage, UkAddress("line1", "line2", None, None, "postcode"))
+        .success
+        .value
         .set(LivedInTheUkYesNoPage, true)
         .flatMap(_.set(AddressYesNoPage, false))
 
@@ -43,4 +44,5 @@ class LivedInTheUkYesNoPageSpec extends PageBehaviours {
       userAnswers.get.get(LivedInTheUkYesNoPage) mustNot be(defined)
     }
   }
+
 }

@@ -31,8 +31,6 @@ lazy val root = Project("register-estate-deceased-settlor-frontend", file("."))
         group(
           Seq(
             "javascripts/registerestatedeceasedsettlorfrontend.js",
-            "javascripts/autocomplete.js",
-            "javascripts/libraries/location-autocomplete.min.js",
             "javascripts/iebacklink.js"
           )
         )

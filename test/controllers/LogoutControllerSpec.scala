@@ -27,6 +27,9 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 class LogoutControllerSpec extends SpecBase with MockitoSugar {
 
+  private val expectedLogoutUrl =
+    "http://localhost:9514/feedback/estates?useServiceNavigation"
+
   "LogoutController" when {
 
     "auditing enabled" must {
@@ -45,7 +48,7 @@ class LogoutControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustBe frontendAppConfig.logoutUrl
+        redirectLocation(result).value mustBe expectedLogoutUrl
 
         verify(mockAuditConnector)
           .sendExplicitAudit(eqTo("estates"), any[Map[String, String]])(any(), any())
@@ -71,7 +74,7 @@ class LogoutControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustBe frontendAppConfig.logoutUrl
+        redirectLocation(result).value mustBe expectedLogoutUrl
 
         verify(mockAuditConnector, times(0))
           .sendExplicitAudit(eqTo("estates"), any[Map[String, String]])(any(), any())
